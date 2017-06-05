@@ -4,7 +4,7 @@
 
 Support:
 * **Sql Server** 
-* **MySQL**
+* **MySQL** (require [MySQL Connector](https://dev.mysql.com/downloads/connector/net/) For .NET)
 
 Commands:
 * **Drop Database**
@@ -48,7 +48,6 @@ Migration and Seeder types are **grouped** by name **and sorted** by version and
 "_001_CREATE_POSTS_TABLE" is before "_002_CREATE_POSTS_TABLE". Only the last is executed ("_002_CREATE_POSTS_TABLE" here)
 
 "_001_CREATE_POSTS_TABLE" : the version is "_001_", the name is "CREATE_POSTS_TABLE", the full name is "_001_CREATE_POSTS_TABLE"
-
 
 ## Migrations and Seeders
 

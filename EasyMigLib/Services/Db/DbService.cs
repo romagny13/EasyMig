@@ -95,7 +95,8 @@ namespace EasyMigLib.Services
                             var rows = new Dictionary<string, object>();
                             for (int i = 0; i < reader.FieldCount; i++)
                             {
-                                rows[reader.GetName(i)] = reader.GetValue(i);
+                                var value = reader.GetValue(i);
+                                rows[reader.GetName(i)] = value.GetType() == typeof(DBNull) ? null : value;
                             }
                             result.Add(rows);
                         }
@@ -126,7 +127,8 @@ namespace EasyMigLib.Services
 
                             for (int i = 0; i < reader.FieldCount; i++)
                             {
-                                result[reader.GetName(i)] = reader.GetValue(i);
+                                var value = reader.GetValue(i);
+                                result[reader.GetName(i)] = value.GetType() == typeof(DBNull) ? null : value;
                             }
                         }
                     }

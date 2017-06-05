@@ -44,7 +44,7 @@ Database information:
 * **Get** Table **rows**
 
 **Version**:
-Migrations and Seeders types are **grouped** by name **and sorted** by version and name. Example:
+Migrations and Seeders are **grouped** by name **and sorted** by version and name. Example:
 "_001_CREATE_POSTS_TABLE" is before "_002_CREATE_POSTS_TABLE". Only the last is executed ("_002_CREATE_POSTS_TABLE" here)
 
 "_001_CREATE_POSTS_TABLE" : the version is "_001_", the name is "CREATE_POSTS_TABLE", the full name is "_001_CREATE_POSTS_TABLE"

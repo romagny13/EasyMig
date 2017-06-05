@@ -253,7 +253,6 @@ namespace EasyMigLibTest
         {
             this.BeforeEach();
 
-            var dbName = "db1";
             var tableName = "users";
 
             EasyMig.SeedTable(tableName)

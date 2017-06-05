@@ -103,9 +103,9 @@ namespace EasyMigLib
             container.DoMigrationOnlyFor(migrationFileName, assemblyTypes, connectionString, providerName, engine, direction);
         }
 
-        public static void DoMigrationsFromMemory(string connectionString, string providerName, string engine = null, MigrationDirection direction = MigrationDirection.Up)
+        public static void DoMigrationsFromMemory(string connectionString, string providerName, string engine = null)
         {
-            container.UpdateDatabase(connectionString, providerName, engine,direction);
+            container.UpdateDatabase(connectionString, providerName, engine);
         }        
 
         public static int ExecuteQuery(string query, string connectionString, string providerName)

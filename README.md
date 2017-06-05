@@ -168,4 +168,7 @@ for (int i = 1; i< 100; i++)
 //  var query = EasyMig.GetMigrationQuery("MySql.Data.MySqlClient");
 // or
 EasyMig.DoMigrationsFromMemory("server=localhost;database=dbtest;uid=root", "MySql.Data.MySqlClient");
+
+// or with Sql Server
+// EasyMig.DoMigrationsFromMemory(@"Server=localhost\SQLEXPRESS;Database=db1;Trusted_Connection=True;", "System.Data.SqlClient");
 ```

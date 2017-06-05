@@ -1,0 +1,5 @@
+C:\Users\romag\Documents\Visual Studio 2017\Projects\EasyMigLib\EasyMigLib\bin\Debug\EasyMigLib.dll
+C:\Users\romag\Documents\Visual Studio 2017\Projects\EasyMigLib\EasyMigLib\bin\Debug\EasyMigLib.pdb
+C:\Users\romag\Documents\Visual Studio 2017\Projects\EasyMigLib\EasyMigLib\obj\Debug\EasyMigLib.csprojResolveAssemblyReference.cache
+C:\Users\romag\Documents\Visual Studio 2017\Projects\EasyMigLib\EasyMigLib\obj\Debug\EasyMigLib.dll
+C:\Users\romag\Documents\Visual Studio 2017\Projects\EasyMigLib\EasyMigLib\obj\Debug\EasyMigLib.pdb

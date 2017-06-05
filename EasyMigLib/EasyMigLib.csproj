@@ -59,7 +59,7 @@
     <Compile Include="Commands\Table\SeedData.cs" />
     <Compile Include="Commands\Table\SeedRowCommand.cs" />
     <Compile Include="Commands\Table\SeedTableCommand.cs" />
-    <Compile Include="DatabaseTable.cs" />
+    <Compile Include="Services\Information\DatabaseTable.cs" />
     <Compile Include="Services\Information\DatabaseInformation.cs" />
     <Compile Include="Services\Information\DatabaseInformationQueryFactories.cs" />
     <Compile Include="Services\Information\DatabaseInformationQueryService.cs" />

@@ -1,5 +1,4 @@
-﻿using EasyMigLib.Services;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace EasyMigLib.Services
 {
@@ -67,12 +66,24 @@ namespace EasyMigLib.Services
             return result;
         }
 
+        public Dictionary<string, Dictionary<string, object>> MergeListToDictionary(List<Dictionary<string, object>> list, string columnKey)
+        {
+            var result = new Dictionary<string, Dictionary<string, object>>();
+            foreach (var item in list)
+            {
+                var key = item[columnKey].ToString();
+                result[key] = item;
+            }
+            return result;
+        }
+
         public DatabaseTable GetTable(string databaseName, string tableName, string connectionString, string providerName)
         {
             var queryService = DatabaseInformationQueryFactories.GetService(providerName);
 
             var query = queryService.GetTable(databaseName, tableName);
             var columnQuery = queryService.GetColumns(databaseName, tableName);
+            var primaryKeyQuery = queryService.GetPrimaryKeys(databaseName, tableName);
             var foreignKeyQuery = queryService.GetForeignKeys(databaseName, tableName);
 
             dbService.CreateConnection(connectionString, providerName);
@@ -80,53 +91,12 @@ namespace EasyMigLib.Services
 
             var table = dbService.ReadOne(query);
             var columnList = dbService.ReadAll(columnQuery);
+            var primaryKeyList = dbService.ReadAll(primaryKeyQuery);
             var foreignKeyList = dbService.ReadAll(foreignKeyQuery);
 
-            var columns = new Dictionary<string, Dictionary<string, object>>();
-            var primaryKeys = new Dictionary<string, Dictionary<string, object>>();
-            var foreignKeys = new Dictionary<string, Dictionary<string, object>>();
-
-            if (queryService is MySQLDatabaseInformationQueryService)
-            {
-                foreach (var column in columnList)
-                {
-                    var columnName = column["COLUMN_NAME"].ToString();
-                    columns[columnName] = column;
-                    if (column["COLUMN_KEY"].ToString() == "PRI")
-                    {
-                        primaryKeys[columnName] = column;
-                    }
-                }
-
-                foreach (var column in foreignKeyList)
-                {
-                    var columnName = column["COLUMN_NAME"].ToString();
-                    foreignKeys[columnName] = column;
-                }
-            }
-            else
-            {
-                foreach (var column in columnList)
-                {
-                    var columnName = column["COLUMN_NAME"].ToString();
-                    columns[columnName] = column;
-                }
-
-                var primaryKeyQuery = queryService.GetPrimaryKeys(databaseName, tableName);
-                var primaryKeyList = dbService.ReadAll(primaryKeyQuery);
-
-                foreach (var column in primaryKeyList)
-                {
-                    var columnName = column["COLUMN_NAME"].ToString();
-                    primaryKeys[columnName] = column;
-                }
-
-                foreach (var column in foreignKeyList)
-                {
-                    var columnName = column["COLUMN_NAME"].ToString();
-                    foreignKeys[columnName] = column;
-                }
-            }
+            var columns = this.MergeListToDictionary(columnList, "COLUMN_NAME");
+            var primaryKeys = this.MergeListToDictionary(primaryKeyList, "COLUMN_NAME");
+            var foreignKeys = this.MergeListToDictionary(foreignKeyList, "COLUMN_NAME");
 
             dbService.Close();
 

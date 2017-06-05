@@ -29,9 +29,13 @@ namespace EasyMigLib.Services
             return "SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE table_schema = '" + databaseName + "' AND table_name = '" + tableName + "'";
         }
 
+        public override string GetPrimaryKeys(string databaseName, string tableName)
+        {
+            return "SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE table_schema = '" + databaseName + "' AND table_name = '" + tableName + "' and COLUMN_KEY='PRI'";
+        }
+
         public override string GetForeignKeys(string databaseName, string tableName)
         {
-            // SELECT 
             return "SELECT table_referenced.TABLE_NAME, base_table.COLUMN_NAME, table_referenced.CONSTRAINT_TYPE, table_referenced.CONSTRAINT_NAME, base_table.REFERENCED_TABLE_NAME, base_table.REFERENCED_COLUMN_NAME FROM information_schema.TABLE_CONSTRAINTS table_referenced LEFT JOIN information_schema.KEY_COLUMN_USAGE base_table ON table_referenced.CONSTRAINT_NAME = base_table.CONSTRAINT_NAME WHERE table_referenced.CONSTRAINT_TYPE = 'FOREIGN KEY' AND table_referenced.TABLE_SCHEMA = '" + databaseName + "' AND table_referenced.TABLE_NAME = '" + tableName + "'; ";
         }
 
@@ -47,10 +51,6 @@ namespace EasyMigLib.Services
             }
         }
 
-        public override string GetPrimaryKeys(string databaseName, string tableName)
-        {
-            throw new NotImplementedException();
-        }
     }
 
 }

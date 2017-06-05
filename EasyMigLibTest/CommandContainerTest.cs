@@ -458,35 +458,35 @@ namespace EasyMigLibTest
         }
 
 
-        [TestMethod]
-        public void TestGetMigrationQuery()
-        {
-            var container = new CommandContainer();
+        //[TestMethod]
+        //public void TestGetMigrationQuery()
+        //{
+        //    var container = new CommandContainer();
 
-            container.DropDatabase("db1");
-            container.CreateDatabase("db2");
+        //    container.DropDatabase("db1");
+        //    container.CreateDatabase("db2");
 
-            container
-                .CreateTable("users")
-                .AddPrimaryKey("id")
-                .AddColumn("username")
-                .Insert(SeedData.New.Set("id",1).Set("username","user 1"));
+        //    container
+        //        .CreateTable("users")
+        //        .AddPrimaryKey("id")
+        //        .AddColumn("username")
+        //        .Insert(SeedData.New.Set("id",1).Set("username","user 1"));
 
-           container
-                .CreateTable("posts")
-                .AddPrimaryKey("id")
-                .AddColumn("title")
-                .AddForeignKey("user_id","users","id")
-                .Insert(SeedData.New.Set("id", 1).Set("title", "post 1").Set("user_id",1));
+        //   container
+        //        .CreateTable("posts")
+        //        .AddPrimaryKey("id")
+        //        .AddColumn("title")
+        //        .AddForeignKey("user_id","users","id")
+        //        .Insert(SeedData.New.Set("id", 1).Set("title", "post 1").Set("user_id",1));
 
-            container.AlterTable("table2").AddColumn("column1");
+        //    container.AlterTable("table2").AddColumn("column1");
 
-            container.DropTable("table3");
+        //    container.DropTable("table3");
 
-            var query = container.GetMigrationQuery("System.Data.SqlClient");
+        //    var query = container.GetMigrationQuery("System.Data.SqlClient");
 
-            Assert.AreEqual("CREATE DATABASE [db2];\r\rDROP DATABASE IF EXISTS [db1];\r\rDROP TABLE IF EXISTS [dbo].[posts];\r\rDROP TABLE IF EXISTS [dbo].[users];\r\rCREATE TABLE [dbo].[users] (\r\t[id] INT NOT NULL IDENTITY(1,1),\r\t[username] NVARCHAR(255) NOT NULL\r);\r\rCREATE TABLE [dbo].[posts] (\r\t[id] INT NOT NULL IDENTITY(1,1),\r\t[title] NVARCHAR(255) NOT NULL,\r\t[user_id] INT NOT NULL\r);\r\rSET IDENTITY_INSERT [dbo].[users] ON;\rINSERT INTO [dbo].[users] ([id],[username]) VALUES (1,'user 1');\rSET IDENTITY_INSERT [dbo].[users] OFF;\r\rSET IDENTITY_INSERT [dbo].[posts] ON;\rINSERT INTO [dbo].[posts] ([id],[title],[user_id]) VALUES (1,'post 1',1);\rSET IDENTITY_INSERT [dbo].[posts] OFF;\r\rALTER TABLE [dbo].[users] ADD PRIMARY KEY ([id]);\r\rALTER TABLE [dbo].[posts] ADD PRIMARY KEY ([id]);\r\rALTER TABLE [dbo].[posts] ADD FOREIGN KEY ([user_id]) REFERENCES [dbo].[users]([id]);\r\rALTER TABLE [dbo].[table2] ADD [column1] NVARCHAR(255) NOT NULL;\r\rDROP TABLE IF EXISTS [dbo].[table3];\r", query);
-        }
+        //    Assert.AreEqual("CREATE DATABASE [db2];\r\rDROP DATABASE IF EXISTS [db1];\r\rDROP TABLE IF EXISTS [dbo].[posts];\r\rDROP TABLE IF EXISTS [dbo].[users];\r\rCREATE TABLE [dbo].[users] (\r\t[id] INT NOT NULL IDENTITY(1,1),\r\t[username] NVARCHAR(255) NOT NULL\r);\r\rCREATE TABLE [dbo].[posts] (\r\t[id] INT NOT NULL IDENTITY(1,1),\r\t[title] NVARCHAR(255) NOT NULL,\r\t[user_id] INT NOT NULL\r);\r\rSET IDENTITY_INSERT [dbo].[users] ON;\rINSERT INTO [dbo].[users] ([id],[username]) VALUES (1,'user 1');\rSET IDENTITY_INSERT [dbo].[users] OFF;\r\rSET IDENTITY_INSERT [dbo].[posts] ON;\rINSERT INTO [dbo].[posts] ([id],[title],[user_id]) VALUES (1,'post 1',1);\rSET IDENTITY_INSERT [dbo].[posts] OFF;\r\rALTER TABLE [dbo].[users] ADD PRIMARY KEY ([id]);\r\rALTER TABLE [dbo].[posts] ADD PRIMARY KEY ([id]);\r\rALTER TABLE [dbo].[posts] ADD FOREIGN KEY ([user_id]) REFERENCES [dbo].[users]([id]);\r\rALTER TABLE [dbo].[table2] ADD [column1] NVARCHAR(255) NOT NULL;\r\rDROP TABLE IF EXISTS [dbo].[table3];\r", query);
+        //}
 
         [TestMethod]
         public void TestUpdateOnlyFor()

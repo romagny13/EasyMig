@@ -92,6 +92,8 @@ namespace EasyMigLib.Services
                 }
                 else
                 {
+                    // escape ' => ''
+                    value = value.ToString().Replace("'", "''");
                     return "'" + value + "'";
                 }
             }
@@ -230,38 +232,6 @@ namespace EasyMigLib.Services
             }
             return string.Join("\r", result);
         }
-
-        public virtual string GetCheckDatabaseExists(string databaseName)
-        {
-            return "select * from sys.databases where name = '" + databaseName +"'";
-        }
-
-        public virtual string GetCheckTableExists(string databaseName, string tableName)
-        {
-            return "SELECT count(*) FROM INFORMATION_SCHEMA.TABLES WHERE table_schema = '" + databaseName + "' AND table_name = '" + tableName + "'";
-        }
-
-        public virtual string GetCheckColumnExists(string databaseName, string tableName, string columnName)
-        {
-            return "SELECT count(*) FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = '" + databaseName + "' AND TABLE_NAME = '" + tableName + "' AND COLUMN_NAME = '" + columnName + "'";
-        }
-
-        public virtual string GetTable(string databaseName, string tableName)
-        {
-            return "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_schema = '" + databaseName + "' AND table_name = '" + tableName + "'";
-        }
-
-        public virtual string GetColumns(string databaseName, string tableName)
-        {
-            return "SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE table_schema = '" + databaseName + "' AND table_name = '" + tableName + "'";
-        }
-
-        public virtual string GetForeignKeys(string databaseName, string tableName)
-        {
-            return "SELECT * FROM information_schema.TABLE_CONSTRAINTS WHERE information_schema.TABLE_CONSTRAINTS.CONSTRAINT_TYPE = 'FOREIGN KEY' AND information_schema.TABLE_CONSTRAINTS.TABLE_SCHEMA = '" + databaseName + "' AND information_schema.TABLE_CONSTRAINTS.TABLE_NAME = '" + tableName + "'";
-        }
-
-        // SELECT * FROM information_schema.TABLE_CONSTRAINTS WHERE information_schema.TABLE_CONSTRAINTS.CONSTRAINT_TYPE = 'FOREIGN KEY' AND information_schema.TABLE_CONSTRAINTS.TABLE_SCHEMA = 'mydb' AND information_schema.TABLE_CONSTRAINTS.TABLE_NAME = 'posts';
     }
 }
 

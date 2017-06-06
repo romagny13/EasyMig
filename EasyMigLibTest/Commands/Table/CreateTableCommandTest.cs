@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using EasyMigLib.Commands;
 using EasyMigLib;
 using EasyMigLib.Services;
+using System.Collections.Generic;
 
 namespace EasyMigLibTest.Commands
 {

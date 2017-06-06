@@ -272,7 +272,7 @@ Allow to modify an existing Table.
  EasyMig.AlterTable("users")
                 .AddColumn("firstname"); // + column type, nullable, default value ...
 ```
-## Modify Column
+### Modify Column
 
 ```cs
   EasyMig.AlterTable("users")
@@ -286,6 +286,33 @@ Note: Sql Server do not suppoort column modification with a default value or unq
 ```cs
  EasyMig.AlterTable("users")
         .DropColumn("firstname");
+```
+
+### Add Primary Key Constraint
+
+```cs
+ EasyMig.AlterTable("posts")
+        .AddPrimaryKeyConstraint("id");
+```
+
+With primary keys
+
+```cs
+ EasyMig.AlterTable("posts")
+        .AddPrimaryKeyConstraint("id1","id2");
+```
+
+### Add Foreign Key Constraint
+
+```cs
+EasyMig.AlterTable("posts")
+       .AddForeignKeyConstraint("user_id","users","id"); // could be set as 
+```
+Set as nullable for relation 0.1
+
+```cs
+ EasyMig.AlterTable("posts")
+        .AddForeignKeyConstraint("user_id","users","id", true);
 ```
 
 ## Seed Table

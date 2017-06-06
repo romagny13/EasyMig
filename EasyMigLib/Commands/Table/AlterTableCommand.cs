@@ -124,11 +124,11 @@ namespace EasyMigLib.Commands
             return this.addPrimaryKeyConstraintCommand;
         }
 
-        public AlterTableCommand AddPrimaryKeyConstraint(string tableName, string[] primaryKeys)
+        public AlterTableCommand AddPrimaryKeyConstraint(params string[] primaryKeys)
         {
             if (this.HasPrimaryKeyConstraintCommand()) { throw new Exception("AddPrimaryKeyConstraintCommand for " + this.TableName + " already defined"); }
 
-            this.addPrimaryKeyConstraintCommand = new AddPrimaryKeyConstraintCommand(tableName, primaryKeys);
+            this.addPrimaryKeyConstraintCommand = new AddPrimaryKeyConstraintCommand(this.TableName, primaryKeys);
             return this;
         }
 

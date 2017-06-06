@@ -109,7 +109,7 @@ namespace EasyMigLibTest.Commands.Table
 
             var container = new AlterTableCommand(tableName);
 
-            container.AddPrimaryKeyConstraint("table1", new string[] { columnName });
+            container.AddPrimaryKeyConstraint(columnName);
 
             Assert.IsTrue(container.HasPrimaryKeyConstraintCommand());
 
@@ -195,11 +195,11 @@ namespace EasyMigLibTest.Commands.Table
 
             var container = new AlterTableCommand(tableName);
             container
-                .AddPrimaryKeyConstraint("column1",new string[] { "column1","column2" });
+                .AddPrimaryKeyConstraint("column1","column2");
 
             var result = container.GetQuery(new SqlQueryService());
 
-            Assert.AreEqual("ALTER TABLE [dbo].[column1] ADD PRIMARY KEY ([column1],[column2]);\r", result);
+            Assert.AreEqual("ALTER TABLE [dbo].[table1] ADD PRIMARY KEY ([column1],[column2]);\r", result);
         }
 
         [TestMethod]
@@ -286,11 +286,11 @@ namespace EasyMigLibTest.Commands.Table
 
             var container = new AlterTableCommand(tableName);
             container
-                .AddPrimaryKeyConstraint("column1", new string[] { "column1", "column2" });
+                .AddPrimaryKeyConstraint("column1", "column2");
 
             var result = container.GetQuery(new MySQLQueryService());
 
-            Assert.AreEqual("ALTER TABLE `column1` ADD PRIMARY KEY (`column1`,`column2`);\r", result);
+            Assert.AreEqual("ALTER TABLE `table1` ADD PRIMARY KEY (`column1`,`column2`);\r", result);
         }
 
         [TestMethod]

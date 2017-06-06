@@ -145,7 +145,7 @@ namespace EasyMigLibTest
             var tableName = "posts";
             var columnName = "id";
 
-            EasyMig.AlterTable(tableName).AddPrimaryKeyConstraint(tableName, new string[] { columnName });
+            EasyMig.AlterTable(tableName).AddPrimaryKeyConstraint(columnName);
 
             var query = EasyMig.GetMigrationQuery(providerName);
 

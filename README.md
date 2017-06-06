@@ -215,26 +215,6 @@ Type | MySQL | SQL Server
 -------- |  -------- | --------
 Blob | BLOB | VARBINARY(MAX)
 
-### Default Values
-
-Type | MySQL | SQL Server
--------- |  -------- | --------
-Char | string | string
-VarChar | string | string
-Text | / | string
-LongText | / | string
-TinyInt | string (example "10") or int (example 10) | string or int
-SmallInt | string or int | string or int
-Int | string or int | string or int
-BigInt | string or int | string or int
-Bit | 0 or 1 | 0 or 1
-Float | string or double | string or double
-Datetime | "CURRENT_TIMESTAMP" | "CURRENT_TIMESTAMP" or valid datetime
-Date | / | valid date
-Time | / | valid time
-Timestamp | "CURRENT_TIMESTAMP" | /
-Blob | / | /
-
 ### Add a foreign key
 
 Example with the column "user_id" in the table "posts" that references the primary key "id" of the table "users"
@@ -258,6 +238,24 @@ EasyMig.CreateTable("posts")
                 .AddColumn("content", ColumnType.Text())
                 .AddForeignKey("user_id", ColumnType.Int(true), "users", "id", false, 1);
 ```
+
+Type | MySQL | SQL Server
+-------- |  -------- | --------
+Char | string | string
+VarChar | string | string
+Text | / | string
+LongText | / | string
+TinyInt | string (example "10") or int (example 10) | string or int
+SmallInt | string or int | string or int
+Int | string or int | string or int
+BigInt | string or int | string or int
+Bit | 0 or 1 | 0 or 1
+Float | string or double | string or double
+Datetime | "CURRENT_TIMESTAMP" | "CURRENT_TIMESTAMP" or valid datetime
+Date | / | valid date
+Time | / | valid time
+Timestamp | "CURRENT_TIMESTAMP" | /
+Blob | / | /
 
 Unique, example with the column email (unique is the last parameter | boolean):
 

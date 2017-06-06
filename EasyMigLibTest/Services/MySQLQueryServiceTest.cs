@@ -71,6 +71,16 @@ namespace EasyMigLibTest.Services
             Assert.AreEqual("'my value'", service.FormatValueString("my value"));
         }
 
+        [TestMethod]
+        public void TestFormatValueString_WithDoubleQuotes()
+        {
+            var service = this.GetService();
+
+            var result = service.FormatValueString("L'item");
+
+            Assert.AreEqual("'L''item'", result);
+        }
+
         // database
 
         [TestMethod]

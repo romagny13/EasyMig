@@ -49,6 +49,12 @@ Migration and Seeder types are **grouped** by name **and sorted** by version and
 
 "_001_CREATE_POSTS_TABLE" : the version is "_001_", the name is "CREATE_POSTS_TABLE", the full name is "_001_CREATE_POSTS_TABLE"
 
+## Installation With NuGet
+
+```
+PM> Install-Package EasyMig
+```
+
 ## Migrations and Seeders
 
 Create a **Migration file**
@@ -185,14 +191,15 @@ Numbers (all are "unsignables"):
 * BigInt
 
 Type | MySQL | SQL Server
--------- |  --------
+-------- |  -------- | --------
 Float | FLOAT or FLOAT(10,d) with digits | FLOAT or DECIMAL(18,d) with digits
 
 * Bit for "Boolean" (accepts 0,1 or NULL)
 
 String Types:
+
 Type | MySQL | SQL Server
--------- |  --------
+-------- |  -------- | --------
 Char | CHAR(n) by default n is 10 | NCHAR(n) by default n is 10
 VarChar | VARCHAR(n) by default n is 255 | NVARCHAR(n) by default n is 255
 Text | TEXT | NVARCHAR(MAX)
@@ -205,8 +212,28 @@ Datetimes:
 * Timestamp
 
 Type | MySQL | SQL Server
--------- |  --------
+-------- |  -------- | --------
 Blob | BLOB | VARBINARY(MAX)
+
+### Default Values
+
+Type | MySQL | SQL Server
+-------- |  -------- | --------
+Char | string | string
+VarChar | string | string
+Text | / | string
+LongText | / | string
+TinyInt | string (example "10") or int (example 10) | string or int
+SmallInt | string or int | string or int
+Int | string or int | string or int
+BigInt | string or int | string or int
+Bit | 0 or 1 | 0 or 1
+Float | string or double | string or double
+Datetime | "CURRENT_TIMESTAMP" | "CURRENT_TIMESTAMP" or valid datetime
+Date | / | valid date
+Time | / | valid time
+Timestamp | "CURRENT_TIMESTAMP" | /
+Blob | / | /
 
 ### Add a foreign key
 
@@ -272,14 +299,14 @@ Allow to modify an existing Table.
  EasyMig.AlterTable("users")
                 .AddColumn("firstname"); // + column type, nullable, default value ...
 ```
-### Modify Column
+### Modify column
 
 ```cs
   EasyMig.AlterTable("users")
          .ModifyColumn("firstname", true); // example set as nullable
 ```
 
-Note: Sql Server do not suppoort column modification with a default value or unqiue constraint, so these constraints are disabled with Sql Server.
+_Note: Sql Server do not support column modification with default value or unique constraint, so these constraints are disabled with Sql Server._
 
 ### Drop column
 
@@ -306,7 +333,7 @@ With primary keys
 
 ```cs
 EasyMig.AlterTable("posts")
-       .AddForeignKeyConstraint("user_id","users","id"); // could be set as 
+       .AddForeignKeyConstraint("user_id","users","id"); 
 ```
 Set as nullable for relation 0.1
 

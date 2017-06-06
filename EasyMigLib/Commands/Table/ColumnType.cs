@@ -105,36 +105,6 @@
 
     public class ColumnType
     {
-
-        public bool CheckDefaultValue(object value)
-        {
-            if (value != null)
-            {
-                var type = this.GetType();
-                if (type.IsSubclassOf(typeof(UnsignableColumnType)))
-                {
-                    return int.TryParse(value.ToString(), out int result);
-                }
-                else if (type == typeof(FloatColumnType))
-                {
-                    return double.TryParse(value.ToString(), out double result);
-                }
-                else if (type == typeof(BitColumnType))
-                {
-                    if(int.TryParse(value.ToString(),out int result))
-                    {
-                        return result == 0 || result == 1;
-                    }
-                    return false;
-                }
-                else
-                {
-                    return value.GetType() == typeof(string);
-                }
-            }
-            return true;
-        }
-
         // String types
 
         public static CharColumnType Char(int length = 10)

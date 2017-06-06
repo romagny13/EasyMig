@@ -58,22 +58,23 @@ namespace EasyMigLib.Services
                 var colum = columnType as IntColumnType;
                 return colum.Unsigned ? "INT UNSIGNED" : "INT";
             }
-            else if (columnType is StringColumnType)
+            else if (columnType is VarCharColumnType)
             {
-                var column = columnType as StringColumnType;
+                var column = columnType as VarCharColumnType;
                 return "VARCHAR(" + column.Length + ") COLLATE utf8mb4_unicode_ci";
             }
             else if (columnType is TextColumnType)
             {
                 return "TEXT COLLATE utf8mb4_unicode_ci";
             }
-            else if (columnType is BooleanColumnType)
+            else if (columnType is BitColumnType)
             {
                 return "BIT";
             }
             else if (columnType is FloatColumnType)
             {
-                return "FLOAT";
+                var column = columnType as FloatColumnType;
+                return column.Digits.HasValue ? "FLOAT(10," + column.Digits.Value + ")" : "FLOAT";
             }
             else if (columnType is DateTimeColumnType)
             {
@@ -82,6 +83,42 @@ namespace EasyMigLib.Services
             else if (columnType is TimestampColumnType)
             {
                 return "TIMESTAMP";
+            }
+            else if (columnType is CharColumnType)
+            {
+                var column = columnType as CharColumnType;
+                return "CHAR(" + column.Length + ") COLLATE utf8mb4_unicode_ci";
+            }
+            else if (columnType is LongTextColumnType)
+            {
+                return "LONGTEXT COLLATE utf8mb4_unicode_ci";
+            }
+            else if (columnType is TinyIntColumnType)
+            {
+                var colum = columnType as TinyIntColumnType;
+                return colum.Unsigned ? "TINYINT UNSIGNED" : "TINYINT";
+            }
+            else if (columnType is SmallIntColumnType)
+            {
+                var colum = columnType as SmallIntColumnType;
+                return colum.Unsigned ? "SMALLINT UNSIGNED" : "SMALLINT";
+            }
+            else if (columnType is BigIntColumnType)
+            {
+                var colum = columnType as BigIntColumnType;
+                return colum.Unsigned ? "BIGINT UNSIGNED" : "BIGINT";
+            }
+            else if (columnType is DateColumnType)
+            {
+                return "DATE";
+            }
+            else if (columnType is TimeColumnType)
+            {
+                return "TIME";
+            }
+            else if (columnType is BlobColumnType)
+            {
+                return "BLOB";
             }
             throw new Exception("Type not supported");
         }

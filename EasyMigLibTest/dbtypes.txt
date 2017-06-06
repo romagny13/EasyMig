@@ -1,0 +1,155 @@
+﻿SQL SERVER
+
+String types:
+
+char(n) fixed (max 8000)
+varchar(n) variable (max 8000)
+varchar(max)  variable (max Maximum 1,073,741,824 characters)
+text variable (max 2gb)
+unicode:
+nchar fixed(max 4000)
+nvarchar variable (max 4000)
+nvarchar(max 536,870,912 characters)
+ntext variable (max 2gb)
+
+bit (1,0 or NULL)
+binary(n) fixed binary string (max 8000 bytes)
+varbinary variable binary string (max 8000 bytes)
+varbinary(max) variable binary string (2gb)
+image variable binary string (max 2gb) 
+
+Number
+tinyint (0 to 255)
+smallint (-32,768 and 32,767)
+int (-2,147,483,648 and 2,147,483,647)
+bigint (-9,223,372,036,854,775,808 and 9,223,372,036,854,775,807)
+
+decimal(p,s) p precision (max of digits,1 to 38, default 18) ...(0 to p, default 0)
+numeric(p,s)
+smallmoney (-214,748.3648 to 214,748.3647)
+money (-922,337,203,685,477.5808 to 922,337,203,685,477.5807)
+
+float(n)
+real
+
+Dates:
+datetime
+date (From January 1, 0001 to December 31, 9999)
+time
+timestamp
+
++ 
+xml (max 2gb)
+unique identifier (guid)
+
+MYSQL
+
+CHAR(n) => fixed (max 255)
+VARCHAR(n) => variable (max 255)
+TEXT => (max 65,535)
+BLOB => (max 65,535)
+mediumtext => (max 16,777,215)
+mediumblob => (max 16,777,215)
+longtext => (max 4,294,967,295)
+longblob => (max 4,294,967,295)
+
+Numbers
+tinytint(n) => (-128 to 127)
+samllint(n) => (-32768 to 32767)
+mediumint(n) => (-8388608 to 8388607 normal. 0 to 16777215 UNSIGNED)
+int(n) => (-2147483648 to 2147483647 normal. 0 to 4294967295 UNSIGNED)
+bigint(n) => (-9223372036854775808 to 9223372036854775807 normal. 0 to 18446744073709551615 UNSIGNED)
+float(size,digits)
+double(size,digits)
+decimal(size,digits) double stored as string
+
+Dates
+datetime() YYYY-MM-DD HH:MI:SS from '1000-01-01 00:00:00' to '9999-12-31 23:59:59'
+timestamp() YYYY-MM-DD HH:MI:SS In an INSERT or UPDATE query, the TIMESTAMP automatically set
+date() Format: YYYY-MM-DD  from '1000-01-01' to '9999-12-31'
+time() HH:MI:SS
+year()
+
+ACCESS
+
+text => (max 255)
+memo => (max 65,536 characters)
+byte => 0 to 255
+
+integer => -32,768 and 32,767
+long => -2,147,483,648 and 2,147,483,647
+single 
+double
+currency
+autonumber 1...aut0increment
+date/time
+yes/no
+
+SO ...
+String types:
+sql
+nchar(n) => fixed(max 4000)
+nvarchar(n) => variable (max 4000)
+nvarchar(max) => 536,870,912 characters
+ntext variable (max 2gb)
+
+tinyint (0 to 255)
+smallint (-32,768 and 32,767)
+int (-2,147,483,648 and 2,147,483,647)
+bigint (-9,223,372,036,854,775,808 and 9,223,372,036,854,775,807)
+decimal(p,s) p precision (max of digits,1 to 38, default 18) ...(0 to p, default 0)
+numeric(p,s)
+smallmoney (-214,748.3648 to 214,748.3647)
+money (-922,337,203,685,477.5808 to 922,337,203,685,477.5807)
+float(n)
+real
+
+datetime
+date (From January 1, 0001 to December 31, 9999)
+time
+timestamp
+
+mysql
+CHAR(n) => fixed (max 255)
+VARCHAR(n) => variable (max 255)
+TEXT => (max 65,535)
+longtext => (max 4,294,967,295)
+
+tinytint(n) => (-128 to 127)
+samllint(n) => (-32768 to 32767)
+mediumint(n) => (-8388608 to 8388607 normal. 0 to 16777215 UNSIGNED)
+int(n) => (-2147483648 to 2147483647 normal. 0 to 4294967295 UNSIGNED)
+bigint(n) => (-9223372036854775808 to 9223372036854775807 normal. 0 to 18446744073709551615 UNSIGNED)
+float(size,digits)
+double(size,digits)
+decimal(size,digits) double stored as string
+
+datetime() YYYY-MM-DD HH:MI:SS from '1000-01-01 00:00:00' to '9999-12-31 23:59:59'
+timestamp() YYYY-MM-DD HH:MI:SS In an INSERT or UPDATE query, the TIMESTAMP automatically set
+date() Format: YYYY-MM-DD  from '1000-01-01' to '9999-12-31'
+time() HH:MI:SS
+year()
+
+			mysql				 sql server
+char		char(n)              nchar(n)
+varchar		varchar(n)			 nvarchar(n)			 
+text		text				 nvarchar(max)
+longtext	longtext				 ntext
+
+tinyint
+smallint
+int
+bigint
+
+float     float(bytes,digits)	float or decimal(18,digits)
+
+bit 0,1 or null
+
+datetime	datetime			datetime
+date		date				date
+time		time				time(7)
+timestamp	timestamp			timestamp
+
+
+
+

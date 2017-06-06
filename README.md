@@ -116,17 +116,269 @@ EasyMig
 EasyMig.DoMigrationsFromMemory(@"Server=localhost\SQLEXPRESS;Database=db1;Trusted_Connection=True;", "System.Data.SqlClient");
 ```
 
-## MySQL Engine
+## Commands
 
-* **Default** is "**InnoDB**" (databases are created with relations and schema). But its possible to change to "**MyISAM**"
+### Drop Database
+
+```cs
+EasyMig.DropDatabase("db1"); 
+```
+Sql generated with SQL Server for example
+
+```sql
+DROP DATABASE IF EXISTS [db1];
+```
+
+### Create Database
+
+```cs
+EasyMig.CreateDatabase("db1");
+```
+
+```sql
+CREATE DATABASE [db1];
+```
+
+### Create Table
+
+### Add a primary key
+
+By default, the primary key is "INT", "UNSIGNED" and auto incremented ("AUTO_INCREAMENT" for MySQL, "IDENTITY(1,1)" for Sql Server)
+
+```cs
+ EasyMig.CreateTable("users")
+        .AddPrimaryKey("id");
+```
+
+We could define the primary key. Example with the type "varchar"
+
+```cs
+EasyMig.CreateTable("users")
+       .AddPrimaryKey("id",ColumnType.VarChar());
+```
+
+### Add columns
+
+By default, the column ("username" in this example) is "VARCHAR" ("VARCHAR(255)" for MySQL, "NVARCHAR(255)" for Sql Server), "NOT NULL"
+
+```cs
+EasyMig.CreateTable("users")
+       .AddPrimaryKey("id")
+       .AddColumn("username");
+```
+
+Change the type and set as "NULL". Example with the column "age" ("TINYINT UNSIGNED" and "NULL")
+
+```cs
+  EasyMig.CreateTable("users")
+         .AddPrimaryKey("id",ColumnType.VarChar())
+         .AddColumn("username")
+         .AddColumn("age",ColumnType.TinyInt(true),true);
+```
+
+#### ColumnTypes
+
+Numbers (all are "unsignables"):
+* TinyInt
+* SmallInt
+* Int
+* BigInt
+
+Type | MySQL | SQL Server
+-------- |  --------
+Float | FLOAT or FLOAT(10,d) with digits | FLOAT or DECIMAL(18,d) with digits
+
+* Bit for "Boolean" (accepts 0,1 or NULL)
+
+String Types:
+Type | MySQL | SQL Server
+-------- |  --------
+Char | CHAR(n) by default n is 10 | NCHAR(n) by default n is 10
+VarChar | VARCHAR(n) by default n is 255 | NVARCHAR(n) by default n is 255
+Text | TEXT | NVARCHAR(MAX)
+LongText | LONGTEXT | NTEXT
+
+Datetimes:
+* DateTime (format:"YYYY-MM-DD HH:MI:SS")
+* Date (format:"YYYY-MM-DD")
+* Time (format:"HH:MI:SS")
+* Timestamp
+
+Type | MySQL | SQL Server
+-------- |  --------
+Blob | BLOB | VARBINARY(MAX)
+
+### Add a foreign key
+
+Example with the column "user_id" in the table "posts" that references the primary key "id" of the table "users"
+
+```cs
+ EasyMig.CreateTable("posts")
+                .AddPrimaryKey("id")
+                .AddColumn("title")
+                .AddColumn("content", ColumnType.Text())
+                .AddForeignKey("user_id", "users", "id");
+```
+
+### Constraints: default value and unique
+
+Default value, example with the column "user_id" (default value 1):
+
+```cs
+EasyMig.CreateTable("posts")
+                .AddPrimaryKey("id")
+                .AddColumn("title")
+                .AddColumn("content", ColumnType.Text())
+                .AddForeignKey("user_id", ColumnType.Int(true), "users", "id", false, 1);
+```
+
+Unique, example with the column email (unique is the last parameter | boolean):
+
+```cs
+EasyMig.CreateTable("users")
+       .AddColumn("email",ColumnType.VarChar(),false,null,true);
+```
+
+### Insert data on table creation
+
+We could define the primary key ("_IDENTITY_INSERT_" is "off" for **Sql Server**).
+
+Example with **Dictionaries**
+
+```cs
+EasyMig.CreateTable("users")
+       .AddPrimaryKey("id",ColumnType.VarChar())
+       .AddColumn("username")
+       .Insert(new Dictionary<string, object> { { "id",1 }, { "username", "user1" } })
+       .Insert(new Dictionary<string, object> { { "id", 2 }, { "username", "user2" } });
+```
+... Or with **SeedData** helper
+
+```cs
+ EasyMig.CreateTable("users")
+        .AddPrimaryKey("id",ColumnType.VarChar())
+        .AddColumn("username")
+        .Insert(SeedData.New.Set("id",1).Set("username","user1"))
+        .Insert(SeedData.New.Set("id", 2).Set("username", "user2"));
+```
+
+## Alter Table command
+
+Allow to modify an existing Table.
+
+### Add column
+
+```cs
+ EasyMig.AlterTable("users")
+                .AddColumn("firstname"); // + column type, nullable, default value ...
+```
+## Modify Column
+
+```cs
+  EasyMig.AlterTable("users")
+         .ModifyColumn("firstname", true); // example set as nullable
+```
+
+Note: Sql Server do not suppoort column modification with a default value or unqiue constraint, so these constraints are disabled with Sql Server.
+
+### Drop column
+
+```cs
+ EasyMig.AlterTable("users")
+        .DropColumn("firstname");
+```
+
+## Seed Table
+
+Seed an existing table
+
+Example
+```cs
+// here we do not define the primary key (auto increment)
+ EasyMig.SeedTable("users")
+        .Insert(SeedData.New.Set("username", "user3")) 
+        .Insert(SeedData.New.Set("username", "user4"));
+```
+
+## Execution
+
+### Migrations 
+
+#### From Memory
+
+Example with MySQL
+```cs
+ EasyMig.DoMigrationsFromMemory("server=localhost;database=db1;uid=root", "MySql.Data.MySqlClient");
+```
+* **Default engine** is "**InnoDB**" (databases are created with relations and schema). But its possible to change to "**MyISAM**"
 
 <img src="http://res.cloudinary.com/romagny13/image/upload/v1496622672/mysql_schema_bevqqq.png">
 
 Change the engine. Example:
 ```cs
- EasyMig.DoMigrationsFromMemory("server=localhost;database=dbtest;uid=root", "MySql.Data.MySqlClient", "MyISAM");
+ EasyMig.DoMigrationsFromMemory("server=localhost;database=db1;uid=root", "MySql.Data.MySqlClient", "MyISAM");
  ```
 
+ Example with Sql Server
+ ```cs
+  EasyMig.DoMigrationsFromMemory(@"Server=localhost\SQLEXPRESS;Database=db1;Trusted_Connection=True;", "System.Data.SqlClient");
+  ```
+
+### With Assembly
+
+Example:
+
+Assembly path (exe or dll), MigrationDirection (Down or Up by default, the method to execute in Migrations)
+```cs
+ EasyMig.DoMigrationsForAssembly("c:/path/to/assembly.dll", connectionString, providerName, null, MigrationDirection.Up);
+```
+
+Or With Types
+```cs
+ EasyMig.DoMigrationsForTypes(new Type[] { typeof(MyMigration1), typeof(MyMigration2) }, connectionString, providerName, null, MigrationDirection.Up);
+```
+
+Its possible to execute only for one type with fileName or file type. Example:
+
+```cs
+EasyMig.DoMigrationOnlyFor("c:/path/to/assembly.dll","MyMigration1", connectionString, providerName, null, MigrationDirection.Up);
+```
+
+### Seed
+
+```cs
+EasyMig.DoSeedForAssembly("c:/path/to/assembly.dll", connectionString, providerName);
+```
+...Or with types
+
+... Only for one file
+```cs
+ EasyMig.DoSeedOnlyFor("MySeeder","c:/path/to/assembly.dll", connectionString, providerName);
+ ```
+
+### Get SQL Queries
+
+Migrations:
+
+```cs
+var sql = EasyMig.GetMigrationQuery(providerName);
+```
+
+Seeders:
+
+```cs
+var sql = EasyMig.GetSeedQuery(providerName);
+```
+### Create Scripts
+
+```cs
+EasyMig.CreateMigrationScript("c:/path/to/assembly.dll",providerName);
+```
+
+```cs
+EasyMig.CreateSeedScript("c:/path/to/assembly.dll",providerName);
+```
+ 
 ## Fake Data
 
 Example with [Faker.Net](https://github.com/slashdotdash/faker-cs)
@@ -170,4 +422,39 @@ EasyMig.DoMigrationsFromMemory("server=localhost;database=dbtest;uid=root", "MyS
 
 // or with Sql Server
 // EasyMig.DoMigrationsFromMemory(@"Server=localhost\SQLEXPRESS;Database=db1;Trusted_Connection=True;", "System.Data.SqlClient");
+```
+
+
+## Database Information
+
+Check if **Database exists**
+
+```cs
+var result = EasyMig.DatabaseInformation.DatabaseExists("mydb", connectionString, providerName)
+```
+
+Check if **Table exists**
+
+```cs
+var result = EasyMig.DatabaseInformation.TableExists("mydb", "users", connectionString, providerName)
+```
+Check if **Column exists**
+
+```cs
+var result = EasyMig.DatabaseInformation.ColumnExists("mydb", "users", "username" , connectionString, providerName))
+```
+
+**Get Table** Schema with columns, primary key and foreign key definitions
+
+```cs
+ var table = EasyMig.DatabaseInformation.GetTable("mydb", "users", connectionString, providerName);
+```
+
+**Get** Table **rows**
+
+```cs
+var tableRows = EasyMig.DatabaseInformation.GetTableRows("users", connectionString, providerName);
+Assert.AreEqual((uint)1,((uint) tableRows[0]["id"])); // caution to type with MySQL unsigned numbers
+Assert.AreEqual("user1", (string) tableRows[0]["username"]);
+Assert.AreEqual(20, ((int)tableRows[0]["age"]));
 ```

@@ -114,7 +114,7 @@ namespace EasyMigLibTest.Services
         {
             var service = this.GetService();
 
-            var result = service.GetAddColumn("table1", new MigrationColumn("column1",ColumnType.String(100),true));
+            var result = service.GetAddColumn("table1", new MigrationColumn("column1",ColumnType.VarChar(100),true));
 
             Assert.AreEqual("ALTER TABLE [dbo].[table1] ADD [column1] NVARCHAR(100) NULL;\r", result);
         }
@@ -124,7 +124,7 @@ namespace EasyMigLibTest.Services
         {
             var service = this.GetService();
 
-            var result = service.GetModifyColumn("table1", new MigrationColumn("column1", ColumnType.String(100), true));
+            var result = service.GetModifyColumn("table1", new MigrationColumn("column1", ColumnType.VarChar(100), true));
 
             Assert.AreEqual("ALTER TABLE [dbo].[table1] ALTER COLUMN [column1] NVARCHAR(100) NULL;\r", result);
         }
@@ -201,7 +201,7 @@ namespace EasyMigLibTest.Services
             var service = this.GetService();
 
             var table = new CreateTableCommand("table1");
-            table.AddColumn("column1", ColumnType.String(), false, "my value");
+            table.AddColumn("column1", ColumnType.VarChar(), false, "my value");
 
             var result = service.GetColumn(table.GetColumn("column1"));
 
@@ -219,6 +219,62 @@ namespace EasyMigLibTest.Services
             var result = service.GetColumn(table.GetColumn("column1"));
 
             Assert.AreEqual("[column1] INT NOT NULL DEFAULT 10", result);
+        }
+
+        // tiny int
+
+        [TestMethod]
+        public void TestGetColumn_WithTinyInt()
+        {
+            var service = this.GetService();
+
+            var table = new CreateTableCommand("table1");
+            table.AddColumn("column1", ColumnType.TinyInt());
+
+            var result = service.GetColumn(table.GetColumn("column1"));
+
+            Assert.AreEqual("[column1] TINYINT NOT NULL", result);
+        }
+
+        [TestMethod]
+        public void TestGetColumn_WithTinyIntUnisgned_IgnoreUnsigned()
+        {
+            var service = this.GetService();
+
+            var table = new CreateTableCommand("table1");
+            table.AddColumn("column1", ColumnType.TinyInt(true));
+
+            var result = service.GetColumn(table.GetColumn("column1"));
+
+            Assert.AreEqual("[column1] TINYINT NOT NULL", result);
+        }
+
+        // small int
+
+        [TestMethod]
+        public void TestGetColumn_WithSmallInt()
+        {
+            var service = this.GetService();
+
+            var table = new CreateTableCommand("table1");
+            table.AddColumn("column1", ColumnType.SmallInt());
+
+            var result = service.GetColumn(table.GetColumn("column1"));
+
+            Assert.AreEqual("[column1] SMALLINT NOT NULL", result);
+        }
+
+        [TestMethod]
+        public void TestGetColumn_WithSmallIntUnisgned_IgnoreUnsigned()
+        {
+            var service = this.GetService();
+
+            var table = new CreateTableCommand("table1");
+            table.AddColumn("column1", ColumnType.SmallInt(true));
+
+            var result = service.GetColumn(table.GetColumn("column1"));
+
+            Assert.AreEqual("[column1] SMALLINT NOT NULL", result);
         }
 
         // int
@@ -249,7 +305,108 @@ namespace EasyMigLibTest.Services
             Assert.AreEqual("[column1] INT NOT NULL", result);
         }
 
-        // string
+        // big int
+
+        [TestMethod]
+        public void TestGetColumn_WithBigInt()
+        {
+            var service = this.GetService();
+
+            var table = new CreateTableCommand("table1");
+            table.AddColumn("column1", ColumnType.BigInt());
+
+            var result = service.GetColumn(table.GetColumn("column1"));
+
+            Assert.AreEqual("[column1] BIGINT NOT NULL", result);
+        }
+
+        [TestMethod]
+        public void TestGetColumn_WithBigIntUnisgned_IgnoreUnsigned()
+        {
+            var service = this.GetService();
+
+            var table = new CreateTableCommand("table1");
+            table.AddColumn("column1", ColumnType.BigInt(true));
+
+            var result = service.GetColumn(table.GetColumn("column1"));
+
+            Assert.AreEqual("[column1] BIGINT NOT NULL", result);
+        }
+
+        // bit
+
+        [TestMethod]
+        public void TestGetColumn_WithBit()
+        {
+            var service = this.GetService();
+
+            var table = new CreateTableCommand("table1");
+            table.AddColumn("column1", ColumnType.Bit());
+
+            var result = service.GetColumn(table.GetColumn("column1"));
+
+            Assert.AreEqual("[column1] BIT NOT NULL", result);
+        }
+
+        // float
+
+        [TestMethod]
+        public void TestGetColumn_WithFloat()
+        {
+            var service = this.GetService();
+
+            var table = new CreateTableCommand("table1");
+            table.AddColumn("column1", ColumnType.Float());
+
+            var result = service.GetColumn(table.GetColumn("column1"));
+
+            Assert.AreEqual("[column1] FLOAT NOT NULL", result);
+        }
+
+
+        [TestMethod]
+        public void TestGetColumn_WithFloatAndDigits()
+        {
+            var service = this.GetService();
+
+            var table = new CreateTableCommand("table1");
+            table.AddColumn("column1", ColumnType.Float(2));
+
+            var result = service.GetColumn(table.GetColumn("column1"));
+
+            Assert.AreEqual("[column1] DECIMAL(18,2) NOT NULL", result);
+        }
+
+
+        // char
+
+        [TestMethod]
+        public void TestGetColumn_WithChar()
+        {
+            var service = this.GetService();
+
+            var table = new CreateTableCommand("table1");
+            table.AddColumn("column1",ColumnType.Char());
+
+            var result = service.GetColumn(table.GetColumn("column1"));
+
+            Assert.AreEqual("[column1] NCHAR(10) NOT NULL", result);
+        }
+
+        [TestMethod]
+        public void TestGetColumn_WithCharAndValue()
+        {
+            var service = this.GetService();
+
+            var table = new CreateTableCommand("table1");
+            table.AddColumn("column1", ColumnType.Char(100));
+
+            var result = service.GetColumn(table.GetColumn("column1"));
+
+            Assert.AreEqual("[column1] NCHAR(100) NOT NULL", result);
+        }
+
+        // varchar
 
         [TestMethod]
         public void TestGetColumn_WithString()
@@ -270,7 +427,7 @@ namespace EasyMigLibTest.Services
             var service = this.GetService();
 
             var table = new CreateTableCommand("table1");
-            table.AddColumn("column1", ColumnType.String(100));
+            table.AddColumn("column1", ColumnType.VarChar(100));
 
             var result = service.GetColumn(table.GetColumn("column1"));
 
@@ -292,6 +449,21 @@ namespace EasyMigLibTest.Services
             Assert.AreEqual("[column1] NVARCHAR(MAX) NOT NULL", result);
         }
 
+        // long text
+
+        [TestMethod]
+        public void TestGetColumn_WithLongText()
+        {
+            var service = this.GetService();
+
+            var table = new CreateTableCommand("table1");
+            table.AddColumn("column1", ColumnType.LongText());
+
+            var result = service.GetColumn(table.GetColumn("column1"));
+
+            Assert.AreEqual("[column1] NTEXT NOT NULL", result);
+        }
+
         // datetime
 
         [TestMethod]
@@ -307,19 +479,60 @@ namespace EasyMigLibTest.Services
             Assert.AreEqual("[column1] DATETIME NOT NULL", result);
         }
 
-        // float
-
         [TestMethod]
-        public void TestGetColumn_WithFloat()
+        public void TestGetColumn_WithDate()
         {
             var service = this.GetService();
 
             var table = new CreateTableCommand("table1");
-            table.AddColumn("column1", ColumnType.Float());
+            table.AddColumn("column1", ColumnType.Date());
 
             var result = service.GetColumn(table.GetColumn("column1"));
 
-            Assert.AreEqual("[column1] FLOAT NOT NULL", result);
+            Assert.AreEqual("[column1] DATE NOT NULL", result);
+        }
+
+        [TestMethod]
+        public void TestGetColumn_WithTime()
+        {
+            var service = this.GetService();
+
+            var table = new CreateTableCommand("table1");
+            table.AddColumn("column1", ColumnType.Time());
+
+            var result = service.GetColumn(table.GetColumn("column1"));
+
+            Assert.AreEqual("[column1] TIME NOT NULL", result);
+        }
+
+
+        [TestMethod]
+        public void TestGetColumn_WithTimestamp()
+        {
+            var service = this.GetService();
+
+            var table = new CreateTableCommand("table1");
+            table.AddColumn("column1", ColumnType.Timestamp());
+
+            var result = service.GetColumn(table.GetColumn("column1"));
+
+            Assert.AreEqual("[column1] TIMESTAMP NOT NULL", result);
+        }
+
+        // blob
+
+
+        [TestMethod]
+        public void TestGetColumn_WithBlob()
+        {
+            var service = this.GetService();
+
+            var table = new CreateTableCommand("table1");
+            table.AddColumn("column1", ColumnType.Blob());
+
+            var result = service.GetColumn(table.GetColumn("column1"));
+
+            Assert.AreEqual("[column1] VARBINARY(MAX) NOT NULL", result);
         }
 
         // drop table

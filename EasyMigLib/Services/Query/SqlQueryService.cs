@@ -21,22 +21,23 @@ namespace EasyMigLib.Services
             {
                 return "INT";
             }
-            else if (columnType is StringColumnType)
+            else if (columnType is VarCharColumnType)
             {
-                var column = columnType as StringColumnType;
+                var column = columnType as VarCharColumnType;
                 return "NVARCHAR(" + column.Length + ")";
             }
             else if (columnType is TextColumnType)
             {
                 return "NVARCHAR(MAX)";
             }
-            else if (columnType is BooleanColumnType)
+            else if (columnType is BitColumnType)
             {
                 return "BIT";
             }
             else if (columnType is FloatColumnType)
             {
-                return "FLOAT";
+                var column = columnType as FloatColumnType;
+                return column.Digits.HasValue ? "DECIMAL(18," + column.Digits.Value + ")" : "FLOAT";
             }
             else if (columnType is DateTimeColumnType)
             {
@@ -45,6 +46,39 @@ namespace EasyMigLib.Services
             else if (columnType is TimestampColumnType)
             {
                 return "TIMESTAMP";
+            }
+            else if (columnType is CharColumnType)
+            {
+                var column = columnType as CharColumnType;
+                return "NCHAR(" + column.Length + ")";
+            }
+            else if (columnType is LongTextColumnType)
+            {
+                return "NTEXT";
+            }
+            else if (columnType is TinyIntColumnType)
+            {
+                return "TINYINT";
+            }
+            else if (columnType is SmallIntColumnType)
+            {
+                return "SMALLINT";
+            }
+            else if (columnType is BigIntColumnType)
+            {
+                return "BIGINT";
+            }
+            else if (columnType is DateColumnType)
+            {
+                return "DATE";
+            }
+            else if (columnType is TimeColumnType)
+            {
+                return "TIME";
+            }
+            else if (columnType is BlobColumnType)
+            {
+                return "VARBINARY(MAX)";
             }
             throw new Exception("Type not supported");
         }

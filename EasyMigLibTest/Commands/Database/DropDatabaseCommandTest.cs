@@ -12,6 +12,7 @@ namespace EasyMigLibTest.Commands
         [TestMethod]
         public void TestGetQuery_WithSql()
         {
+
             var command = new DropDatabaseCommand("db1");
             var result = command.GetQuery(new SqlQueryService());
 

@@ -1,93 +1,152 @@
 ﻿namespace EasyMigLib.Commands
 {
-    // Int
 
-    public class IntColumnType : ColumnType
-    {
-        public bool Unsigned { get; }
+    // String types
 
-        public IntColumnType(bool unsigned = false)
-        {
-            this.Unsigned = unsigned;
-        }
-    }
-
-    // String
-
-    public class StringColumnType : ColumnType
+    public class CharColumnType : ColumnType
     {
         public int Length { get; }
 
-        public StringColumnType(int length = 255)
+        public CharColumnType(int length = 255)
         {
             this.Length = length;
         }
     }
 
-    // Text
+    public class VarCharColumnType : ColumnType
+    {
+        public int Length { get; }
+
+        public VarCharColumnType(int length = 255)
+        {
+            this.Length = length;
+        }
+    }
 
     public class TextColumnType : ColumnType
     { }
 
-    // Boolean / Bit
-
-    public class BooleanColumnType : ColumnType
+    public class LongTextColumnType : ColumnType
     { }
 
-    // Float
+    // Numbers
+
+    public class UnsignableColumnType : ColumnType
+    {
+        public bool Unsigned { get; }
+
+        public UnsignableColumnType(bool unsigned = false)
+        {
+            this.Unsigned = unsigned;
+        }
+    }
+
+    public class TinyIntColumnType : UnsignableColumnType
+    {
+        public TinyIntColumnType(bool unsigned = false)
+            :base(unsigned)
+        { }
+    }
+
+    public class SmallIntColumnType : UnsignableColumnType
+    {
+        public SmallIntColumnType(bool unsigned = false)
+            : base(unsigned)
+        { }
+    }
+
+    public class IntColumnType : UnsignableColumnType
+    {
+
+        public IntColumnType(bool unsigned = false)
+           : base(unsigned)
+        { }
+    }
+
+    public class BigIntColumnType : UnsignableColumnType
+    {
+
+        public BigIntColumnType(bool unsigned = false)
+           : base(unsigned)
+        { }
+    }
+
+    public class BitColumnType : ColumnType
+    { }
 
     public class FloatColumnType : ColumnType
-    { }
+    {
+        public int? Digits { get; }
+
+        public FloatColumnType(int? digits = null)
+        {
+            this.Digits = digits;
+        }
+    }
 
     // DateTime
 
     public class DateTimeColumnType : ColumnType
     { }
 
-    // Timestamp
+    public class DateColumnType : ColumnType
+    { }
+
+    public class TimeColumnType : ColumnType
+    { }
 
     public class TimestampColumnType : ColumnType
     { }
 
+    // blob
+
+    public class BlobColumnType : ColumnType
+    { }
 
     public class ColumnType
     {
 
-        public bool CheckValue(object defaultValue)
+        public bool CheckDefaultValue(object value)
         {
-            if (defaultValue != null)
+            if (value != null)
             {
                 var type = this.GetType();
-                if (type == typeof(IntColumnType))
+                if (type.IsSubclassOf(typeof(UnsignableColumnType)))
                 {
-                    return int.TryParse(defaultValue.ToString(), out int result);
+                    return int.TryParse(value.ToString(), out int result);
                 }
                 else if (type == typeof(FloatColumnType))
                 {
-                    return double.TryParse(defaultValue.ToString(), out double result);
+                    return double.TryParse(value.ToString(), out double result);
                 }
-                else if (type == typeof(BooleanColumnType))
+                else if (type == typeof(BitColumnType))
                 {
-                    return defaultValue.GetType() == typeof(bool);
+                    if(int.TryParse(value.ToString(),out int result))
+                    {
+                        return result == 0 || result == 1;
+                    }
+                    return false;
                 }
                 else
                 {
-                    return defaultValue.GetType() == typeof(string);
+                    return value.GetType() == typeof(string);
                 }
             }
             return true;
         }
 
-        public static IntColumnType Int(bool unsigned = false)
+        // String types
+
+        public static CharColumnType Char(int length = 10)
         {
-            // INT
-            return new IntColumnType(unsigned);
+            // CHAR(10)
+            return new CharColumnType(length);
         }
 
-        public static StringColumnType String(int length = 255)
+        public static VarCharColumnType VarChar(int length = 255)
         {
             // VARCHAR(255)
-            return new StringColumnType(length);
+            return new VarCharColumnType(length);
         }
 
         public static TextColumnType Text()
@@ -96,16 +155,48 @@
             return new TextColumnType();
         }
 
-        public static TimestampColumnType Timestamp()
+        public static LongTextColumnType LongText()
         {
-            // TIMESTAMP
-            return new TimestampColumnType();
+            // NTEXT (Sql Server) or LONGTEXT (MySQL)
+            return new LongTextColumnType();
         }
 
-        public static BooleanColumnType Boolean()
+        // Numbers
+
+        public static TinyIntColumnType TinyInt(bool unsigned = false)
+        {
+            // TINYINT
+            return new TinyIntColumnType(unsigned);
+        }
+
+        public static SmallIntColumnType SmallInt(bool unsigned = false)
+        {
+            // SMALLINT
+            return new SmallIntColumnType(unsigned);
+        }
+
+        public static IntColumnType Int(bool unsigned = false)
+        {
+            // INT
+            return new IntColumnType(unsigned);
+        }
+
+        public static BigIntColumnType BigInt(bool unsigned = false)
+        {
+            // BIGINT
+            return new BigIntColumnType(unsigned);
+        }
+
+        public static BitColumnType Bit()
         {
             // BIT
-            return new BooleanColumnType();
+            return new BitColumnType();
+        }
+
+        public static FloatColumnType Float(int? digits = null)
+        {
+            // FLOAT
+            return new FloatColumnType(digits);
         }
 
         public static DateTimeColumnType DateTime()
@@ -114,10 +205,28 @@
             return new DateTimeColumnType();
         }
 
-        public static FloatColumnType Float()
+        public static DateColumnType Date()
         {
-            // FLOAT
-            return new FloatColumnType();
+            // DATE
+            return new DateColumnType();
+        }
+
+        public static TimeColumnType Time()
+        {
+            // TIME(7) (Sql Server) or TIME (MySQL)
+            return new TimeColumnType();
+        }
+
+        public static TimestampColumnType Timestamp()
+        {
+            // TIMESTAMP
+            return new TimestampColumnType();
+        }
+
+        public static BlobColumnType Blob()
+        {
+            // TIMESTAMP
+            return new BlobColumnType();
         }
     }
 }

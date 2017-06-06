@@ -57,7 +57,7 @@ namespace EasyMigLib.Commands
 
         public AlterTableCommand AddColumn(string columnName, bool nullable = false)
         {
-            return this.AddColumn(columnName, ColumnType.String(), nullable);
+            return this.AddColumn(columnName, ColumnType.VarChar(), nullable);
         }
 
         // modify column
@@ -85,7 +85,7 @@ namespace EasyMigLib.Commands
 
         public AlterTableCommand ModifyColumn(string columnName, bool nullable = false)
         {
-            return this.ModifyColumn(columnName, ColumnType.String(), nullable);
+            return this.ModifyColumn(columnName, ColumnType.VarChar(), nullable);
         }
 
         // drop column

@@ -64,7 +64,7 @@ namespace EasyMigLibTest.Commands
 
             try
             {
-                table.AddColumn("column1", ColumnType.String(), false, 10);
+                table.AddColumn("column1", ColumnType.VarChar(), false, 10);
             }
             catch (Exception)
             {
@@ -82,7 +82,7 @@ namespace EasyMigLibTest.Commands
 
             try
             {
-                table.AddColumn("column1", ColumnType.String(), false, "my value");
+                table.AddColumn("column1", ColumnType.VarChar(), false, "my value");
             }
             catch (Exception)
             {
@@ -190,7 +190,7 @@ namespace EasyMigLibTest.Commands
 
             try
             {
-                table.AddColumn("column1", ColumnType.Boolean(), false, 10);
+                table.AddColumn("column1", ColumnType.Bit(), false, 10);
             }
             catch (Exception)
             {
@@ -208,7 +208,7 @@ namespace EasyMigLibTest.Commands
 
             try
             {
-                table.AddColumn("column1", ColumnType.Boolean(), false, true);
+                table.AddColumn("column1", ColumnType.Bit(), false, 1);
             }
             catch (Exception)
             {
@@ -229,7 +229,7 @@ namespace EasyMigLibTest.Commands
 
             try
             {
-                table.AddPrimaryKey("id", ColumnType.String(), true);
+                table.AddPrimaryKey("id", ColumnType.VarChar(), true);
             }
             catch (Exception)
             {
@@ -273,7 +273,7 @@ namespace EasyMigLibTest.Commands
             var result = table.GetColumn("column1");
 
             Assert.AreEqual("column1", result.ColumnName);
-            Assert.AreEqual(typeof(StringColumnType), result.ColumnType.GetType());
+            Assert.AreEqual(typeof(VarCharColumnType), result.ColumnType.GetType());
             Assert.AreEqual(false, result.Nullable);
             Assert.AreEqual(null, result.DefaultValue);
             Assert.AreEqual(false, result.Unique);
@@ -281,7 +281,7 @@ namespace EasyMigLibTest.Commands
             var result2 = table.GetColumn("column2");
 
             Assert.AreEqual("column2", result2.ColumnName);
-            Assert.AreEqual(typeof(StringColumnType), result2.ColumnType.GetType());
+            Assert.AreEqual(typeof(VarCharColumnType), result2.ColumnType.GetType());
             Assert.AreEqual(true, result2.Nullable);
             Assert.AreEqual(null, result2.DefaultValue);
             Assert.AreEqual(false, result2.Unique);
@@ -291,9 +291,9 @@ namespace EasyMigLibTest.Commands
         public void TestAddColumn()
         {
             var table = new CreateTableCommand("table1");
-            table.AddColumn("column1", ColumnType.String(), true, "default value");
-            table.AddColumn("column2", ColumnType.Boolean(), false, true);
-            table.AddColumn("column3", ColumnType.String(100), false, "default value 2", true);
+            table.AddColumn("column1", ColumnType.VarChar(), true, "default value");
+            table.AddColumn("column2", ColumnType.Bit(), false, 1);
+            table.AddColumn("column3", ColumnType.VarChar(100), false, "default value 2", true);
 
             Assert.IsTrue(table.HasColumn("column1"));
             Assert.IsTrue(table.HasColumn("column2"));
@@ -302,7 +302,7 @@ namespace EasyMigLibTest.Commands
             var result = table.GetColumn("column1");
 
             Assert.AreEqual("column1", result.ColumnName);
-            Assert.AreEqual(typeof(StringColumnType), result.ColumnType.GetType());
+            Assert.AreEqual(typeof(VarCharColumnType), result.ColumnType.GetType());
             Assert.AreEqual(true, result.Nullable);
             Assert.AreEqual("default value", result.DefaultValue);
             Assert.AreEqual(false, result.Unique);
@@ -310,16 +310,16 @@ namespace EasyMigLibTest.Commands
             var result2 = table.GetColumn("column2");
 
             Assert.AreEqual("column2", result2.ColumnName);
-            Assert.AreEqual(typeof(BooleanColumnType), result2.ColumnType.GetType());
+            Assert.AreEqual(typeof(BitColumnType), result2.ColumnType.GetType());
             Assert.AreEqual(false, result2.Nullable);
-            Assert.AreEqual(true, result2.DefaultValue);
+            Assert.AreEqual(1, result2.DefaultValue);
             Assert.AreEqual(false, result2.Unique);
 
             var result3 = table.GetColumn("column3");
 
             Assert.AreEqual("column3", result3.ColumnName);
-            Assert.AreEqual(typeof(StringColumnType), result3.ColumnType.GetType());
-            Assert.AreEqual(100, ((StringColumnType)result3.ColumnType).Length);
+            Assert.AreEqual(typeof(VarCharColumnType), result3.ColumnType.GetType());
+            Assert.AreEqual(100, ((VarCharColumnType)result3.ColumnType).Length);
             Assert.AreEqual(false, result3.Nullable);
             Assert.AreEqual("default value 2", result3.DefaultValue);
             Assert.AreEqual(true, result3.Unique);
@@ -333,7 +333,7 @@ namespace EasyMigLibTest.Commands
         {
             var table = new CreateTableCommand("table1");
             table.AddPrimaryKey("id1");
-            table.AddPrimaryKey("id2", ColumnType.String());
+            table.AddPrimaryKey("id2", ColumnType.VarChar());
 
             Assert.IsTrue(table.HasPrimaryKeys);
             Assert.IsTrue(table.HasPrimaryKey("id1"));
@@ -350,7 +350,7 @@ namespace EasyMigLibTest.Commands
             var result2 = table.GetPrimaryKey("id2");
 
             Assert.AreEqual("id2", result2.ColumnName);
-            Assert.AreEqual(typeof(StringColumnType), result2.ColumnType.GetType());
+            Assert.AreEqual(typeof(VarCharColumnType), result2.ColumnType.GetType());
             Assert.AreEqual(false, result2.Nullable);
             Assert.AreEqual(null, result2.DefaultValue);
             Assert.AreEqual(false, result2.AutoIncrement);
@@ -361,7 +361,7 @@ namespace EasyMigLibTest.Commands
         {
             var table = new CreateTableCommand("table1");
             table.AddPrimaryKey("id1");
-            table.AddPrimaryKey("id2", ColumnType.String());
+            table.AddPrimaryKey("id2", ColumnType.VarChar());
             table.AddColumn("column1");
 
             Assert.IsTrue(table.HasColumn("id1"));
@@ -374,7 +374,7 @@ namespace EasyMigLibTest.Commands
         {
             var table = new CreateTableCommand("table1");
             table.AddPrimaryKey("id1");
-            table.AddPrimaryKey("id2", ColumnType.String());
+            table.AddPrimaryKey("id2", ColumnType.VarChar());
             table.AddColumn("column1");
 
             var result = table.GetColumn("id1");
@@ -388,7 +388,7 @@ namespace EasyMigLibTest.Commands
             var result2 = table.GetColumn("id2");
 
             Assert.AreEqual("id2", result2.ColumnName);
-            Assert.AreEqual(typeof(StringColumnType), result2.ColumnType.GetType());
+            Assert.AreEqual(typeof(VarCharColumnType), result2.ColumnType.GetType());
             Assert.AreEqual(false, result2.Nullable);
             Assert.AreEqual(null, result2.DefaultValue);
             Assert.AreEqual(false, ((PrimaryKeyColumn)result2).AutoIncrement);
@@ -396,7 +396,7 @@ namespace EasyMigLibTest.Commands
             var result3 = table.GetColumn("column1");
 
             Assert.AreEqual("column1", result3.ColumnName);
-            Assert.AreEqual(typeof(StringColumnType), result3.ColumnType.GetType());
+            Assert.AreEqual(typeof(VarCharColumnType), result3.ColumnType.GetType());
             Assert.AreEqual(false, result3.Nullable);
             Assert.AreEqual(null, result3.DefaultValue);
         }
@@ -409,8 +409,8 @@ namespace EasyMigLibTest.Commands
             var table = new CreateTableCommand("table1");
             table.AddForeignKey("column1", "table2", "id1");
             table.AddForeignKey("column2", "table3", "id2", true);
-            table.AddForeignKey("column3", ColumnType.String(), "table4", "id3");
-            table.AddForeignKey("column4", ColumnType.String(), "table5", "id4", true, "default value");
+            table.AddForeignKey("column3", ColumnType.VarChar(), "table4", "id3");
+            table.AddForeignKey("column4", ColumnType.VarChar(), "table5", "id4", true, "default value");
 
             Assert.IsTrue(table.HasForeignKeys);
             Assert.IsTrue(table.HasForeignKey("column1"));
@@ -441,7 +441,7 @@ namespace EasyMigLibTest.Commands
             var result3 = table.GetForeignKey("column3");
 
             Assert.AreEqual("column3", result3.ColumnName);
-            Assert.AreEqual(typeof(StringColumnType), result3.ColumnType.GetType());
+            Assert.AreEqual(typeof(VarCharColumnType), result3.ColumnType.GetType());
             Assert.AreEqual(false, result3.Nullable);
             Assert.AreEqual(null, result3.DefaultValue);
             Assert.AreEqual("table4", result3.TableReferenced);
@@ -450,7 +450,7 @@ namespace EasyMigLibTest.Commands
             var result4 = table.GetForeignKey("column4");
 
             Assert.AreEqual("column4", result4.ColumnName);
-            Assert.AreEqual(typeof(StringColumnType), result4.ColumnType.GetType());
+            Assert.AreEqual(typeof(VarCharColumnType), result4.ColumnType.GetType());
             Assert.AreEqual(true, result4.Nullable);
             Assert.AreEqual("default value", result4.DefaultValue);
             Assert.AreEqual("table5", result4.TableReferenced);
@@ -464,8 +464,8 @@ namespace EasyMigLibTest.Commands
             var table = new CreateTableCommand("table1");
             table.AddForeignKey("column1", "table2", "id1");
             table.AddForeignKey("column2", "table3", "id2", true);
-            table.AddForeignKey("column3", ColumnType.String(), "table4", "id3");
-            table.AddForeignKey("column4", ColumnType.String(), "table5", "id4", true, "default value");
+            table.AddForeignKey("column3", ColumnType.VarChar(), "table4", "id3");
+            table.AddForeignKey("column4", ColumnType.VarChar(), "table5", "id4", true, "default value");
 
 
             var result = table.GetColumn("column1");
@@ -487,8 +487,8 @@ namespace EasyMigLibTest.Commands
             var table = new CreateTableCommand("table1");
             table.AddForeignKey("column1", "table2", "id1");
             table.AddForeignKey("column2", "table3", "id2", true);
-            table.AddForeignKey("column3", ColumnType.String(), "table4", "id3");
-            table.AddForeignKey("column4", ColumnType.String(), "table5", "id4", true, "default value");
+            table.AddForeignKey("column3", ColumnType.VarChar(), "table4", "id3");
+            table.AddForeignKey("column4", ColumnType.VarChar(), "table5", "id4", true, "default value");
             table.AddColumn("column5");
             table.AddPrimaryKey("column6");
 
@@ -506,8 +506,8 @@ namespace EasyMigLibTest.Commands
             var table = new CreateTableCommand("table1");
             table.AddForeignKey("column1", "table2", "id1");
             table.AddForeignKey("column2", "table3", "id2", true);
-            table.AddForeignKey("column3", ColumnType.String(), "table4", "id3");
-            table.AddForeignKey("column4", ColumnType.String(), "table5", "id4", true, "default value");
+            table.AddForeignKey("column3", ColumnType.VarChar(), "table4", "id3");
+            table.AddForeignKey("column4", ColumnType.VarChar(), "table5", "id4", true, "default value");
             table.AddColumn("column5");
             table.AddPrimaryKey("column6");
 

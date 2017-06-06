@@ -75,7 +75,7 @@ namespace EasyMigLib.Commands
         public CreateTableCommand AddForeignKey(string columnName, ColumnType columnType, string tableReferenced, string primaryKeyReferenced, bool nullable = false, object defaultValue = null)
         {
             if (this.HasColumn(columnName)) { throw new Exception("Column " + columnName + " already registered for " + this.TableName); }
-            if (!columnType.CheckValue(defaultValue)) { throw new Exception("Invalid default for " + columnName + " with " + this.TableName); }
+            if (!columnType.CheckDefaultValue(defaultValue)) { throw new Exception("Invalid default for " + columnName + " with " + this.TableName); }
 
             this.foreignKeys[columnName] = new ForeignKeyColumn(columnName, columnType, tableReferenced, primaryKeyReferenced, nullable, defaultValue);
             return this;
@@ -116,7 +116,7 @@ namespace EasyMigLib.Commands
         public CreateTableCommand AddColumn(string columnName, ColumnType columnType, bool nullable = false, object defaultValue = null, bool unique = false)
         {
             if (this.HasColumn(columnName)) { throw new Exception("Column " + columnName + " already registered for " + this.TableName); }
-            if (!columnType.CheckValue(defaultValue)) { throw new Exception("Invalid default for " + columnName + " with " + this.TableName); }
+            if (!columnType.CheckDefaultValue(defaultValue)) { throw new Exception("Invalid default for " + columnName + " with " + this.TableName); }
 
             this.columns[columnName] = new MigrationColumn(columnName, columnType, nullable, defaultValue, unique);
             return this;
@@ -124,7 +124,7 @@ namespace EasyMigLib.Commands
 
         public CreateTableCommand AddColumn(string columnName, bool nullable = false)
         {
-            return this.AddColumn(columnName, new StringColumnType(), nullable);
+            return this.AddColumn(columnName, new VarCharColumnType(), nullable);
         }
 
         public CreateTableCommand AddTimestamps()

@@ -129,7 +129,7 @@ namespace EasyMigLibTest.Commands.Table
 
             var container = new AlterTableCommand(tableName);
 
-            container.AddForeignKeyConstraint(columnName, ColumnType.String(), "users", "id", true);
+            container.AddForeignKeyConstraint(columnName, ColumnType.VarChar(), "users", "id", true);
 
             Assert.IsTrue(container.HasForeignKeyConstraintCommand(columnName));
 

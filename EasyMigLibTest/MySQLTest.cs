@@ -161,7 +161,7 @@ namespace EasyMigLibTest
 
             Assert.IsTrue(EasyMig.DatabaseInformation.ColumnExists(dbName, tableName, columnName, connectionString, providerName));
 
-            EasyMig.AlterTable(tableName).ModifyColumn(columnName, ColumnType.String(), true, "default value");
+            EasyMig.AlterTable(tableName).ModifyColumn(columnName, ColumnType.VarChar(), true, "default value");
 
             var query = EasyMig.GetMigrationQuery(providerName);
 

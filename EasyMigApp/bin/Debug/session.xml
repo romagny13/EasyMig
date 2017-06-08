@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ArrayOfString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <string>Server=localhost\SQLEXPRESS;Database=db1;Trusted_Connection=True;</string>
-  <string>server=localhost;database=db1;uid=root</string>
+  <string>server=localhost;database=db3;uid=root</string>
+  <string>Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\romag\Documents\Visual Studio 2017\Projects\experimental\EasyMigLib\EasyMigTest\dbTest.mdf;Integrated Security=True;Connect Timeout=30</string>
 </ArrayOfString>

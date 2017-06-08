@@ -22,6 +22,8 @@ Commands:
     * _Add primary key constraint_
     * _Add foreign key constraint_
 * **Drop Table**
+* **Create Stored Procedure**
+* **Drop Stored Procedure**
 
 * **SeedTable**
     * Insert dictionary of key/value
@@ -34,12 +36,14 @@ Execution:
 * Get Migrations | Seeders **Query string**
 * Create **Migration Script** (create table, etc.)
 * Create **Seed Script**
+* Create **Stored procedure Script** for SSMS (with GO DELIMTER)
 * **Execute** a sql **Query**
 
 Database information:
 * Check if **Database exists**
 * Check if **Table exists**
 * Check if **Column exists**
+* Check if **Stored Procedure exists**
 * **Get Table** Schema with columns, primary key and foreign key definitions
 * **Get** Table **rows**
 
@@ -264,6 +268,26 @@ EasyMig.CreateTable("users")
        .AddColumn("email",ColumnType.VarChar(),false,null,true);
 ```
 
+## Create Stored Procedure
+
+Example with Sql Server
+
+```cs
+EasyMig.CreateStoredProcedure("p1")
+       .AddParameter("@id", ColumnType.Int())
+       .AddParameter("@age", ColumnType.Int(), DatabaseParameterDirection.OUT)
+       .SetBody("select @age=age from users where id=@id");
+```
+
+Example with MySql
+
+```cs
+EasyMig.CreateStoredProcedure("p1")
+       .AddParameter("p_id", ColumnType.Int())
+       .AddParameter("p_age", ColumnType.Int(), DatabaseParameterDirection.OUT)
+       .SetBody("select age into p_age from users where id=p_id");
+```
+
 ### Insert data on table creation
 
 We could define the primary key ("_IDENTITY_INSERT_" is "off" for **Sql Server**).
@@ -354,13 +378,19 @@ Example
 
 ## Execution
 
+Targets:
+* _MySql_
+* _SqlServer_
+* _SqlServerAttachedDbFile_
+
+
 ### Migrations 
 
 #### From Memory
 
 Example with MySQL
 ```cs
- EasyMig.DoMigrationsFromMemory("server=localhost;database=db1;uid=root", "MySql.Data.MySqlClient");
+ EasyMig.ToMySql.DoMigrationsFromMemory("server=localhost;database=db1;uid=root");
 ```
 * **Default engine** is "**InnoDB**" (databases are created with relations and schema). But its possible to change to "**MyISAM**"
 
@@ -368,12 +398,12 @@ Example with MySQL
 
 Change the engine. Example:
 ```cs
- EasyMig.DoMigrationsFromMemory("server=localhost;database=db1;uid=root", "MySql.Data.MySqlClient", "MyISAM");
+ EasyMig.ToMySql.DoMigrationsFromMemory("server=localhost;database=db1;uid=root","MyISAM");
  ```
 
  Example with Sql Server
  ```cs
-  EasyMig.DoMigrationsFromMemory(@"Server=localhost\SQLEXPRESS;Database=db1;Trusted_Connection=True;", "System.Data.SqlClient");
+  EasyMig.ToSqlServer.DoMigrationsFromMemory(@"Server=localhost\SQLEXPRESS;Database=db1;Trusted_Connection=True;", "System.Data.SqlClient");
   ```
 
 ### With Assembly
@@ -382,30 +412,30 @@ Example:
 
 Assembly path (exe or dll), MigrationDirection (Down or Up by default, the method to execute in Migrations)
 ```cs
- EasyMig.DoMigrationsForAssembly("c:/path/to/assembly.dll", connectionString, providerName, null, MigrationDirection.Up);
+ EasyMig.ToSqlServer.DoMigrationsForAssembly("c:/path/to/assembly.dll", connectionString, MigrationDirection.Up); // Up by default
 ```
 
 Or With Types
 ```cs
- EasyMig.DoMigrationsForTypes(new Type[] { typeof(MyMigration1), typeof(MyMigration2) }, connectionString, providerName, null, MigrationDirection.Up);
+ EasyMig.ToSqlServer.DoMigrationsForTypes(new Type[] { typeof(MyMigration1), typeof(MyMigration2) }, connectionString);
 ```
 
 Its possible to execute only for one type with fileName or file type. Example:
 
 ```cs
-EasyMig.DoMigrationOnlyFor("c:/path/to/assembly.dll","MyMigration1", connectionString, providerName, null, MigrationDirection.Up);
+EasyMig.ToSqlServer.DoMigrationOnlyFor("c:/path/to/assembly.dll","MyMigration1", connectionString, MigrationDirection.Up);
 ```
 
 ### Seed
 
 ```cs
-EasyMig.DoSeedForAssembly("c:/path/to/assembly.dll", connectionString, providerName);
+EasyMig.ToSqlServer.DoSeedForAssembly("c:/path/to/assembly.dll", connectionString);
 ```
 ...Or with types
 
 ... Only for one file
 ```cs
- EasyMig.DoSeedOnlyFor("MySeeder","c:/path/to/assembly.dll", connectionString, providerName);
+ EasyMig.ToSqlServer.DoSeedOnlyFor("MySeeder","c:/path/to/assembly.dll", connectionString);
  ```
 
 ### Get SQL Queries
@@ -413,22 +443,22 @@ EasyMig.DoSeedForAssembly("c:/path/to/assembly.dll", connectionString, providerN
 Migrations:
 
 ```cs
-var sql = EasyMig.GetMigrationQuery(providerName);
+var sql = EasyMig.ToSqlServer.GetMigrationQuery();
 ```
 
 Seeders:
 
 ```cs
-var sql = EasyMig.GetSeedQuery(providerName);
+var sql = EasyMig.ToMySql.GetSeedQuery();
 ```
 ### Create Scripts
 
 ```cs
-EasyMig.CreateMigrationScript("c:/path/to/assembly.dll",providerName);
+EasyMig.ToSqlServerAttachedDbFile.CreateMigrationScript("c:/path/to/assembly.dll","c:/path/to/script.sql");
 ```
 
 ```cs
-EasyMig.CreateSeedScript("c:/path/to/assembly.dll",providerName);
+EasyMig.ToSqlServer.CreateSeedScript("c:/path/to/assembly.dll","c:/path/to/script.sql");
 ```
  
 ## Fake Data
@@ -468,44 +498,55 @@ for (int i = 1; i< 100; i++)
     );
 }
 
-//  var query = EasyMig.GetMigrationQuery("MySql.Data.MySqlClient");
+//  var query = EasyMig.ToMySql.GetMigrationQuery();
 // or
-EasyMig.DoMigrationsFromMemory("server=localhost;database=dbtest;uid=root", "MySql.Data.MySqlClient");
+EasyMig.ToMySql.DoMigrationsFromMemory("server=localhost;database=dbtest;uid=root");
 
 // or with Sql Server
-// EasyMig.DoMigrationsFromMemory(@"Server=localhost\SQLEXPRESS;Database=db1;Trusted_Connection=True;", "System.Data.SqlClient");
+// EasyMig.ToSqlServer.DoMigrationsFromMemory(@"Server=localhost\SQLEXPRESS;Database=db1;Trusted_Connection=True;");
 ```
 
 
 ## Database Information
 
+Target:
+* MySql
+* Sql Server
+* Sql Server Attached Db File
+
 Check if **Database exists**
 
 ```cs
-var result = EasyMig.DatabaseInformation.DatabaseExists("mydb", connectionString, providerName)
+var result = EasyMig.Information.MySql.DatabaseExists("mydb", connectionString);
 ```
 
 Check if **Table exists**
 
 ```cs
-var result = EasyMig.DatabaseInformation.TableExists("mydb", "users", connectionString, providerName)
+var result = EasyMig.Information.SqlServer.TableExists("mydb", "users", connectionString);
 ```
 Check if **Column exists**
 
 ```cs
-var result = EasyMig.DatabaseInformation.ColumnExists("mydb", "users", "username" , connectionString, providerName))
+var result = EasyMig.Information.SqlServer.ColumnExists("mydb", "users", "username" , connectionString);
+```
+
+Check if **Stored Procedure exists**
+
+```cs
+var result = EasyMig.Information.SqlServer.ProcedureExists("mydb", "users", "username", connectionString);
 ```
 
 **Get Table** Schema with columns, primary key and foreign key definitions
 
 ```cs
- var table = EasyMig.DatabaseInformation.GetTable("mydb", "users", connectionString, providerName);
+ var table = EasyMig.Information.SqlServer.GetTable("mydb", "users", connectionString);
 ```
 
 **Get** Table **rows**
 
 ```cs
-var tableRows = EasyMig.DatabaseInformation.GetTableRows("users", connectionString, providerName);
+var tableRows = EasyMig.Information.SqlServerAttachedDbFile.GetTableRows("users", connectionString);
 Assert.AreEqual((uint)1,((uint) tableRows[0]["id"])); // caution to type with MySQL unsigned numbers
 Assert.AreEqual("user1", (string) tableRows[0]["username"]);
 Assert.AreEqual(20, ((int)tableRows[0]["age"]));

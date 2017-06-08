@@ -1,5 +1,7 @@
-C:\Users\romag\Documents\Visual Studio 2017\Projects\EasyMigLib\EasyMigLib\bin\Debug\EasyMigLib.dll
-C:\Users\romag\Documents\Visual Studio 2017\Projects\EasyMigLib\EasyMigLib\bin\Debug\EasyMigLib.pdb
-C:\Users\romag\Documents\Visual Studio 2017\Projects\EasyMigLib\EasyMigLib\obj\Debug\EasyMigLib.csprojResolveAssemblyReference.cache
-C:\Users\romag\Documents\Visual Studio 2017\Projects\EasyMigLib\EasyMigLib\obj\Debug\EasyMigLib.dll
-C:\Users\romag\Documents\Visual Studio 2017\Projects\EasyMigLib\EasyMigLib\obj\Debug\EasyMigLib.pdb
+c:\users\romag\documents\visual studio 2017\Projects\experimental\EasyMigLib\EasyMigLib\bin\Debug\EasyMigLib.dll
+c:\users\romag\documents\visual studio 2017\Projects\experimental\EasyMigLib\EasyMigLib\bin\Debug\EasyMigLib.pdb
+c:\users\romag\documents\visual studio 2017\Projects\experimental\EasyMigLib\EasyMigLib\bin\Debug\MySql.Data.dll
+c:\users\romag\documents\visual studio 2017\Projects\experimental\EasyMigLib\EasyMigLib\bin\Debug\MySql.Data.xml
+c:\users\romag\documents\visual studio 2017\Projects\experimental\EasyMigLib\EasyMigLib\obj\Debug\EasyMigLib.dll
+c:\users\romag\documents\visual studio 2017\Projects\experimental\EasyMigLib\EasyMigLib\obj\Debug\EasyMigLib.pdb
+C:\Users\romag\Documents\Visual Studio 2017\Projects\experimental\EasyMigLib\EasyMigLib\obj\Debug\EasyMigLib.csprojResolveAssemblyReference.cache

@@ -1,5 +1,4 @@
-﻿using EasyMigLib.Services;
-
+﻿using EasyMigLib.Query;
 namespace EasyMigLib.Commands
 {
     public class DropTableCommand
@@ -11,7 +10,7 @@ namespace EasyMigLib.Commands
             this.TableName = tableName;
         }
 
-        public string GetQuery(QueryService queryService)
+        public string GetQuery(IQueryService queryService)
         {
             return queryService.GetDropTable(this.TableName);
         }

@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{1630C896-1127-4D77-8EE5-8E8204A9AB9B}</ProjectGuid>
+    <ProjectGuid>{58621EB2-B232-49D3-B299-48586BCB31C0}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>EasyMigApp</RootNamespace>
     <AssemblyName>EasyMigApp</AssemblyName>
@@ -63,20 +63,19 @@
     <Compile Include="Models\Observable.cs" />
     <Compile Include="Models\Session.cs" />
     <Compile Include="Models\Validatable.cs" />
+    <Compile Include="Shell.xaml.cs">
+      <DependentUpon>Shell.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ViewModels\RelayCommand.cs" />
     <Compile Include="ViewModels\ShellViewModel.cs" />
-    <Page Include="Shell.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Shell.xaml.cs">
-      <DependentUpon>Shell.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
+    <Page Include="Shell.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -106,7 +105,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EasyMigLib\EasyMigLib.csproj">
-      <Project>{59d82c41-b8bf-4b89-a4f1-7dff3c4298f5}</Project>
+      <Project>{9623d7c0-78a6-491c-bf18-d4d4b5f59002}</Project>
       <Name>EasyMigLib</Name>
     </ProjectReference>
   </ItemGroup>

@@ -1,4 +1,4 @@
-﻿using EasyMigLib.Services;
+﻿using EasyMigLib.Query;
 
 namespace EasyMigLib.Commands
 {
@@ -11,7 +11,7 @@ namespace EasyMigLib.Commands
             this.DatabaseName = databaseName;
         }
 
-        public string GetQuery(QueryService queryService)
+        public string GetQuery(IQueryService queryService)
         {
             return queryService.GetDropDatabase(this.DatabaseName);
         }

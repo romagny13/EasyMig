@@ -1,4 +1,4 @@
-﻿using EasyMigLib.Services;
+﻿using EasyMigLib.Query;
 using System;
 using System.Collections.Generic;
 
@@ -74,7 +74,8 @@ namespace EasyMigLib.Commands
             return this.modifyColumnsCommands[columnName];
         }
 
-        public AlterTableCommand ModifyColumn(string columnName, ColumnType columnType, bool nullable = false, object defaultValue = null, bool unique = false)
+
+        public AlterTableCommand ModifyColumn(string columnName, ColumnType columnType, bool nullable, object defaultValue, bool unique)
         {
             if (this.HasModifyColumnCommand(columnName)) { throw new Exception("ModifyColumnCommand " + this.TableName + " with " + columnName + " already registered"); }
 
@@ -83,10 +84,11 @@ namespace EasyMigLib.Commands
             return this;
         }
 
-        public AlterTableCommand ModifyColumn(string columnName, bool nullable = false)
+        public AlterTableCommand ModifyColumn(string columnName, ColumnType columnType, bool nullable = false)
         {
-            return this.ModifyColumn(columnName, ColumnType.VarChar(), nullable);
+            return this.ModifyColumn(columnName, columnType, nullable, null, false);
         }
+
 
         // drop column
 
@@ -146,21 +148,21 @@ namespace EasyMigLib.Commands
             return this.addForeignKeyConstraintCommands[columnName];
         }
 
-        public AlterTableCommand AddForeignKeyConstraint(string columnName, ColumnType columnType, string tableReferenced, string primaryKeyReferenced, bool nullable = false, object defaultValue = null)
+        public AlterTableCommand AddForeignKeyConstraint(string columnName, ColumnType columnType, string tableReferenced, string primaryKeyReferenced)
         {
             if (this.HasForeignKeyConstraintCommand(columnName)) { throw new Exception("AddForeignKeyConstraintCommand already registered for " + columnName + " with " + this.TableName); }
 
-            var column = new ForeignKeyColumn(columnName, columnType, tableReferenced, primaryKeyReferenced, nullable, defaultValue);
+            var column = new ForeignKeyColumn(columnName, columnType, tableReferenced, primaryKeyReferenced);
             this.addForeignKeyConstraintCommands[columnName] = new AddForeignKeyConstraintCommand(this.TableName, column);
             return this;
         }
 
-        public AlterTableCommand AddForeignKeyConstraint(string columnName, string tableReferenced, string primaryKeyReferenced, bool nullable = false)
+        public AlterTableCommand AddForeignKeyConstraint(string columnName, string tableReferenced, string primaryKeyReferenced)
         {
-            return this.AddForeignKeyConstraint(columnName, ColumnType.Int(true), tableReferenced, primaryKeyReferenced, nullable);
+            return this.AddForeignKeyConstraint(columnName, ColumnType.Int(true), tableReferenced, primaryKeyReferenced);
         }
 
-        public string GetQuery(QueryService queryService)
+        public string GetQuery(IQueryService queryService)
         {
             var result = new List<string>();
             if (this.HasAddColumnCommands)

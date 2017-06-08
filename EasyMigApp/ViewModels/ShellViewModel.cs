@@ -1,5 +1,5 @@
 ﻿using EasyMigApp.Models;
-using EasyMigLib.Services;
+using EasyMigLib.MigrationReflection;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
@@ -154,6 +154,7 @@ namespace EasyMigApp.ViewModels
                     catch (Exception e)
                     {
                         MessageBox.Show(e.Message, "Error");
+                        this.migrationService.Clear();
                     }
                 }
             });
@@ -177,6 +178,7 @@ namespace EasyMigApp.ViewModels
                     catch (Exception e)
                     {
                         MessageBox.Show(e.Message, "Error");
+                        this.migrationService.Clear();
                     }
                 }
             });
@@ -202,6 +204,7 @@ namespace EasyMigApp.ViewModels
                         catch (Exception e)
                         {
                             MessageBox.Show(e.Message, "Error");
+                            this.migrationService.Clear();
                         }
                     }
                 }
@@ -228,6 +231,7 @@ namespace EasyMigApp.ViewModels
                         catch (Exception e)
                         {
                             MessageBox.Show(e.Message, "Error");
+                            this.migrationService.Clear();
                         }
                     }
                 }
@@ -252,6 +256,7 @@ namespace EasyMigApp.ViewModels
                     catch (Exception e)
                     {
                         MessageBox.Show(e.Message, "Error");
+                        this.migrationService.Clear();
                     }
                 }
             });
@@ -277,6 +282,7 @@ namespace EasyMigApp.ViewModels
                         catch (Exception e)
                         {
                             MessageBox.Show(e.Message, "Error");
+                            this.migrationService.Clear();
                         }
                     }
                 }
@@ -295,7 +301,7 @@ namespace EasyMigApp.ViewModels
                     {
                         var directory = this.migrationService.GetAssemblyDirectory(this.model.AssemblyPath);
 
-                        this.migrationService.CreateMigrationScript(this.model.AssemblyPath, this.model.ProviderName, directory + "/script.sql", this.model.Engine);
+                        this.migrationService.CreateMigrationScript(this.model.AssemblyPath, this.model.ProviderName, directory + "/script.sql", directory + "/procedures.sql", this.model.Engine);
 
                         MessageBox.Show("Script created!", "Success");
 
@@ -304,6 +310,7 @@ namespace EasyMigApp.ViewModels
                     catch (Exception e)
                     {
                         MessageBox.Show(e.Message, "Error");
+                        this.migrationService.Clear();
                     }
                 }
             });
@@ -330,6 +337,7 @@ namespace EasyMigApp.ViewModels
                     catch (Exception e)
                     {
                         MessageBox.Show(e.Message, "Error");
+                        this.migrationService.Clear();
                     }
                 }
             });

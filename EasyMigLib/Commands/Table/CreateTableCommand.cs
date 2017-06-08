@@ -1,4 +1,4 @@
-﻿using EasyMigLib.Services;
+﻿using EasyMigLib.Query;
 using System;
 using System.Collections.Generic;
 
@@ -149,7 +149,7 @@ namespace EasyMigLib.Commands
             return result;
         }
 
-        public string GetQuery(QueryService queryService)
+        public string GetQuery(IQueryService queryService)
         {
             return queryService.GetCreateTable(this);
         }

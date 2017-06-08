@@ -1,5 +1,4 @@
-﻿using EasyMigLib.Services;
-using System;
+﻿using EasyMigLib.Query;
 using System.Collections.Generic;
 
 namespace EasyMigLib.Commands
@@ -37,7 +36,7 @@ namespace EasyMigLib.Commands
             return null;
         }
 
-        public string GetQuery(QueryService queryService)
+        public string GetQuery(IQueryService queryService)
         {
             var result = "";
             foreach (var seedRowCommand in this.seedRowCommands)

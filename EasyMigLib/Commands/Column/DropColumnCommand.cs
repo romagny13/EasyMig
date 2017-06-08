@@ -1,4 +1,4 @@
-﻿using EasyMigLib.Services;
+﻿using EasyMigLib.Query;
 
 namespace EasyMigLib.Commands
 {
@@ -13,7 +13,7 @@ namespace EasyMigLib.Commands
             this.ColumnName = columnName;
         }
 
-        public string GetQuery(QueryService queryService)
+        public string GetQuery(IQueryService queryService)
         {
             return queryService.GetDropColumn(this.TableName, this.ColumnName);
         }

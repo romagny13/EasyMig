@@ -1,4 +1,4 @@
-﻿using EasyMigLib.Services;
+﻿using EasyMigLib.Query;
 using System.Collections.Generic;
 
 namespace EasyMigLib.Commands
@@ -14,7 +14,7 @@ namespace EasyMigLib.Commands
             this.columnValues = columnValues;
         }
 
-        public string GetQuery(QueryService queryService)
+        public string GetQuery(IQueryService queryService)
         {
             return queryService.GetSeedRow(this.TableName, this.columnValues);
         }

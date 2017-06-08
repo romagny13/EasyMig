@@ -453,9 +453,19 @@ var sql = EasyMig.ToMySql.GetSeedQuery();
 ```
 ### Create Scripts
 
+Migrations (create table, etc.):
+
 ```cs
 EasyMig.ToSqlServerAttachedDbFile.CreateMigrationScript("c:/path/to/assembly.dll","c:/path/to/script.sql");
 ```
+
+Stored Procedures (DELIMITER : "GO" for SQL Server Managment Studio, "$$" for MySql):
+
+```cs
+EasyMig.ToSqlServerAttachedDbFile.CreateStoredProcedureScript("c:/path/to/assembly.dll", "c:/path/to/script.sql");
+```
+
+Seeders:
 
 ```cs
 EasyMig.ToSqlServer.CreateSeedScript("c:/path/to/assembly.dll","c:/path/to/script.sql");

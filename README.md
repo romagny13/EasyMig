@@ -380,8 +380,8 @@ Example
 
 Targets:
 * _MySql_
-* _SqlServer_
-* _SqlServerAttachedDbFile_
+* _Sql Server_
+* _Sql Server Attached Db File_
 
 
 ### Migrations 
@@ -510,9 +510,9 @@ EasyMig.ToMySql.DoMigrationsFromMemory("server=localhost;database=dbtest;uid=roo
 ## Database Information
 
 Target:
-* MySql
-* Sql Server
-* Sql Server Attached Db File
+* _MySql_
+* _Sql Server_
+* _Sql Server Attached Db File_
 
 Check if **Database exists**
 

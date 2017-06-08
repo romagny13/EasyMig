@@ -268,26 +268,6 @@ EasyMig.CreateTable("users")
        .AddColumn("email",ColumnType.VarChar(),false,null,true);
 ```
 
-## Create Stored Procedure
-
-Example with Sql Server
-
-```cs
-EasyMig.CreateStoredProcedure("p1")
-       .AddParameter("@id", ColumnType.Int())
-       .AddParameter("@age", ColumnType.Int(), DatabaseParameterDirection.OUT)
-       .SetBody("select @age=age from users where id=@id");
-```
-
-Example with MySql
-
-```cs
-EasyMig.CreateStoredProcedure("p1")
-       .AddParameter("p_id", ColumnType.Int())
-       .AddParameter("p_age", ColumnType.Int(), DatabaseParameterDirection.OUT)
-       .SetBody("select age into p_age from users where id=p_id");
-```
-
 ### Insert data on table creation
 
 We could define the primary key ("_IDENTITY_INSERT_" is "off" for **Sql Server**).
@@ -362,6 +342,26 @@ Set as nullable for relation 0.1
 ```cs
  EasyMig.AlterTable("posts")
         .AddForeignKeyConstraint("user_id","users","id", true);
+```
+
+## Create Stored Procedure
+
+Example with Sql Server
+
+```cs
+EasyMig.CreateStoredProcedure("p1")
+       .AddParameter("@id", ColumnType.Int())
+       .AddParameter("@age", ColumnType.Int(), DatabaseParameterDirection.OUT)
+       .SetBody("select @age=age from users where id=@id");
+```
+
+Example with MySql
+
+```cs
+EasyMig.CreateStoredProcedure("p1")
+       .AddParameter("p_id", ColumnType.Int())
+       .AddParameter("p_age", ColumnType.Int(), DatabaseParameterDirection.OUT)
+       .SetBody("select age into p_age from users where id=p_id");
 ```
 
 ## Seed Table

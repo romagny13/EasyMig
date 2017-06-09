@@ -25,7 +25,7 @@ Commands:
 * **Create Stored Procedure**
 * **Drop Stored Procedure**
 
-* **SeedTable**
+* **Seed Table**
     * Insert dictionary of key/value
 
 Execution:

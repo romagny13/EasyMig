@@ -7,9 +7,9 @@
         string GetDatabaseExists(string databaseName);
         string GetForeignKeys(string databaseName, string tableName);
         string GetPrimaryKeys(string databaseName, string tableName);
+        string GetProcedureExists(string databaseName, string procedureName);
         string GetTable(string databaseName, string tableName);
         string GetTableExists(string databaseName, string tableName);
         string GetTableRows(string tableName, int? limit);
-        string GetProcedureExists(string databaseName, string procedureName);
     }
 }

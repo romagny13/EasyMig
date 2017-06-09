@@ -7,6 +7,7 @@ namespace EasyMigLib.Query
     {
         string EndQuote { get; }
         string StartQuote { get; }
+        string Delimiter { get; }
 
         void AddTimestamps(CreateTableCommand table);
         string FormatValueString(object value);
@@ -19,9 +20,12 @@ namespace EasyMigLib.Query
         string GetColumn(MigrationColumn column);
         string GetColumnType(ColumnType columnType);
         string GetCreateDatabase(string databaseName);
+        string GetCreateAndUseDatabase(string databaseName);
+        string GetCreateStoredProcedure(string procedureName, Dictionary<string, DatabaseParameter> parameters, string body);
         string GetCreateTable(CreateTableCommand table);
         string GetDropColumn(string tableName, string columnName);
         string GetDropDatabase(string databaseName);
+        string GetDropStoredProcedure(string procedureName, bool delimiter = true);
         string GetDropTable(string tableName);
         string GetModifyColumn(string tableName, MigrationColumn column);
         string GetParameter(DatabaseParameter parameter);
@@ -31,9 +35,9 @@ namespace EasyMigLib.Query
         string GetSeedRow(string tableName, Dictionary<string, object> columnValues);
         string GetSeeds(CreateTableCommand createTableCommand);
         string GetSeedValues(Dictionary<string, object> columnValues);
-        string GetCreateStoredProcedure(string procedureName, Dictionary<string, DatabaseParameter> parameters, string body);
+        string GetUseDatabase(string databaseName);
         bool IsReservedWord(string value);
+        void SetDefaultDelimiter(string delimiter);
         string WrapWithQuotes(string value);
-        string GetDropStoredProcedure(string procedureName, bool semicolon = true);
     }
 }

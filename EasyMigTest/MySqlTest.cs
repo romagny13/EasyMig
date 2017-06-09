@@ -153,7 +153,7 @@ namespace EasyMigLibTest
         {
             this.BeforeEach();
 
-            EasyMig.DropDatabase("db2");
+            EasyMig.DropDatabaseIfExists("db2");
             var query = EasyMig.ToMySql.GetMigrationQuery();
 
             EasyMig.ToMySql.ExecuteQuery(query, completeConnectionString);

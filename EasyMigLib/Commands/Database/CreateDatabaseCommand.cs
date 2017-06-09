@@ -1,7 +1,7 @@
 ﻿using EasyMigLib.Query;
 namespace EasyMigLib.Commands
 {
-    public class CreateDatabaseCommand
+    public class CreateDatabaseCommand : DatabaseCommand
     {
         public string DatabaseName { get; protected set; }
 
@@ -10,7 +10,7 @@ namespace EasyMigLib.Commands
             this.DatabaseName = databaseName;
         }
 
-        public string GetQuery(IQueryService queryService)
+        public override string GetQuery(IQueryService queryService)
         {
             return queryService.GetCreateDatabase(this.DatabaseName);
         }

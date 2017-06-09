@@ -16,7 +16,7 @@ namespace EasyMigTest.Commands.MySqlClient.Procedure
             var command = new DropStoredProcedureCommand("p1");
             var result = command.GetQuery(new SqlQueryService());
 
-            Assert.AreEqual("DROP PROCEDURE IF EXISTS [dbo].[p1];", result);
+            Assert.AreEqual("DROP PROCEDURE IF EXISTS [dbo].[p1]\rGO\r", result);
         }
 
         [TestMethod]
@@ -25,7 +25,7 @@ namespace EasyMigTest.Commands.MySqlClient.Procedure
             var command = new DropStoredProcedureCommand("p1");
             var result = command.GetQuery(new MySqlQueryService());
 
-            Assert.AreEqual("DROP PROCEDURE IF EXISTS `p1`;", result);
+            Assert.AreEqual("DROP PROCEDURE IF EXISTS `p1`;\r", result);
         }
     }
 }

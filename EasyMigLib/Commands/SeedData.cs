@@ -19,14 +19,14 @@ namespace EasyMigLib.Commands
 
         public object Get(string columnName)
         {
-            if (!this.Has(columnName)) { throw new Exception("No Column " + columnName + " defined"); }
+            if (!this.Has(columnName)) { throw new EasyMigException("No Column " + columnName + " defined"); }
 
            return this.container[columnName];
         }
 
         public SeedData Set(string columnName, object value)
         {
-            if (this.Has(columnName)) { throw new Exception("Column " + columnName + " already defined"); }
+            if (this.Has(columnName)) { throw new EasyMigException("Column " + columnName + " already defined"); }
 
             this.container[columnName] = value;
             return this;

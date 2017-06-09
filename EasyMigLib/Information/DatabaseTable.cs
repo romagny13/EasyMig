@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace EasyMigLib.Information
 {
@@ -32,7 +31,7 @@ namespace EasyMigLib.Information
 
         public Dictionary<string, object> GetColumn(string columnName)
         {
-            if (!this.HasColumn(columnName)) { throw new Exception("No column " + columnName + " found in " + this.TableName); }
+            if (!this.HasColumn(columnName)) { throw new EasyMigException("No column " + columnName + " found in " + this.TableName); }
             return this.Columns[columnName];
         }
 

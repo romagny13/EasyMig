@@ -15,7 +15,7 @@ namespace EasyMigLibTest.Commands
             var command = new AddForeignKeyConstraintCommand("posts", new ForeignKeyColumn("user_id", ColumnType.Int(), "users","id"));
             var result = command.GetQuery(new SqlQueryService());
 
-            Assert.AreEqual("ALTER TABLE [dbo].[posts] ADD FOREIGN KEY ([user_id]) REFERENCES [dbo].[users]([id]);\r", result);
+            Assert.AreEqual("ALTER TABLE [dbo].[posts] ADD FOREIGN KEY ([user_id]) REFERENCES [dbo].[users]([id])\rGO\r", result);
         }
 
 

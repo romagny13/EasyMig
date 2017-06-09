@@ -2,7 +2,7 @@
 
 namespace EasyMigLib.Commands
 {
-    public class AddPrimaryKeyConstraintCommand
+    public class AddPrimaryKeyConstraintCommand : DatabaseCommand
     {
         public string TableName { get; protected set; }
         public string[] PrimaryKeys { get; protected set; }
@@ -13,7 +13,7 @@ namespace EasyMigLib.Commands
             this.PrimaryKeys = primaryKeys;
         }
 
-        public string GetQuery(IQueryService queryService)
+        public override string GetQuery(IQueryService queryService)
         {
             return queryService.GetAddPrimaryKeyConstraint(this.TableName, this.PrimaryKeys);
         }

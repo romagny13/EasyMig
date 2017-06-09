@@ -15,7 +15,7 @@ namespace EasyMigLibTest.Commands
             var command = new CreateStoredProcedureCommand("p1").SetBody("select * from users");
             var result = command.GetQuery(new SqlQueryService());
 
-            Assert.AreEqual("CREATE PROCEDURE [dbo].[p1] \rAS\rBEGIN\rselect * from users;\rEND", result);
+            Assert.AreEqual("CREATE PROCEDURE [dbo].[p1] \rAS\rBEGIN\rselect * from users;\rEND\rGO\r", result);
         }
 
         [TestMethod]
@@ -27,7 +27,7 @@ namespace EasyMigLibTest.Commands
                 .SetBody("select @age=age from users where id=@id");
             var result = command.GetQuery(new SqlQueryService());
 
-            Assert.AreEqual("CREATE PROCEDURE [dbo].[p2] @id INT,@age INT OUT\rAS\rBEGIN\rselect @age=age from users where id=@id;\rEND", result);
+            Assert.AreEqual("CREATE PROCEDURE [dbo].[p2] @id INT,@age INT OUT\rAS\rBEGIN\rselect @age=age from users where id=@id;\rEND\rGO\r", result);
         }
 
         [TestMethod]

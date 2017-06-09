@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EasyMigLib.Query;
+using System;
 using System.Collections.Generic;
 
 namespace EasyMigLib.Commands
@@ -6,6 +7,7 @@ namespace EasyMigLib.Commands
     public class CommandContainer
     {
         internal Dictionary<string, CreateDatabaseCommand> createDatabaseCommands;
+        internal Dictionary<string, CreateAndUseDatabaseCommand> createAndUseDatabaseCommands;
         internal Dictionary<string, DropDatabaseCommand> dropDatabaseCommands;
 
         internal Dictionary<string, CreateTableCommand> createTableCommands;
@@ -18,6 +20,7 @@ namespace EasyMigLib.Commands
         internal Dictionary<string, SeedTableCommand> seedTableCommands;
 
         public bool HasCreateDatabaseCommands => this.createDatabaseCommands.Count > 0;
+        public bool HasCreateAndUseDatabaseCommands => this.createAndUseDatabaseCommands.Count > 0;
         public bool HasDropDatabaseCommands => this.dropDatabaseCommands.Count > 0;
         public bool HasCreateTableCommands => this.createTableCommands.Count > 0;
         public bool HasAlterTableCommands => this.alterTableCommands.Count > 0;
@@ -30,6 +33,7 @@ namespace EasyMigLib.Commands
         {
 
             this.createDatabaseCommands = new Dictionary<string, CreateDatabaseCommand>();
+            this.createAndUseDatabaseCommands = new Dictionary<string, CreateAndUseDatabaseCommand>();
             this.dropDatabaseCommands = new Dictionary<string, DropDatabaseCommand>();
 
             this.createTableCommands = new Dictionary<string, CreateTableCommand>();
@@ -51,17 +55,40 @@ namespace EasyMigLib.Commands
 
         public CreateDatabaseCommand GetCreateDatabaseCommand(string databaseName)
         {
-            if (!this.HasCreateDatabaseCommand(databaseName)) { throw new Exception("No " + databaseName + " registered"); }
+            if (!this.HasCreateDatabaseCommand(databaseName)) { throw new Exception("No CreateDatabaseCommand " + databaseName + " registered"); }
 
             return this.createDatabaseCommands[databaseName];
         }
 
         public CreateDatabaseCommand CreateDatabase(string databaseName)
         {
-            if (this.HasCreateDatabaseCommand(databaseName)) { throw new Exception(databaseName + " already registered"); }
+            if (this.HasCreateDatabaseCommand(databaseName)) { throw new Exception("CreateDatabaseCommand " + databaseName + " already registered"); }
 
             var command = new CreateDatabaseCommand(databaseName);
             this.createDatabaseCommands[databaseName] = command;
+            return command;
+        }
+
+        // create and use database 
+
+        public bool HasCreateAndUseDatabaseCommand(string databaseName)
+        {
+            return this.createAndUseDatabaseCommands.ContainsKey(databaseName);
+        }
+
+        public CreateAndUseDatabaseCommand GetCreateAndUseDatabaseCommand(string databaseName)
+        {
+            if (!this.HasCreateAndUseDatabaseCommand(databaseName)) { throw new Exception("No CreateAndUseDatabaseCommand " + databaseName + " registered"); }
+
+            return this.createAndUseDatabaseCommands[databaseName];
+        }
+
+        public CreateAndUseDatabaseCommand CreateAndUseDatabase(string databaseName)
+        {
+            if (this.HasCreateAndUseDatabaseCommand(databaseName)) { throw new Exception("CreateAndUseDatabaseCommand " + databaseName + " already registered"); }
+
+            var command = new CreateAndUseDatabaseCommand(databaseName);
+            this.createAndUseDatabaseCommands[databaseName] = command;
             return command;
         }
 
@@ -138,7 +165,6 @@ namespace EasyMigLib.Commands
                 return command;
             }
         }
-
 
         // drop table 
 
@@ -247,6 +273,7 @@ namespace EasyMigLib.Commands
         public void ClearMigrations()
         {
             this.createDatabaseCommands.Clear();
+            this.createAndUseDatabaseCommands.Clear();
             this.dropDatabaseCommands.Clear();
 
             this.createTableCommands.Clear();
@@ -255,6 +282,179 @@ namespace EasyMigLib.Commands
 
             this.createStoredProcedureCommands.Clear();
             this.dropStoredProcedureCommands.Clear();
+        }
+
+        // queries
+
+        public string[] GetDropTableList()
+        {
+            var result = new List<string>();
+            foreach (var table in this.createTableCommands)
+            {
+                if (table.Value.HasForeignKeys)
+                {
+                    var tableReferencedList = table.Value.GetReferencedTableList();
+                    foreach (var tableReferenced in tableReferencedList)
+                    {
+                        if (!result.Contains(tableReferenced))
+                        {
+                            result.Add(tableReferenced);
+                        }
+
+                        // sort
+                        var indexOfTableReferenced = result.IndexOf(tableReferenced);
+                        var index = result.IndexOf(table.Key);
+                        if (index == -1)
+                        {
+                            result.Insert(indexOfTableReferenced, table.Key);
+                        }
+                        else if (index > indexOfTableReferenced)
+                        {
+                            result.RemoveAt(index);
+                            // insert before table referenced
+                            result.Insert(indexOfTableReferenced, table.Key);
+                        }
+                    }
+                }
+            }
+
+            // tables with only primary keys
+            foreach (var table in createTableCommands)
+            {
+                if (!table.Value.HasForeignKeys && !result.Contains(table.Key))
+                {
+                    result.Add(table.Key);
+                }
+            }
+            return result.ToArray();
+        }
+
+        public string GetDropDatabasesQuery(IQueryService queryService)
+        {
+            var result = new List<string>();
+            foreach (var command in this.dropDatabaseCommands)
+            {
+                result.Add(command.Value.GetQuery(queryService));
+            }
+            return string.Join("\r", result);
+        }
+
+        public string GetCreateDatabasesQuery(IQueryService queryService)
+        {
+            var result = new List<string>();
+            foreach (var command in this.createDatabaseCommands)
+            {
+                result.Add(command.Value.GetQuery(queryService));
+            }
+            return string.Join("\r", result);
+        }
+
+        public string GetCreateAndUseDatabasesQuery(IQueryService queryService)
+        {
+            var result = new List<string>();
+            foreach (var command in this.createAndUseDatabaseCommands)
+            {
+                result.Add(command.Value.GetQuery(queryService));
+            }
+            return string.Join("\r", result);
+        }
+
+        public string GetCreateTablesQuery(IQueryService queryService)
+        {
+            var result = new List<string>();
+
+            // drop tables
+
+            var dropTables = this.GetDropTableList();
+            foreach (var tableName in dropTables)
+            {
+                result.Add(queryService.GetDropTable(tableName));
+            }
+
+            // create tables
+
+            foreach (var command in this.createTableCommands)
+            {
+                result.Add(command.Value.GetQuery(queryService));
+            }
+
+            // insert rows
+
+            foreach (var command in this.createTableCommands)
+            {
+                if (command.Value.HasSeeds)
+                {
+                    result.Add(queryService.GetSeeds(command.Value));
+                }
+            }
+
+            // primary keys
+
+            foreach (var command in this.createTableCommands)
+            {
+                if (command.Value.HasPrimaryKeys)
+                {
+                    result.Add(queryService.GetAddPrimaryKeyConstraint(command.Value));
+                }
+            }
+
+            // foreign keys
+
+            foreach (var command in this.createTableCommands)
+            {
+                if (command.Value.HasForeignKeys)
+                {
+                    result.Add(queryService.GetAddForeignKeyConstraints(command.Value));
+                }
+            }
+            return string.Join("\r", result);
+        }
+
+        public string GetDropTablesQuery(IQueryService queryService)
+        {
+            var result = "";
+            foreach (var command in this.dropTableCommands)
+            {
+                result += command.Value.GetQuery(queryService);
+            }
+            return result;
+        }
+
+        public string GetAlterTablesQuery(IQueryService queryService)
+        {
+            var result = new List<string>();
+            foreach (var command in this.alterTableCommands)
+            {
+                result.Add(command.Value.GetQuery(queryService));
+            }
+            return string.Join("\r", result);
+        }
+
+        public string GetDropStoredProceduresQuery(IQueryService queryService)
+        {
+            var result = new List<string>();
+            foreach (var command in this.dropStoredProcedureCommands)
+            {
+                result.Add(command.Value.GetQuery(queryService));
+            }
+            return string.Join("\r", result);
+        }
+
+        public string GetSeedQuery(IQueryService queryService)
+        {
+            var result = new List<string>();
+            foreach (var seedTableCommand in this.seedTableCommands)
+            {
+                result.Add(seedTableCommand.Value.GetQuery(queryService));
+            }
+            if (result.Count > 0)
+            {
+                return string.Join("\r", result);
+            }
+            else
+            {
+                return "";
+            }
         }
 
     }

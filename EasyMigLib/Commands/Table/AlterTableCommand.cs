@@ -1,11 +1,10 @@
 ﻿using EasyMigLib.Query;
-using System;
 using System.Collections.Generic;
 
 namespace EasyMigLib.Commands
 {
 
-    public class AlterTableCommand
+    public class AlterTableCommand : DatabaseCommand
     {
         internal Dictionary<string, AddColumnCommand> addColumnsCommands;
         internal Dictionary<string, ModifyColumnCommand> modifyColumnsCommands;
@@ -41,14 +40,14 @@ namespace EasyMigLib.Commands
 
         public AddColumnCommand GetAddColumnCommand(string columnName)
         {
-            if (!this.HasAddColumnCommand(columnName)) { throw new Exception("No AddColumnCommand registered for " + columnName + " with " + this.TableName); }
+            if (!this.HasAddColumnCommand(columnName)) { throw new EasyMigException("No AddColumnCommand registered for " + columnName + " with " + this.TableName); }
 
             return this.addColumnsCommands[columnName];
         }
 
         public AlterTableCommand AddColumn(string columnName, ColumnType columnType, bool nullable = false, object defaultValue = null, bool unique = false)
         {
-            if (this.HasAddColumnCommand(columnName)) { throw new Exception("AddColumnCommand " + this.TableName + " with " + columnName + " already registered"); }
+            if (this.HasAddColumnCommand(columnName)) { throw new EasyMigException("AddColumnCommand " + this.TableName + " with " + columnName + " already registered"); }
 
             var column = new MigrationColumn(columnName, columnType, nullable, defaultValue, unique);
             this.addColumnsCommands[columnName] = new AddColumnCommand(this.TableName, column);
@@ -69,7 +68,7 @@ namespace EasyMigLib.Commands
 
         public ModifyColumnCommand GetModifyColumnCommand(string columnName)
         {
-            if (!this.HasModifyColumnCommand(columnName)) { throw new Exception("No ModifyColumnCommand registered for " + columnName + " with " + this.TableName); }
+            if (!this.HasModifyColumnCommand(columnName)) { throw new EasyMigException("No ModifyColumnCommand registered for " + columnName + " with " + this.TableName); }
 
             return this.modifyColumnsCommands[columnName];
         }
@@ -77,7 +76,7 @@ namespace EasyMigLib.Commands
 
         public AlterTableCommand ModifyColumn(string columnName, ColumnType columnType, bool nullable, object defaultValue, bool unique)
         {
-            if (this.HasModifyColumnCommand(columnName)) { throw new Exception("ModifyColumnCommand " + this.TableName + " with " + columnName + " already registered"); }
+            if (this.HasModifyColumnCommand(columnName)) { throw new EasyMigException("ModifyColumnCommand " + this.TableName + " with " + columnName + " already registered"); }
 
             var column = new MigrationColumn(columnName, columnType, nullable, defaultValue, unique);
             this.modifyColumnsCommands[columnName] = new ModifyColumnCommand(this.TableName, column);
@@ -99,14 +98,14 @@ namespace EasyMigLib.Commands
 
         public DropColumnCommand GetDropColumnCommand(string columnName)
         {
-            if (!this.HasDropColumnCommand(columnName)) { throw new Exception("No DropColumnCommand registered for " + columnName + " with " + this.TableName); }
+            if (!this.HasDropColumnCommand(columnName)) { throw new EasyMigException("No DropColumnCommand registered for " + columnName + " with " + this.TableName); }
 
             return this.dropColumnsCommands[columnName];
         }
 
         public AlterTableCommand DropColumn(string columnName)
         {
-            if (this.HasDropColumnCommand(columnName)) { throw new Exception("DropColumnCommand " + this.TableName + " with " + columnName + " already registered"); }
+            if (this.HasDropColumnCommand(columnName)) { throw new EasyMigException("DropColumnCommand " + this.TableName + " with " + columnName + " already registered"); }
 
             this.dropColumnsCommands[columnName] = new DropColumnCommand(this.TableName, columnName);
             return this;
@@ -121,14 +120,14 @@ namespace EasyMigLib.Commands
 
         public AddPrimaryKeyConstraintCommand GetPrimaryKeyConstraintCommand(string columnName)
         {
-            if (!this.HasPrimaryKeyConstraintCommand()) { throw new Exception("No AddPrimaryKeyConstraintCommand registered for " + this.TableName); }
+            if (!this.HasPrimaryKeyConstraintCommand()) { throw new EasyMigException("No AddPrimaryKeyConstraintCommand registered for " + this.TableName); }
 
             return this.addPrimaryKeyConstraintCommand;
         }
 
         public AlterTableCommand AddPrimaryKeyConstraint(params string[] primaryKeys)
         {
-            if (this.HasPrimaryKeyConstraintCommand()) { throw new Exception("AddPrimaryKeyConstraintCommand for " + this.TableName + " already defined"); }
+            if (this.HasPrimaryKeyConstraintCommand()) { throw new EasyMigException("AddPrimaryKeyConstraintCommand for " + this.TableName + " already defined"); }
 
             this.addPrimaryKeyConstraintCommand = new AddPrimaryKeyConstraintCommand(this.TableName, primaryKeys);
             return this;
@@ -143,14 +142,14 @@ namespace EasyMigLib.Commands
 
         public AddForeignKeyConstraintCommand GetForeignKeyConstraintCommand(string columnName)
         {
-            if (!this.HasForeignKeyConstraintCommand(columnName)) { throw new Exception("No AddForeignKeyConstraintCommand registered for " + columnName + " with " + this.TableName); }
+            if (!this.HasForeignKeyConstraintCommand(columnName)) { throw new EasyMigException("No AddForeignKeyConstraintCommand registered for " + columnName + " with " + this.TableName); }
 
             return this.addForeignKeyConstraintCommands[columnName];
         }
 
         public AlterTableCommand AddForeignKeyConstraint(string columnName, ColumnType columnType, string tableReferenced, string primaryKeyReferenced)
         {
-            if (this.HasForeignKeyConstraintCommand(columnName)) { throw new Exception("AddForeignKeyConstraintCommand already registered for " + columnName + " with " + this.TableName); }
+            if (this.HasForeignKeyConstraintCommand(columnName)) { throw new EasyMigException("AddForeignKeyConstraintCommand already registered for " + columnName + " with " + this.TableName); }
 
             var column = new ForeignKeyColumn(columnName, columnType, tableReferenced, primaryKeyReferenced);
             this.addForeignKeyConstraintCommands[columnName] = new AddForeignKeyConstraintCommand(this.TableName, column);
@@ -162,7 +161,7 @@ namespace EasyMigLib.Commands
             return this.AddForeignKeyConstraint(columnName, ColumnType.Int(true), tableReferenced, primaryKeyReferenced);
         }
 
-        public string GetQuery(IQueryService queryService)
+        public override string GetQuery(IQueryService queryService)
         {
             var result = new List<string>();
             if (this.HasAddColumnCommands)

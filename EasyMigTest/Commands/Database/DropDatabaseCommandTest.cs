@@ -16,7 +16,7 @@ namespace EasyMigLibTest.Commands
             var command = new DropDatabaseCommand("db1");
             var result = command.GetQuery(new SqlQueryService());
 
-            Assert.AreEqual("DROP DATABASE IF EXISTS [db1];\r", result);
+            Assert.AreEqual("DROP DATABASE IF EXISTS [db1]\rGO\r", result);
         }
 
         [TestMethod]

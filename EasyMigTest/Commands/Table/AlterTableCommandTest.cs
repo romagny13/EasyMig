@@ -132,7 +132,7 @@ namespace EasyMigLibTest.Commands.Table
 
             var result = container.GetQuery(new SqlQueryService());
 
-            Assert.AreEqual("ALTER TABLE [dbo].[table1] ADD [column1] NVARCHAR(255) NOT NULL;\r\rALTER TABLE [dbo].[table1] ADD [column2] NVARCHAR(255) NOT NULL;\r", result);
+            Assert.AreEqual("ALTER TABLE [dbo].[table1] ADD [column1] NVARCHAR(255) NOT NULL\rGO\r\rALTER TABLE [dbo].[table1] ADD [column2] NVARCHAR(255) NOT NULL\rGO\r", result);
         }
 
         [TestMethod]
@@ -147,7 +147,7 @@ namespace EasyMigLibTest.Commands.Table
 
             var result = container.GetQuery(new SqlQueryService());
 
-            Assert.AreEqual("ALTER TABLE [dbo].[table1] ALTER COLUMN [column1] NVARCHAR(255) NOT NULL;\r\rALTER TABLE [dbo].[table1] ALTER COLUMN [column2] NVARCHAR(255) NOT NULL;\r", result);
+            Assert.AreEqual("ALTER TABLE [dbo].[table1] ALTER COLUMN [column1] NVARCHAR(255) NOT NULL\rGO\r\rALTER TABLE [dbo].[table1] ALTER COLUMN [column2] NVARCHAR(255) NOT NULL\rGO\r", result);
         }
 
         [TestMethod]
@@ -161,7 +161,7 @@ namespace EasyMigLibTest.Commands.Table
 
             var result = container.GetQuery(new SqlQueryService());
 
-            Assert.AreEqual("ALTER TABLE [dbo].[table1] ALTER COLUMN [column1] NVARCHAR(100) NULL;\r", result);
+            Assert.AreEqual("ALTER TABLE [dbo].[table1] ALTER COLUMN [column1] NVARCHAR(100) NULL\rGO\r", result);
         }
 
         [TestMethod]
@@ -176,7 +176,7 @@ namespace EasyMigLibTest.Commands.Table
 
             var result = container.GetQuery(new SqlQueryService());
 
-            Assert.AreEqual("ALTER TABLE [dbo].[table1] DROP COLUMN [column1];\r\rALTER TABLE [dbo].[table1] DROP COLUMN [column2];\r", result);
+            Assert.AreEqual("ALTER TABLE [dbo].[table1] DROP COLUMN [column1]\rGO\r\rALTER TABLE [dbo].[table1] DROP COLUMN [column2]\rGO\r", result);
         }
 
         [TestMethod]
@@ -190,7 +190,7 @@ namespace EasyMigLibTest.Commands.Table
 
             var result = container.GetQuery(new SqlQueryService());
 
-            Assert.AreEqual("ALTER TABLE [dbo].[table1] ADD PRIMARY KEY ([column1],[column2]);\r", result);
+            Assert.AreEqual("ALTER TABLE [dbo].[table1] ADD PRIMARY KEY ([column1],[column2])\rGO\r", result);
         }
 
         [TestMethod]
@@ -205,7 +205,7 @@ namespace EasyMigLibTest.Commands.Table
 
             var result = container.GetQuery(new SqlQueryService());
 
-            Assert.AreEqual("ALTER TABLE [dbo].[posts] ADD FOREIGN KEY ([user_id]) REFERENCES [dbo].[users]([id]);\r\rALTER TABLE [dbo].[posts] ADD FOREIGN KEY ([category_id]) REFERENCES [dbo].[categories]([id]);\r", result);
+            Assert.AreEqual("ALTER TABLE [dbo].[posts] ADD FOREIGN KEY ([user_id]) REFERENCES [dbo].[users]([id])\rGO\r\rALTER TABLE [dbo].[posts] ADD FOREIGN KEY ([category_id]) REFERENCES [dbo].[categories]([id])\rGO\r", result);
         }
 
         [TestMethod]
@@ -221,7 +221,7 @@ namespace EasyMigLibTest.Commands.Table
 
             var result = container.GetQuery(new SqlQueryService());
 
-            Assert.AreEqual("ALTER TABLE [dbo].[posts] ADD [column1] NVARCHAR(255) NOT NULL;\r\rALTER TABLE [dbo].[posts] ADD [column2] NVARCHAR(255) NOT NULL;\r\rALTER TABLE [dbo].[posts] ALTER COLUMN [column3] NVARCHAR(255) NOT NULL;\r", result);
+            Assert.AreEqual("ALTER TABLE [dbo].[posts] ADD [column1] NVARCHAR(255) NOT NULL\rGO\r\rALTER TABLE [dbo].[posts] ADD [column2] NVARCHAR(255) NOT NULL\rGO\r\rALTER TABLE [dbo].[posts] ALTER COLUMN [column3] NVARCHAR(255) NOT NULL\rGO\r", result);
         }
 
 

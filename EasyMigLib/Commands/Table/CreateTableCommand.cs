@@ -1,11 +1,10 @@
 ﻿using EasyMigLib.Query;
-using System;
 using System.Collections.Generic;
 
 namespace EasyMigLib.Commands
 {
 
-    public class CreateTableCommand
+    public class CreateTableCommand : DatabaseCommand
     {
         internal Dictionary<string, PrimaryKeyColumn> primaryKeys;
         internal Dictionary<string, ForeignKeyColumn> foreignKeys;
@@ -39,15 +38,15 @@ namespace EasyMigLib.Commands
 
         public PrimaryKeyColumn GetPrimaryKey(string columnName)
         {
-            if (!this.HasPrimaryKey(columnName)) { throw new Exception("Primary key " + columnName + "  not registered for " + this.TableName); }
+            if (!this.HasPrimaryKey(columnName)) { throw new EasyMigException("Primary key " + columnName + "  not registered for " + this.TableName); }
 
             return this.primaryKeys[columnName];
         }
 
         public CreateTableCommand AddPrimaryKey(string columnName, ColumnType columnType, bool autoIncrement = false)
         {
-            if (this.HasColumn(columnName)) { throw new Exception("Column " + columnName + " already registered for " + this.TableName); }
-            if (columnType.GetType() != typeof(IntColumnType) && autoIncrement) { throw new Exception("Invalid type. Column " + columnName + " cannot be auto incremetented"); }
+            if (this.HasColumn(columnName)) { throw new EasyMigException("Column " + columnName + " already registered for " + this.TableName); }
+            if (columnType.GetType() != typeof(IntColumnType) && autoIncrement) { throw new EasyMigException("Invalid type. Column " + columnName + " cannot be auto incremetented"); }
 
             this.primaryKeys[columnName] = new PrimaryKeyColumn(columnName, columnType, autoIncrement);
             return this;
@@ -67,14 +66,14 @@ namespace EasyMigLib.Commands
 
         public ForeignKeyColumn GetForeignKey(string columnName)
         {
-            if (!this.HasForeignKey(columnName)) { throw new Exception("Foreign key " + columnName + "  not registered for " + this.TableName); }
+            if (!this.HasForeignKey(columnName)) { throw new EasyMigException("Foreign key " + columnName + "  not registered for " + this.TableName); }
 
             return this.foreignKeys[columnName];
         }
 
         public CreateTableCommand AddForeignKey(string columnName, ColumnType columnType, string tableReferenced, string primaryKeyReferenced, bool nullable = false, object defaultValue = null)
         {
-            if (this.HasColumn(columnName)) { throw new Exception("Column " + columnName + " already registered for " + this.TableName); }
+            if (this.HasColumn(columnName)) { throw new EasyMigException("Column " + columnName + " already registered for " + this.TableName); }
 
             this.foreignKeys[columnName] = new ForeignKeyColumn(columnName, columnType, tableReferenced, primaryKeyReferenced, nullable, defaultValue);
             return this;
@@ -96,7 +95,7 @@ namespace EasyMigLib.Commands
 
         public MigrationColumn GetColumn(string columnName)
         {
-            if (!this.HasColumn(columnName)) { throw new Exception("Column " + columnName + " not registered for " + this.TableName); }
+            if (!this.HasColumn(columnName)) { throw new EasyMigException("Column " + columnName + " not registered for " + this.TableName); }
 
             if (this.HasPrimaryKey(columnName))
             {
@@ -114,7 +113,7 @@ namespace EasyMigLib.Commands
 
         public CreateTableCommand AddColumn(string columnName, ColumnType columnType, bool nullable = false, object defaultValue = null, bool unique = false)
         {
-            if (this.HasColumn(columnName)) { throw new Exception("Column " + columnName + " already registered for " + this.TableName); }
+            if (this.HasColumn(columnName)) { throw new EasyMigException("Column " + columnName + " already registered for " + this.TableName); }
 
             this.columns[columnName] = new MigrationColumn(columnName, columnType, nullable, defaultValue, unique);
             return this;
@@ -149,7 +148,7 @@ namespace EasyMigLib.Commands
             return result;
         }
 
-        public string GetQuery(IQueryService queryService)
+        public override string GetQuery(IQueryService queryService)
         {
             return queryService.GetCreateTable(this);
         }

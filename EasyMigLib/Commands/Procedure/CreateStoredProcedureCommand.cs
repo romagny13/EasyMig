@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace EasyMigLib.Commands
 {
 
-    public class CreateStoredProcedureCommand
+    public class CreateStoredProcedureCommand : DatabaseCommand
     {
         public string ProcedureName { get; protected set; }
         public Dictionary<string, DatabaseParameter> Parameters { get; }
@@ -33,7 +33,7 @@ namespace EasyMigLib.Commands
             return this;
         }
 
-        public string GetQuery(IQueryService queryService)
+        public override string GetQuery(IQueryService queryService)
         {
             return queryService.GetCreateStoredProcedure(this.ProcedureName, this.Parameters, this.Body);
         }

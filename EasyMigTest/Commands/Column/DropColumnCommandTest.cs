@@ -14,7 +14,7 @@ namespace EasyMigLibTest.Commands
             var command = new DropColumnCommand("table1", "column1");
             var result = command.GetQuery(new SqlQueryService());
 
-            Assert.AreEqual("ALTER TABLE [dbo].[table1] DROP COLUMN [column1];\r", result);
+            Assert.AreEqual("ALTER TABLE [dbo].[table1] DROP COLUMN [column1]\rGO\r", result);
         }
 
         [TestMethod]

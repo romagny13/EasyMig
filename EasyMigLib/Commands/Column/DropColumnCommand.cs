@@ -2,7 +2,7 @@
 
 namespace EasyMigLib.Commands
 {
-    public class DropColumnCommand
+    public class DropColumnCommand : DatabaseCommand
     {
         public string TableName { get; protected set; }
         public string ColumnName { get; protected set; }
@@ -13,7 +13,7 @@ namespace EasyMigLib.Commands
             this.ColumnName = columnName;
         }
 
-        public string GetQuery(IQueryService queryService)
+        public override string GetQuery(IQueryService queryService)
         {
             return queryService.GetDropColumn(this.TableName, this.ColumnName);
         }

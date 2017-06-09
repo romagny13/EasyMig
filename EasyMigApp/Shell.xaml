@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:EasyMigApp"
         mc:Ignorable="d"
-        Title="EasyMig Tool" Height="600" MaxHeight="600" Width="640" Background="#FFEEEEEE">
+        Title="EasyMig Tool" Height="600" MaxHeight="600" Width="640" Background="#FFEEEEEE" Icon="easymig.ico">
 
     <Window.Resources>
 
@@ -36,105 +36,116 @@
         </Style>
     </Window.Resources>
 
-    <StackPanel>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
 
-        <Grid Margin="12,12,12,0" Height="30">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="140"/>
-                <ColumnDefinition/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
+        <StackPanel>
 
-            <TextBlock Text="Assembly path" ></TextBlock>
-            <TextBox Text="{Binding Model.AssemblyPath}" Grid.Column="1" IsReadOnly="True" TabIndex="2"></TextBox>
-            <TextBlock Grid.Column="2" Margin="2,-5,2,0" FontSize="24" FontWeight="DemiBold"  Text="*" Foreground="Red"/>
-            <Button Command="{Binding AssemblyPathCommand}" Width="30" Grid.Column="3" Content="..."></Button>
+            <Grid Margin="12,12,12,0" Height="30">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="140"/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Text="Assembly path" ></TextBlock>
+                <TextBox Text="{Binding Model.AssemblyPath}" Grid.Column="1" IsReadOnly="True" TabIndex="2"></TextBox>
+                <TextBlock Grid.Column="2" Margin="2,-5,2,0" FontSize="24" FontWeight="DemiBold"  Text="*" Foreground="Red"/>
+                <Button Command="{Binding AssemblyPathCommand}" Width="30" Grid.Column="3" Content="..."></Button>
+            </Grid>
+
+            <Grid Margin="12,16,12,0" Height="30">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="140"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Text="ConnectionString" ></TextBlock>
+                <ComboBox Text="{Binding Model.ConnectionString}" ItemsSource="{Binding StoredConnectionStrings}" Height="30" IsEditable="True" Grid.Column="1"></ComboBox>
+            </Grid>
+
+            <Grid Margin="12,16,12,0" Height="30">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="140"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Text="ProviderName" ></TextBlock>
+                <ComboBox ItemsSource="{Binding ProviderNames}"  SelectedItem="{Binding Model.ProviderName}"  Grid.Column="1"></ComboBox>
+            </Grid>
+
+            <Grid Margin="12,16,12,0" Height="50">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="140"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Text="Engine" ></TextBlock>
+
+                <StackPanel Grid.Column="1">
+                    <TextBox Text="{Binding Model.Engine}" Height="30"></TextBox>
+                    <TextBlock Text="'MyISAM' for example for MySQL" FontSize="10" FontStyle="Italic" Foreground="#333"></TextBlock>
+                </StackPanel>
+            </Grid>
+
+            <Grid Margin="12,16,12,0" IsEnabled="{Binding HasMigrations}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="140"/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="120"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="Migrations" FontSize="14" FontWeight="DemiBold"></TextBlock>
+                <ListView x:Name="MigrationList" MaxHeight="200" ItemsSource="{Binding Migrations}" Grid.Column="1" Margin="0,0,12,0">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding FullName}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+                <StackPanel Grid.Column="3">
+                    <Button Command="{Binding UpAllCommand}" Height="30" Margin="0,0,0,12">Up All</Button>
+                    <Button Command="{Binding DownAllCommand}" Height="30" Margin="0,0,0,12">Down All</Button>
+                    <Button Command="{Binding UpOneCommand}" CommandParameter="{Binding ElementName=MigrationList, Path=SelectedItem}" IsEnabled="{Binding ElementName=MigrationList, Path=SelectedItems.Count}" Height="30" Margin="0,0,0,12">Up One</Button>
+                    <Button Command="{Binding DownOneCommand}" CommandParameter="{Binding ElementName=MigrationList, Path=SelectedItem}" IsEnabled="{Binding ElementName=MigrationList, Path=SelectedItems.Count}" Height="30" Margin="0,0,0,12">Down One</Button>
+                    <Button Command="{Binding GenMigrationScriptCommand}" Height="30">Script</Button>
+                </StackPanel>
+            </Grid>
+
+            <Grid Margin="12,16,12,0"  IsEnabled="{Binding HasSeeders}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="140"/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="120"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="Seeders" FontSize="14" FontWeight="DemiBold"></TextBlock>
+
+                <ListView MaxHeight="120" ItemsSource="{Binding Seeders}" x:Name="SeederList" Grid.Column="1"  Margin="0,0,12,0" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding FullName}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+
+                <StackPanel Grid.Column="3">
+                    <Button Command="{Binding SeedAllCommand}" Height="30" Margin="0,0,0,12">Seed All</Button>
+                    <Button Command="{Binding SeedOneCommand}" IsEnabled="{Binding ElementName=SeederList, Path=SelectedItems.Count}" CommandParameter="{Binding ElementName=SeederList, Path=SelectedItem}" Height="30" Margin="0,0,0,12">Seed One</Button>
+                    <Button Command="{Binding GenSeedScriptCommand}" Height="30">Script</Button>
+                </StackPanel>
+            </Grid>
+        </StackPanel>
+
+        <Grid VerticalAlignment="Bottom" Grid.Row="1">
+            <ProgressBar IsIndeterminate="True" Visibility="{Binding IsActive}" Height="10" Foreground="#FF5E7981"></ProgressBar>
         </Grid>
+    </Grid>
 
-        <Grid Margin="12,16,12,0" Height="30">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="140"/>
-                <ColumnDefinition/>
-            </Grid.ColumnDefinitions>
-
-            <TextBlock Text="ConnectionString" ></TextBlock>
-            <ComboBox Text="{Binding Model.ConnectionString}" ItemsSource="{Binding StoredConnectionStrings}" Height="30" IsEditable="True" Grid.Column="1"></ComboBox>
-        </Grid>
-
-        <Grid Margin="12,16,12,0" Height="30">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="140"/>
-                <ColumnDefinition/>
-            </Grid.ColumnDefinitions>
-
-            <TextBlock Text="ProviderName" ></TextBlock>
-            <ComboBox ItemsSource="{Binding ProviderNames}"  SelectedItem="{Binding Model.ProviderName}"  Grid.Column="1"></ComboBox>
-        </Grid>
-
-        <Grid Margin="12,16,12,0" Height="50">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="140"/>
-                <ColumnDefinition/>
-            </Grid.ColumnDefinitions>
-
-            <TextBlock Text="Engine" ></TextBlock>
-
-            <StackPanel Grid.Column="1">
-                <TextBox Text="{Binding Model.Engine}" Height="30"></TextBox>
-                <TextBlock Text="'MyISAM' for example for MySQL" FontSize="10" FontStyle="Italic" Foreground="#333"></TextBlock>
-            </StackPanel>
-        </Grid>
-
-        <Grid Margin="12,16,12,0" IsEnabled="{Binding HasMigrations}">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="140"/>
-                <ColumnDefinition/>
-                <ColumnDefinition Width="120"/>
-            </Grid.ColumnDefinitions>
-            <TextBlock Text="Migrations" FontSize="14" FontWeight="DemiBold"></TextBlock>
-            <ListView x:Name="MigrationList" MaxHeight="200" ItemsSource="{Binding Migrations}" Grid.Column="1" Margin="0,0,12,0">
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="{Binding FullName}" />
-                        </StackPanel>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
-            <StackPanel Grid.Column="3">
-                <Button Command="{Binding UpAllCommand}" Height="30" Margin="0,0,0,12">Up All</Button>
-                <Button Command="{Binding DownAllCommand}" Height="30" Margin="0,0,0,12">Down All</Button>
-                <Button Command="{Binding UpOneCommand}" CommandParameter="{Binding ElementName=MigrationList, Path=SelectedItem}" IsEnabled="{Binding ElementName=MigrationList, Path=SelectedItems.Count}" Height="30" Margin="0,0,0,12">Up One</Button>
-                <Button Command="{Binding DownOneCommand}" CommandParameter="{Binding ElementName=MigrationList, Path=SelectedItem}" IsEnabled="{Binding ElementName=MigrationList, Path=SelectedItems.Count}" Height="30" Margin="0,0,0,12">Down One</Button>
-                <Button Command="{Binding GenMigrationScriptCommand}" Height="30">Script</Button>
-            </StackPanel>
-        </Grid>
-
-        <Grid Margin="12,16,12,0"  IsEnabled="{Binding HasSeeders}">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="140"/>
-                <ColumnDefinition/>
-                <ColumnDefinition Width="120"/>
-            </Grid.ColumnDefinitions>
-            <TextBlock Text="Seeders" FontSize="14" FontWeight="DemiBold"></TextBlock>
-
-            <ListView MaxHeight="120" ItemsSource="{Binding Seeders}" x:Name="SeederList" Grid.Column="1"  Margin="0,0,12,0" ScrollViewer.VerticalScrollBarVisibility="Auto">
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="{Binding FullName}" />
-                        </StackPanel>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
-
-            <StackPanel Grid.Column="3">
-                <Button Command="{Binding SeedAllCommand}" Height="30" Margin="0,0,0,12">Seed All</Button>
-                <Button Command="{Binding SeedOneCommand}" IsEnabled="{Binding ElementName=SeederList, Path=SelectedItems.Count}" CommandParameter="{Binding ElementName=SeederList, Path=SelectedItem}" Height="30" Margin="0,0,0,12">Seed One</Button>
-                <Button Command="{Binding GenSeedScriptCommand}" Height="30">Script</Button>
-            </StackPanel>
-        </Grid>
-
-    </StackPanel>
 </Window>

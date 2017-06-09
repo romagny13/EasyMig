@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace EasyMigLib.Commands
 {
-    public class SeedRwoCommand
+    public class SeedRwoCommand : DatabaseCommand
     {
         public string TableName { get; protected set; }
         internal Dictionary<string, object> columnValues;
@@ -14,7 +14,7 @@ namespace EasyMigLib.Commands
             this.columnValues = columnValues;
         }
 
-        public string GetQuery(IQueryService queryService)
+        public override string GetQuery(IQueryService queryService)
         {
             return queryService.GetSeedRow(this.TableName, this.columnValues);
         }

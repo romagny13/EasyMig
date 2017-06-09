@@ -15,7 +15,7 @@ namespace EasyMigLibTest.Commands
             var command = new DropTableCommand("table1");
             var result = command.GetQuery(new SqlQueryService());
 
-            Assert.AreEqual("DROP TABLE IF EXISTS [dbo].[table1];\r", result);
+            Assert.AreEqual("DROP TABLE IF EXISTS [dbo].[table1]\rGO\r", result);
         }
 
         [TestMethod]

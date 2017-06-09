@@ -73,16 +73,14 @@ namespace EasyMigApp.Models
             if (this.IsSqlClient(providerName))
             {
                 EasyMig.ToSqlServer.CreateMigrationScript(assemblyPath, fileName);
-                EasyMig.ToSqlServer.CreateStoredProcedureScript(assemblyPath, procedureFileName);
             }
             else
             {
                 EasyMig.ToMySql.CreateMigrationScript(assemblyPath, fileName, engine);
-                EasyMig.ToMySql.CreateStoredProcedureScript(assemblyPath, procedureFileName);
             }
         }
 
-        public void CreateSeedScript(string assemblyPath, string providerName, string fileName, string engine)
+        public void CreateSeedScript(string assemblyPath, string providerName, string fileName)
         {
             if (this.IsSqlClient(providerName))
             {
@@ -91,7 +89,7 @@ namespace EasyMigApp.Models
             else
             {
 
-                EasyMig.ToMySql.CreateSeedScript(assemblyPath,  fileName, engine);
+                EasyMig.ToMySql.CreateSeedScript(assemblyPath,  fileName);
             }
         }
 
@@ -99,14 +97,7 @@ namespace EasyMigApp.Models
         {
             if (this.IsSqlClient(providerName))
             {
-                if (this.IsAttachDbFilename(connectionString))
-                {
-                    EasyMig.ToSqlServerAttachedDbFile.DoMigrationsForAssembly(assemblyPath, connectionString);
-                }
-                else
-                {
-                    EasyMig.ToSqlServer.DoMigrationsForAssembly(assemblyPath, connectionString);
-                }
+                EasyMig.ToSqlServer.DoMigrationsForAssembly(assemblyPath, connectionString);
             }
             else
             {
@@ -118,14 +109,7 @@ namespace EasyMigApp.Models
         {
             if (this.IsSqlClient(providerName))
             {
-                if (this.IsAttachDbFilename(connectionString))
-                {
-                    EasyMig.ToSqlServerAttachedDbFile.DoMigrationsForAssembly(assemblyPath, connectionString,MigrationDirection.Down);
-                }
-                else
-                {
-                    EasyMig.ToSqlServer.DoMigrationsForAssembly(assemblyPath, connectionString,MigrationDirection.Down);
-                }
+                EasyMig.ToSqlServer.DoMigrationsForAssembly(assemblyPath, connectionString, MigrationDirection.Down);
             }
             else
             {
@@ -138,14 +122,7 @@ namespace EasyMigApp.Models
         {
             if (this.IsSqlClient(providerName))
             {
-                if (this.IsAttachDbFilename(connectionString))
-                {
-                    EasyMig.ToSqlServerAttachedDbFile.DoMigrationOnlyFor(fileName, assemblyPath, connectionString);
-                }
-                else
-                {
-                    EasyMig.ToSqlServer.DoMigrationOnlyFor(fileName, assemblyPath, connectionString);
-                }
+                EasyMig.ToSqlServer.DoMigrationOnlyFor(fileName, assemblyPath, connectionString);
             }
             else
             {
@@ -157,14 +134,8 @@ namespace EasyMigApp.Models
         {
             if (this.IsSqlClient(providerName))
             {
-                if (this.IsAttachDbFilename(connectionString))
-                {
-                    EasyMig.ToSqlServerAttachedDbFile.DoMigrationOnlyFor(fileName, assemblyPath, connectionString, MigrationDirection.Down);
-                }
-                else
-                {
-                    EasyMig.ToSqlServer.DoMigrationOnlyFor(fileName, assemblyPath, connectionString, MigrationDirection.Down);
-                }
+                EasyMig.ToSqlServer.DoMigrationOnlyFor(fileName, assemblyPath, connectionString, MigrationDirection.Down);
+
             }
             else
             {
@@ -176,18 +147,11 @@ namespace EasyMigApp.Models
         {
             if (this.IsSqlClient(providerName))
             {
-                if (this.IsAttachDbFilename(connectionString))
-                {
-                    EasyMig.ToSqlServerAttachedDbFile.DoSeedForAssembly(assemblyPath, connectionString);
-                }
-                else
-                {
-                    EasyMig.ToSqlServer.DoSeedForAssembly(assemblyPath, connectionString);
-                }
+                EasyMig.ToSqlServer.DoSeedForAssembly(assemblyPath, connectionString);
             }
             else
             {
-                EasyMig.ToMySql.DoSeedForAssembly(assemblyPath, connectionString, engine);
+                EasyMig.ToMySql.DoSeedForAssembly(assemblyPath, connectionString);
             }
         }
 
@@ -195,18 +159,11 @@ namespace EasyMigApp.Models
         {
             if (this.IsSqlClient(providerName))
             {
-                if (this.IsAttachDbFilename(connectionString))
-                {
-                    EasyMig.ToSqlServerAttachedDbFile.DoSeedOnlyFor(fileName, assemblyPath, connectionString);
-                }
-                else
-                {
-                    EasyMig.ToSqlServer.DoSeedOnlyFor(fileName, assemblyPath, connectionString);
-                }
+                EasyMig.ToSqlServer.DoSeedOnlyFor(fileName, assemblyPath, connectionString);
             }
             else
             {
-                EasyMig.ToMySql.DoSeedOnlyFor(fileName, assemblyPath, connectionString, engine);
+                EasyMig.ToMySql.DoSeedOnlyFor(fileName, assemblyPath, connectionString);
             }
         }
 

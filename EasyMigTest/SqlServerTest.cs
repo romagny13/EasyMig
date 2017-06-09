@@ -57,25 +57,13 @@ namespace EasyMigLibTest
             await TestCreateDatabase();
         }
 
-        //[TestMethod]
-        //public void TestProcedure()
-        //{
-        //    this.BeforeEach();
-        //    TestDropStoredProcedure();
-        //    TestCreateStoredProcedure();
-        //}
-
         public async Task TestDropDatabase()
         {
             var dbName = "sql_db2";
 
-            EasyMig.DropDatabase(dbName);
+            EasyMig.DropDatabaseIfExists(dbName);
 
             EasyMig.ToSqlServer.DoMigrationsFromMemory(connectionString);
-
-            //var query = EasyMig.ToSqlServer.GetMigrationQuery();
-
-            //EasyMig.ToSqlServer.ExecuteQuery(query, shortConnectionString);
 
             await Task.Delay(500);
 
@@ -90,10 +78,6 @@ namespace EasyMigLibTest
             EasyMig.CreateDatabase(dbName);
 
             EasyMig.ToSqlServer.DoMigrationsFromMemory(connectionString);
-
-            //var query = EasyMig.ToSqlServer.GetMigrationQuery();
-
-            //EasyMig.ToSqlServer.ExecuteQuery(query, shortConnectionString);
 
             await Task.Delay(500);
 
@@ -111,10 +95,6 @@ namespace EasyMigLibTest
                 .AddColumn("title");
 
             EasyMig.ToSqlServer.DoMigrationsFromMemory(connectionString);
-
-            //var query = EasyMig.ToSqlServer.GetMigrationQuery();
-
-            //EasyMig.ToSqlServer.ExecuteQuery(query, connectionString);
 
             await Task.Delay(500);
 
@@ -155,10 +135,6 @@ namespace EasyMigLibTest
 
             EasyMig.ToSqlServer.DoMigrationsFromMemory(connectionString);
 
-            //var query = EasyMig.ToSqlServer.GetMigrationQuery();
-
-            //EasyMig.ToSqlServer.ExecuteQuery(query, connectionString);
-
             await Task.Delay(500);
 
             Assert.IsTrue(EasyMig.Information.SqlServer.ColumnExists(dbName, tableName, columnName, connectionString));
@@ -181,10 +157,6 @@ namespace EasyMigLibTest
 
             EasyMig.ToSqlServer.DoMigrationsFromMemory(connectionString);
 
-            //var query = EasyMig.ToSqlServer.GetMigrationQuery();
-
-            //EasyMig.ToSqlServer.ExecuteQuery(query, connectionString);
-
             await Task.Delay(500);
 
             var table = EasyMig.Information.SqlServer.GetTable(dbName, tableName, connectionString);
@@ -201,10 +173,6 @@ namespace EasyMigLibTest
             EasyMig.AlterTable(tableName).AddPrimaryKeyConstraint(columnName);
 
             EasyMig.ToSqlServer.DoMigrationsFromMemory(connectionString);
-
-            //var query = EasyMig.ToSqlServer.GetMigrationQuery();
-
-            //EasyMig.ToSqlServer.ExecuteQuery(query, connectionString);
 
             await Task.Delay(500);
 
@@ -226,10 +194,6 @@ namespace EasyMigLibTest
 
             EasyMig.ToSqlServer.DoMigrationsFromMemory(connectionString);
 
-            //var query = EasyMig.ToSqlServer.GetMigrationQuery();
-
-            //EasyMig.ToSqlServer.ExecuteQuery(query, connectionString);
-
             await Task.Delay(500);
 
             var table = EasyMig.Information.SqlServer.GetTable(dbName, tableName, connectionString);
@@ -249,10 +213,6 @@ namespace EasyMigLibTest
 
             EasyMig.ToSqlServer.DoMigrationsFromMemory(connectionString);
 
-            //var query = EasyMig.ToSqlServer.GetMigrationQuery();
-
-            //EasyMig.ToSqlServer.ExecuteQuery(query, connectionString);
-
             await Task.Delay(500);
 
             Assert.IsFalse(EasyMig.Information.SqlServer.ColumnExists(dbName, tableName, columnName, connectionString));
@@ -271,10 +231,6 @@ namespace EasyMigLibTest
                 .Insert(SeedData.New.Set("username", "user1").Set("age", 20));
 
             EasyMig.ToSqlServer.DoSeedFromMemory(connectionString);
-
-            //var query = EasyMig.ToSqlServer.GetSeedQuery();
-
-            //EasyMig.ToSqlServer.ExecuteQuery(query, connectionString);
 
             var tableRows = EasyMig.Information.SqlServer.GetTableRows(tableName, connectionString);
             Assert.AreEqual(1, tableRows.Count);

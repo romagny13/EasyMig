@@ -1,5 +1,6 @@
 ﻿using EasyMigLib.Commands;
 using System.Collections.Generic;
+using System;
 
 namespace EasyMigLib.Query
 {
@@ -7,6 +8,7 @@ namespace EasyMigLib.Query
     {
         public string StartQuote { get; }
         public string EndQuote { get; }
+        public string Delimiter { get; protected set;  }
 
         public abstract string GetColumnType(ColumnType columnType);
         public abstract string GetColumn(MigrationColumn column);
@@ -19,6 +21,17 @@ namespace EasyMigLib.Query
             this.StartQuote = startQuote;
             this.EndQuote = endQuote;
             this.reservedWords = this.GetReservedWords();
+            this.Delimiter = ";\r";
+        }
+
+        public void SetDefaultDelimiter(string delimiter)
+        {
+            this.Delimiter = delimiter;
+        }
+
+        public virtual string GetDefaultDelimiter()
+        {
+            return this.Delimiter;
         }
 
         // reserved words
@@ -49,21 +62,33 @@ namespace EasyMigLib.Query
 
         // database
 
+
         public virtual string GetCreateDatabase(string databaseName)
         {
-            return "CREATE DATABASE " + this.WrapWithQuotes(databaseName) + ";\r";
+            return "CREATE DATABASE " + this.WrapWithQuotes(databaseName) + this.GetDefaultDelimiter();
+        }
+
+        public virtual string GetUseDatabase(string databaseName)
+        {
+            return "USE " + this.WrapWithQuotes(databaseName) + this.GetDefaultDelimiter();
+        }
+
+        public virtual string GetCreateAndUseDatabase(string databaseName)
+        {
+            return this.GetCreateDatabase(databaseName)
+                + this.GetUseDatabase(databaseName); 
         }
 
         public virtual string GetDropDatabase(string databaseName)
         {
-            return "DROP DATABASE IF EXISTS " + this.WrapWithQuotes(databaseName) + ";\r";
+            return "DROP DATABASE IF EXISTS " + this.WrapWithQuotes(databaseName) + this.GetDefaultDelimiter();
         }
 
         // table
 
         public virtual string GetDropTable(string tableName)
         {
-            return "DROP TABLE IF EXISTS " + this.FormatWithSchemaName(tableName) + ";\r";
+            return "DROP TABLE IF EXISTS " + this.FormatWithSchemaName(tableName) + this.GetDefaultDelimiter();
         }
 
         public virtual void AddTimestamps(CreateTableCommand table)
@@ -117,24 +142,24 @@ namespace EasyMigLib.Query
 
             return "CREATE TABLE " + this.FormatWithSchemaName(table.TableName) + " (\r"
               + string.Join(",\r", result)
-              + "\r);\r";
+              + "\r)" + this.GetDefaultDelimiter();
         }
 
         // alter table
 
         public virtual string GetAddColumn(string tableName, MigrationColumn column)
         {
-            return "ALTER TABLE " + this.FormatWithSchemaName(tableName) + " ADD " + this.GetColumn(column) + ";\r";
+            return "ALTER TABLE " + this.FormatWithSchemaName(tableName) + " ADD " + this.GetColumn(column) + this.GetDefaultDelimiter();
         }
 
         public virtual string GetModifyColumn(string tableName, MigrationColumn column)
         {
-            return "ALTER TABLE " + this.FormatWithSchemaName(tableName) + " ALTER COLUMN " + this.GetColumn(column) + ";\r";
+            return "ALTER TABLE " + this.FormatWithSchemaName(tableName) + " ALTER COLUMN " + this.GetColumn(column) + this.GetDefaultDelimiter();
         }
 
         public virtual string GetDropColumn(string tableName, string columnName)
         {
-            return "ALTER TABLE " + this.FormatWithSchemaName(tableName) + " DROP COLUMN " + this.WrapWithQuotes(columnName) + ";\r";
+            return "ALTER TABLE " + this.FormatWithSchemaName(tableName) + " DROP COLUMN " + this.WrapWithQuotes(columnName) + this.GetDefaultDelimiter();
         }
 
         public virtual string GetAddPrimaryKeyConstraint(string tableName, string[] primaryKeys)
@@ -147,7 +172,7 @@ namespace EasyMigLib.Query
                     formattedPrimaryKeys.Add(this.WrapWithQuotes(primaryKey));
                 }
 
-                return "ALTER TABLE " + this.FormatWithSchemaName(tableName) + " ADD PRIMARY KEY (" + string.Join(",", formattedPrimaryKeys) + ");\r";
+                return "ALTER TABLE " + this.FormatWithSchemaName(tableName) + " ADD PRIMARY KEY (" + string.Join(",", formattedPrimaryKeys) + ")" + this.GetDefaultDelimiter();
             }
             else
             {
@@ -160,7 +185,7 @@ namespace EasyMigLib.Query
             return "ALTER TABLE " + this.FormatWithSchemaName(tableName)
                     + " ADD FOREIGN KEY (" + this.WrapWithQuotes(foreignKey.ColumnName)
                     + ") REFERENCES " + this.FormatWithSchemaName(foreignKey.TableReferenced)
-                    + "(" + this.WrapWithQuotes(foreignKey.PrimaryKeyReferenced) + ");\r";
+                    + "(" + this.WrapWithQuotes(foreignKey.PrimaryKeyReferenced) + ")" + this.GetDefaultDelimiter();
 
         }
 
@@ -176,7 +201,7 @@ namespace EasyMigLib.Query
                     formattedPrimaryKeys.Add(this.WrapWithQuotes(primaryKey.Value.ColumnName));
                 }
 
-                return "ALTER TABLE " + this.FormatWithSchemaName(createTableCommand.TableName) + " ADD PRIMARY KEY (" + string.Join(",", formattedPrimaryKeys) + ");\r";
+                return "ALTER TABLE " + this.FormatWithSchemaName(createTableCommand.TableName) + " ADD PRIMARY KEY (" + string.Join(",", formattedPrimaryKeys) + ")" + this.GetDefaultDelimiter();
             }
             else
             {
@@ -220,17 +245,17 @@ namespace EasyMigLib.Query
         {
             return "INSERT INTO " + this.FormatWithSchemaName(tableName) + " ("
                 + this.GetSeedColumns(columnValues) + ") VALUES ("
-                + this.GetSeedValues(columnValues) + ");\r";
+                + this.GetSeedValues(columnValues) + ")" + this.GetDefaultDelimiter();
         }
 
         public virtual string GetSeeds(CreateTableCommand createTableCommand)
         {
-            var result = new List<string>();
+            var result = "";
             foreach (var seedRowCommand in createTableCommand.seedTableCommand.seedRowCommands)
             {
-                result.Add(this.GetSeedRow(seedRowCommand.TableName, seedRowCommand.columnValues));
+                result += this.GetSeedRow(seedRowCommand.TableName, seedRowCommand.columnValues);
             }
-            return string.Join("\r", result);
+            return result;
         }
 
         // stored procedure
@@ -252,10 +277,10 @@ namespace EasyMigLib.Query
             return string.Join(",", result);
         }
 
-        public virtual string GetDropStoredProcedure(string procedureName, bool semicolon = true)
+        public virtual string GetDropStoredProcedure(string procedureName, bool delimiter = true)
         {
             return "DROP PROCEDURE IF EXISTS " + this.FormatWithSchemaName(procedureName) 
-                + (semicolon ? ";" :"");
+                + (delimiter ? this.GetDefaultDelimiter() : "");
         }
 
         public virtual string FormatBody(string body)
@@ -266,7 +291,6 @@ namespace EasyMigLib.Query
             }
             return "";
         }
-
     }
 }
 

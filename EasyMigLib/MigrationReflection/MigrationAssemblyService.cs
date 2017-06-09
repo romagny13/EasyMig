@@ -78,21 +78,21 @@ namespace EasyMigLib.MigrationReflection
             return result;
         }
 
-        public Assembly LoadAssembly(string path)
+        public Assembly LoadAssemblyFrom(string path)
         {
-            return Assembly.LoadFile(path);
+            return Assembly.LoadFrom(path);
         }
 
         public List<RecognizedMigrationFile> FindTypes<T>(string assemblyPath)
         {
-            var assembly = this.LoadAssembly(assemblyPath);
+            var assembly = this.LoadAssemblyFrom(assemblyPath);
             var types = assembly.GetTypes();
             return this.FindTypes<T>(types);
         }
 
         public RecognizedMigrationFile FindType<T>(string assemblyPath, string matchName)
         {
-            var assembly = this.LoadAssembly(assemblyPath);
+            var assembly = this.LoadAssemblyFrom(assemblyPath);
             var types = assembly.GetTypes();
             return this.FindType<T>(types, matchName);
         }

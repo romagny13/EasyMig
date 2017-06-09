@@ -15,7 +15,7 @@ namespace EasyMigLibTest.Commands
             var command = new CreateDatabaseCommand("db1");
             var result = command.GetQuery(new SqlQueryService());
 
-            Assert.AreEqual("CREATE DATABASE [db1];\r", result);
+            Assert.AreEqual("CREATE DATABASE [db1]\rGO\r", result);
         }
 
         [TestMethod]

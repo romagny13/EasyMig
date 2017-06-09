@@ -11,7 +11,9 @@ namespace EasyMigTest.Query.SqlClient
     {
         public SqlQueryService GetService()
         {
-            return new SqlQueryService();
+            var service = new SqlQueryService();
+            service.SetDefaultDelimiter("\rGO\r");
+            return service;
         }
 
         // quotes
@@ -89,7 +91,7 @@ namespace EasyMigTest.Query.SqlClient
 
             var result = service.GetCreateDatabase("db1");
 
-            Assert.AreEqual("CREATE DATABASE [db1];\r", result);
+            Assert.AreEqual("CREATE DATABASE [db1]\rGO\r", result);
         }
 
 
@@ -100,7 +102,7 @@ namespace EasyMigTest.Query.SqlClient
 
             var result = service.GetDropDatabase("db1");
 
-            Assert.AreEqual("DROP DATABASE IF EXISTS [db1];\r", result);
+            Assert.AreEqual("DROP DATABASE IF EXISTS [db1]\rGO\r", result);
         }
 
         // drop table
@@ -112,7 +114,7 @@ namespace EasyMigTest.Query.SqlClient
 
             var result = service.GetDropTable("table1");
 
-            Assert.AreEqual("DROP TABLE IF EXISTS [dbo].[table1];\r", result);
+            Assert.AreEqual("DROP TABLE IF EXISTS [dbo].[table1]\rGO\r", result);
         }
 
         // columns
@@ -124,7 +126,7 @@ namespace EasyMigTest.Query.SqlClient
 
             var result = service.GetAddColumn("table1", new MigrationColumn("column1", ColumnType.VarChar(100), true));
 
-            Assert.AreEqual("ALTER TABLE [dbo].[table1] ADD [column1] NVARCHAR(100) NULL;\r", result);
+            Assert.AreEqual("ALTER TABLE [dbo].[table1] ADD [column1] NVARCHAR(100) NULL\rGO\r", result);
         }
 
         [TestMethod]
@@ -134,7 +136,7 @@ namespace EasyMigTest.Query.SqlClient
 
             var result = service.GetModifyColumn("table1", new MigrationColumn("column1", ColumnType.VarChar(100), true));
 
-            Assert.AreEqual("ALTER TABLE [dbo].[table1] ALTER COLUMN [column1] NVARCHAR(100) NULL;\r", result);
+            Assert.AreEqual("ALTER TABLE [dbo].[table1] ALTER COLUMN [column1] NVARCHAR(100) NULL\rGO\r", result);
         }
 
         [TestMethod]
@@ -144,7 +146,7 @@ namespace EasyMigTest.Query.SqlClient
 
             var result = service.GetDropColumn("table1", "column1");
 
-            Assert.AreEqual("ALTER TABLE [dbo].[table1] DROP COLUMN [column1];\r", result);
+            Assert.AreEqual("ALTER TABLE [dbo].[table1] DROP COLUMN [column1]\rGO\r", result);
         }
 
         // primary key constraint
@@ -156,7 +158,7 @@ namespace EasyMigTest.Query.SqlClient
 
             var result = service.GetAddPrimaryKeyConstraint("table1", new string[] { "column1", "column2" });
 
-            Assert.AreEqual("ALTER TABLE [dbo].[table1] ADD PRIMARY KEY ([column1],[column2]);\r", result);
+            Assert.AreEqual("ALTER TABLE [dbo].[table1] ADD PRIMARY KEY ([column1],[column2])\rGO\r", result);
         }
 
         // foreign key constraint
@@ -168,7 +170,7 @@ namespace EasyMigTest.Query.SqlClient
 
             var result = service.GetAddForeignKeyConstraint("posts", new ForeignKeyColumn("user_id", ColumnType.Int(), "users", "id"));
 
-            Assert.AreEqual("ALTER TABLE [dbo].[posts] ADD FOREIGN KEY ([user_id]) REFERENCES [dbo].[users]([id]);\r", result);
+            Assert.AreEqual("ALTER TABLE [dbo].[posts] ADD FOREIGN KEY ([user_id]) REFERENCES [dbo].[users]([id])\rGO\r", result);
         }
 
         // get column
@@ -551,7 +553,7 @@ namespace EasyMigTest.Query.SqlClient
             var service = this.GetService();
 
             var result = service.GetDropTable("table1");
-            var expected = "DROP TABLE IF EXISTS [dbo].[table1];\r";
+            var expected = "DROP TABLE IF EXISTS [dbo].[table1]\rGO\r";
 
             Assert.AreEqual(expected, result);
         }
@@ -569,7 +571,7 @@ namespace EasyMigTest.Query.SqlClient
 
             var result = service.GetCreateTable(table);
 
-            var expected = "CREATE TABLE [dbo].[table1] (\r\t[column1] NVARCHAR(255) NOT NULL,\r\t[column2] NVARCHAR(255) NOT NULL\r);\r";
+            var expected = "CREATE TABLE [dbo].[table1] (\r\t[column1] NVARCHAR(255) NOT NULL,\r\t[column2] NVARCHAR(255) NOT NULL\r)\rGO\r";
             Assert.AreEqual(expected, result);
         }
 
@@ -586,7 +588,7 @@ namespace EasyMigTest.Query.SqlClient
 
             var result = service.GetCreateTable(table);
 
-            var expected = "CREATE TABLE [dbo].[table1] (\r\t[pk1] INT NOT NULL IDENTITY(1,1),\r\t[column1] NVARCHAR(255) NOT NULL,\r\t[column2] NVARCHAR(255) NOT NULL\r);\r";
+            var expected = "CREATE TABLE [dbo].[table1] (\r\t[pk1] INT NOT NULL IDENTITY(1,1),\r\t[column1] NVARCHAR(255) NOT NULL,\r\t[column2] NVARCHAR(255) NOT NULL\r)\rGO\r";
             Assert.AreEqual(expected, result);
         }
 
@@ -602,7 +604,7 @@ namespace EasyMigTest.Query.SqlClient
 
             var result = service.GetCreateTable(table);
 
-            var expected = "CREATE TABLE [dbo].[table1] (\r\t[pk1] INT NOT NULL,\r\t[pk2] INT NOT NULL,\r\t[column1] NVARCHAR(255) NOT NULL\r);\r";
+            var expected = "CREATE TABLE [dbo].[table1] (\r\t[pk1] INT NOT NULL,\r\t[pk2] INT NOT NULL,\r\t[column1] NVARCHAR(255) NOT NULL\r)\rGO\r";
             Assert.AreEqual(expected, result);
         }
 
@@ -618,7 +620,7 @@ namespace EasyMigTest.Query.SqlClient
 
             var result = service.GetCreateTable(table);
 
-            var expected = "CREATE TABLE [dbo].[table1] (\r\t[pk1] INT NOT NULL IDENTITY(1,1),\r\t[column1] NVARCHAR(255) NOT NULL,\r\t[fk1] INT NOT NULL\r);\r";
+            var expected = "CREATE TABLE [dbo].[table1] (\r\t[pk1] INT NOT NULL IDENTITY(1,1),\r\t[column1] NVARCHAR(255) NOT NULL,\r\t[fk1] INT NOT NULL\r)\rGO\r";
             Assert.AreEqual(expected, result);
         }
 
@@ -635,7 +637,7 @@ namespace EasyMigTest.Query.SqlClient
 
             var result = service.GetCreateTable(table);
 
-            var expected = "CREATE TABLE [dbo].[table1] (\r\t[pk1] INT NOT NULL IDENTITY(1,1),\r\t[column1] NVARCHAR(255) NOT NULL,\r\t[fk1] INT NOT NULL,\r\t[fk2] INT NOT NULL\r);\r";
+            var expected = "CREATE TABLE [dbo].[table1] (\r\t[pk1] INT NOT NULL IDENTITY(1,1),\r\t[column1] NVARCHAR(255) NOT NULL,\r\t[fk1] INT NOT NULL,\r\t[fk2] INT NOT NULL\r)\rGO\r";
             Assert.AreEqual(expected, result);
         }
 
@@ -651,7 +653,7 @@ namespace EasyMigTest.Query.SqlClient
 
             var result = service.GetCreateTable(table);
 
-            var expected = "CREATE TABLE [dbo].[table1] (\r\t[pk1] INT NOT NULL IDENTITY(1,1),\r\t[column1] NVARCHAR(255) NOT NULL,\r\t[created_at] DATETIME NULL DEFAULT CURRENT_TIMESTAMP,\r\t[updated_at] DATETIME NULL\r);\r";
+            var expected = "CREATE TABLE [dbo].[table1] (\r\t[pk1] INT NOT NULL IDENTITY(1,1),\r\t[column1] NVARCHAR(255) NOT NULL,\r\t[created_at] DATETIME NULL DEFAULT CURRENT_TIMESTAMP,\r\t[updated_at] DATETIME NULL\r)\rGO\r";
             Assert.AreEqual(expected, result);
         }
 
@@ -668,7 +670,7 @@ namespace EasyMigTest.Query.SqlClient
 
             var result = service.GetAddPrimaryKeyConstraint(table);
 
-            var expected = "ALTER TABLE [dbo].[table1] ADD PRIMARY KEY ([pk1]);\r";
+            var expected = "ALTER TABLE [dbo].[table1] ADD PRIMARY KEY ([pk1])\rGO\r";
             Assert.AreEqual(expected, result);
         }
 
@@ -684,7 +686,7 @@ namespace EasyMigTest.Query.SqlClient
 
             var result = service.GetAddPrimaryKeyConstraint(table);
 
-            var expected = "ALTER TABLE [dbo].[table1] ADD PRIMARY KEY ([pk1],[pk2]);\r";
+            var expected = "ALTER TABLE [dbo].[table1] ADD PRIMARY KEY ([pk1],[pk2])\rGO\r";
             Assert.AreEqual(expected, result);
         }
 
@@ -714,7 +716,7 @@ namespace EasyMigTest.Query.SqlClient
 
             var result = service.GetAddForeignKeyConstraints(table);
 
-            var expected = "ALTER TABLE [dbo].[posts] ADD FOREIGN KEY ([user_id]) REFERENCES [dbo].[users]([id]);\r";
+            var expected = "ALTER TABLE [dbo].[posts] ADD FOREIGN KEY ([user_id]) REFERENCES [dbo].[users]([id])\rGO\r";
             Assert.AreEqual(expected, result);
         }
 
@@ -729,7 +731,7 @@ namespace EasyMigTest.Query.SqlClient
 
             var result = service.GetAddForeignKeyConstraints(table);
 
-            var expected = "ALTER TABLE [dbo].[posts] ADD FOREIGN KEY ([user_id]) REFERENCES [dbo].[users]([id]);\rALTER TABLE [dbo].[posts] ADD FOREIGN KEY ([category_id]) REFERENCES [dbo].[categories]([id]);\r";
+            var expected = "ALTER TABLE [dbo].[posts] ADD FOREIGN KEY ([user_id]) REFERENCES [dbo].[users]([id])\rGO\rALTER TABLE [dbo].[posts] ADD FOREIGN KEY ([category_id]) REFERENCES [dbo].[categories]([id])\rGO\r";
             Assert.AreEqual(expected, result);
         }
 
@@ -761,7 +763,7 @@ namespace EasyMigTest.Query.SqlClient
 
             var result = service.GetCreateStoredProcedure(p.ProcedureName, p.Parameters, p.Body);
 
-            Assert.AreEqual("CREATE PROCEDURE [dbo].[p1] @id INT,@age INT OUT\rAS\rBEGIN\rselect @age=age from users where id=@id;\rEND", result);
+            Assert.AreEqual("CREATE PROCEDURE [dbo].[p1] @id INT,@age INT OUT\rAS\rBEGIN\rselect @age=age from users where id=@id;\rEND\rGO\r", result);
         }
 
         [TestMethod]
@@ -773,7 +775,7 @@ namespace EasyMigTest.Query.SqlClient
 
             var result = service.GetDropStoredProcedure(p.ProcedureName);
 
-            Assert.AreEqual("DROP PROCEDURE IF EXISTS [dbo].[p1];", result);
+            Assert.AreEqual("DROP PROCEDURE IF EXISTS [dbo].[p1]\rGO\r", result);
         }
 
         [TestMethod]
@@ -812,7 +814,7 @@ namespace EasyMigTest.Query.SqlClient
 
             var result = service.GetSeeds(table);
 
-            var expected = "SET IDENTITY_INSERT [dbo].[users] ON;\rINSERT INTO [dbo].[users] ([id],[username],[age]) VALUES (1,'user 1',20);\rINSERT INTO [dbo].[users] ([id],[username],[age]) VALUES (2,'user 2',30);\rSET IDENTITY_INSERT [dbo].[users] OFF;\r";
+            var expected = "SET IDENTITY_INSERT [dbo].[users] ON\rGO\rINSERT INTO [dbo].[users] ([id],[username],[age]) VALUES (1,'user 1',20)\rGO\rINSERT INTO [dbo].[users] ([id],[username],[age]) VALUES (2,'user 2',30)\rGO\rSET IDENTITY_INSERT [dbo].[users] OFF\rGO\r";
             Assert.AreEqual(expected, result);
         }
 
@@ -830,7 +832,7 @@ namespace EasyMigTest.Query.SqlClient
 
             var result = service.GetSeeds(table);
 
-            var expected = "INSERT INTO [dbo].[users] ([id],[username],[age]) VALUES (1,'user 1',20);\rINSERT INTO [dbo].[users] ([id],[username],[age]) VALUES (2,'user 2',30);\r";
+            var expected = "INSERT INTO [dbo].[users] ([id],[username],[age]) VALUES (1,'user 1',20)\rGO\rINSERT INTO [dbo].[users] ([id],[username],[age]) VALUES (2,'user 2',30)\rGO\r";
             Assert.AreEqual(expected, result);
         }
 
@@ -848,7 +850,7 @@ namespace EasyMigTest.Query.SqlClient
 
             var result = service.GetSeeds(table);
 
-            var expected = "INSERT INTO [dbo].[users] ([id],[username],[age]) VALUES (1,NULL,NULL);\r";
+            var expected = "INSERT INTO [dbo].[users] ([id],[username],[age]) VALUES (1,NULL,NULL)\rGO\r";
             Assert.AreEqual(expected, result);
         }
 
@@ -861,7 +863,7 @@ namespace EasyMigTest.Query.SqlClient
 
             var result = service.GetSeedRow("table1", new Dictionary<string, object> { { "id", 1 }, { "column1", "value 1" } });
 
-            var expected = "INSERT INTO [dbo].[table1] ([id],[column1]) VALUES (1,'value 1');\r";
+            var expected = "INSERT INTO [dbo].[table1] ([id],[column1]) VALUES (1,'value 1')\rGO\r";
             Assert.AreEqual(expected, result);
         }
 

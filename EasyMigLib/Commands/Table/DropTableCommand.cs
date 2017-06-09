@@ -1,7 +1,7 @@
 ﻿using EasyMigLib.Query;
 namespace EasyMigLib.Commands
 {
-    public class DropTableCommand
+    public class DropTableCommand : DatabaseCommand
     {
         public string TableName { get; protected set; }
 
@@ -10,7 +10,7 @@ namespace EasyMigLib.Commands
             this.TableName = tableName;
         }
 
-        public string GetQuery(IQueryService queryService)
+        public override string GetQuery(IQueryService queryService)
         {
             return queryService.GetDropTable(this.TableName);
         }

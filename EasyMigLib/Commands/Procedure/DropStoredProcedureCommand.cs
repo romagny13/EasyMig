@@ -2,7 +2,7 @@
 
 namespace EasyMigLib.Commands
 {
-    public class DropStoredProcedureCommand
+    public class DropStoredProcedureCommand : DatabaseCommand
     {
         public string ProcedureName { get; protected set; }
  
@@ -11,7 +11,7 @@ namespace EasyMigLib.Commands
             this.ProcedureName = procedureName;
         }
 
-        public string GetQuery(IQueryService queryService)
+        public override string GetQuery(IQueryService queryService)
         {
             return queryService.GetDropStoredProcedure(this.ProcedureName);
         }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace EasyMigLib.Commands
 {
-    public class SeedTableCommand
+    public class SeedTableCommand : DatabaseCommand
     {
         public string TableName { get; protected set; }
         internal List<SeedRwoCommand> seedRowCommands;
@@ -36,7 +36,7 @@ namespace EasyMigLib.Commands
             return null;
         }
 
-        public string GetQuery(IQueryService queryService)
+        public override string GetQuery(IQueryService queryService)
         {
             var result = "";
             foreach (var seedRowCommand in this.seedRowCommands)

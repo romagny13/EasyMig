@@ -1,7 +1,7 @@
 ﻿using EasyMigLib.Query;
 namespace EasyMigLib.Commands
 {
-    public class AddForeignKeyConstraintCommand
+    public class AddForeignKeyConstraintCommand : DatabaseCommand
     {
         public string TableName { get; protected set; }
         public ForeignKeyColumn ForeignKey { get; protected set; }
@@ -12,7 +12,7 @@ namespace EasyMigLib.Commands
             this.ForeignKey = foreignKey;
         }
 
-        public string GetQuery(IQueryService queryService)
+        public override string GetQuery(IQueryService queryService)
         {
             return queryService.GetAddForeignKeyConstraint(this.TableName, this.ForeignKey);
         }

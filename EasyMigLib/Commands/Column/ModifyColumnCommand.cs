@@ -2,7 +2,7 @@
 
 namespace EasyMigLib.Commands
 {
-    public class ModifyColumnCommand
+    public class ModifyColumnCommand : DatabaseCommand
     {
         public string TableName { get; protected set; }
         public MigrationColumn Column { get; protected set; }
@@ -13,7 +13,7 @@ namespace EasyMigLib.Commands
             this.Column = column;
         }
 
-        public string GetQuery(IQueryService queryService)
+        public override string GetQuery(IQueryService queryService)
         {
             return queryService.GetModifyColumn(this.TableName, this.Column);
         }

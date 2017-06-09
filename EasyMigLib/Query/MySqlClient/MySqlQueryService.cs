@@ -29,7 +29,7 @@ namespace EasyMigLib.Query.MySqlClient
             }
             else
             {
-                if (!this.CheckEngine(engine)) { throw new Exception("Invalid MySQL engine. Supported: MyISAM or InnoDB (by default)"); }
+                if (!this.CheckEngine(engine)) { throw new EasyMigException("Invalid MySQL engine. Supported: MyISAM or InnoDB (by default)"); }
 
                 this.Engine = engine;
             }
@@ -120,7 +120,7 @@ namespace EasyMigLib.Query.MySqlClient
             {
                 return "BLOB";
             }
-            throw new Exception("Type not supported");
+            throw new EasyMigException("Type not supported");
         }
 
         public override string GetColumn(MigrationColumn column)

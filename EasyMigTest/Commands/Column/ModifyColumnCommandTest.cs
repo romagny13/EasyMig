@@ -15,7 +15,7 @@ namespace EasyMigLibTest.Commands
             var command = new ModifyColumnCommand("table1", new MigrationColumn("column1", ColumnType.VarChar(), true));
             var result = command.GetQuery(new SqlQueryService());
 
-            Assert.AreEqual("ALTER TABLE [dbo].[table1] ALTER COLUMN [column1] NVARCHAR(255) NULL;\r", result);
+            Assert.AreEqual("ALTER TABLE [dbo].[table1] ALTER COLUMN [column1] NVARCHAR(255) NULL\rGO\r", result);
         }
 
         [TestMethod]

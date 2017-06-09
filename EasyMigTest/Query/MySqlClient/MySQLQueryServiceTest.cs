@@ -779,7 +779,7 @@ namespace EasyMigLibTest.Services
 
             var result = service.GetDropStoredProcedure(p.ProcedureName);
 
-            Assert.AreEqual("DROP PROCEDURE IF EXISTS `p1`;", result);
+            Assert.AreEqual("DROP PROCEDURE IF EXISTS `p1`;\r", result);
         }
 
         [TestMethod]
@@ -818,8 +818,7 @@ namespace EasyMigLibTest.Services
 
             var result = service.GetSeeds(table);
 
-            var expected = "INSERT INTO `users` (`id`,`username`,`age`) VALUES (1,'user 1',20);\r\rINSERT INTO `users` (`id`,`username`,`age`) VALUES (2,'user 2',30);\r";
-            Assert.AreEqual(expected, result);
+            Assert.AreEqual("INSERT INTO `users` (`id`,`username`,`age`) VALUES (1,'user 1',20);\rINSERT INTO `users` (`id`,`username`,`age`) VALUES (2,'user 2',30);\r", result);
         }
 
 

@@ -15,7 +15,7 @@ namespace EasyMigLibTest.Commands
             var command = new AddColumnCommand("table1",new MigrationColumn("column1", ColumnType.VarChar(), true));
             var result = command.GetQuery(new SqlQueryService());
 
-            Assert.AreEqual("ALTER TABLE [dbo].[table1] ADD [column1] NVARCHAR(255) NULL;\r", result);
+            Assert.AreEqual("ALTER TABLE [dbo].[table1] ADD [column1] NVARCHAR(255) NULL\rGO\r", result);
         }
 
         [TestMethod]
@@ -24,7 +24,7 @@ namespace EasyMigLibTest.Commands
             var command = new AddColumnCommand("table1", new MigrationColumn("column1", ColumnType.VarChar(), true, "my value"));
             var result = command.GetQuery(new SqlQueryService());
 
-            Assert.AreEqual("ALTER TABLE [dbo].[table1] ADD [column1] NVARCHAR(255) NULL DEFAULT 'my value';\r", result);
+            Assert.AreEqual("ALTER TABLE [dbo].[table1] ADD [column1] NVARCHAR(255) NULL DEFAULT 'my value'\rGO\r", result);
         }
 
         [TestMethod]

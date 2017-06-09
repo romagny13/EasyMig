@@ -384,7 +384,7 @@ namespace EasyMigLibTest.Commands
 
             var result = command.GetQuery(new SqlQueryService());
 
-            Assert.AreEqual("CREATE TABLE [dbo].[posts] (\r\t[id] INT NOT NULL IDENTITY(1,1),\r\t[title] NVARCHAR(255) NOT NULL,\r\t[content] NVARCHAR(255) NOT NULL,\r\t[user_id] INT NOT NULL\r);\r", result);
+            Assert.AreEqual("CREATE TABLE [dbo].[posts] (\r\t[id] INT NOT NULL IDENTITY(1,1),\r\t[title] NVARCHAR(255) NOT NULL,\r\t[content] NVARCHAR(255) NOT NULL,\r\t[user_id] INT NOT NULL\r)\rGO\r", result);
         }
 
         [TestMethod]

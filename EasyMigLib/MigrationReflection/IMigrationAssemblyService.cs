@@ -12,7 +12,7 @@ namespace EasyMigLib.MigrationReflection
         List<RecognizedMigrationFile> FindTypes<T>(string assemblyPath);
         List<RecognizedMigrationFile> FindTypes<T>(Type[] assemblyTypes);
         RecognizedMigrationFile GetRecognizedMigrationFile(Type type);
-        Assembly LoadAssembly(string path);
+        Assembly LoadAssemblyFrom(string path);
         void RunMigration(RecognizedMigrationFile recognizedType, MigrationDirection direction = MigrationDirection.Up);
         void RunSeeder(RecognizedMigrationFile recognizedType);
         void SortTypes(List<RecognizedMigrationFile> types);

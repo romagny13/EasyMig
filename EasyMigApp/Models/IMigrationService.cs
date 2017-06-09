@@ -9,7 +9,7 @@ namespace EasyMigApp.Models
     {
         void Clear();
         void CreateMigrationScript(string assemblyPath, string providerName, string fileName, string procedureFileName, string engine);
-        void CreateSeedScript(string assemblyPath, string providerName, string fileName, string engine);
+        void CreateSeedScript(string assemblyPath, string providerName, string fileName);
         void DownAll(string assemblyPath, string connectionString, string providerName, string engine);
         void DownOne(string fileName, string assemblyPath, string connectionString, string providerName, string engine);
         string GetAssemblyDirectory(string assemblyPath);

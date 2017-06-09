@@ -16,7 +16,7 @@ namespace EasyMigLibTest.Commands
             var command = new AddPrimaryKeyConstraintCommand("table1", keys);
             var result = command.GetQuery(new SqlQueryService());
 
-            Assert.AreEqual("ALTER TABLE [dbo].[table1] ADD PRIMARY KEY ([column1]);\r", result);
+            Assert.AreEqual("ALTER TABLE [dbo].[table1] ADD PRIMARY KEY ([column1])\rGO\r", result);
         }
 
         [TestMethod]
@@ -26,7 +26,7 @@ namespace EasyMigLibTest.Commands
             var command = new AddPrimaryKeyConstraintCommand("table1", keys);
             var result = command.GetQuery(new SqlQueryService());
 
-            Assert.AreEqual("ALTER TABLE [dbo].[table1] ADD PRIMARY KEY ([column1],[column2]);\r", result);
+            Assert.AreEqual("ALTER TABLE [dbo].[table1] ADD PRIMARY KEY ([column1],[column2])\rGO\r", result);
         }
 
         [TestMethod]

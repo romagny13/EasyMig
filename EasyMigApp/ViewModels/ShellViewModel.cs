@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
@@ -35,6 +36,12 @@ namespace EasyMigApp.ViewModels
             set { this.Set(ref seeders, value); }
         }
 
+        private Visibility isActive;
+        public Visibility IsActive
+        {
+            get { return isActive; }
+            set { this.Set(ref isActive, value); }
+        }
 
         public bool HasMigrations => this.Migrations.Count > 0;
         public bool HasSeeders => this.Seeders.Count > 0;
@@ -62,6 +69,8 @@ namespace EasyMigApp.ViewModels
 
         public ShellViewModel(IMigrationService migrationService)
         {
+            this.SetInactive();
+
             this.migrationService = migrationService;
 
             this.Migrations = new ObservableCollection<RecognizedMigrationFile>();
@@ -106,6 +115,16 @@ namespace EasyMigApp.ViewModels
             Session.Save();
         }
 
+        public void SetActive()
+        {
+            this.IsActive = Visibility.Visible;
+        }
+
+        public void SetInactive()
+        {
+            this.IsActive = Visibility.Collapsed;
+        }
+
         public void InitAssemblyCommand()
         {
             this.AssemblyPathCommand = new RelayCommand(() =>
@@ -138,64 +157,20 @@ namespace EasyMigApp.ViewModels
 
         public void InitUpAllCommand()
         {
-            this.UpAllCommand = new RelayCommand(() =>
+            this.UpAllCommand = new RelayCommand(async () =>
             {
                 this.model.ValidateAll();
                 if (!this.model.HasErrors)
                 {
-                    try
-                    {
-                        this.migrationService.UpAll(this.model.AssemblyPath, this.model.ConnectionString, this.model.ProviderName, this.model.Engine);
-
-                        MessageBox.Show("Db udpated!", "Success");
-
-                        this.SaveConnectionString(this.model.ConnectionString);
-                    }
-                    catch (Exception e)
-                    {
-                        MessageBox.Show(e.Message, "Error");
-                        this.migrationService.Clear();
-                    }
-                }
-            });
-        }
-
-        public void InitDownAllCommand()
-        {
-            this.DownAllCommand = new RelayCommand(() =>
-            {
-                this.model.ValidateAll();
-                if (!this.model.HasErrors)
-                {
-                    try
-                    {
-                        this.migrationService.DownAll(this.model.AssemblyPath, this.model.ConnectionString, this.model.ProviderName, this.model.Engine);
-
-                        MessageBox.Show("Db udpated!", "Success");
-
-                        this.SaveConnectionString(this.model.ConnectionString);
-                    }
-                    catch (Exception e)
-                    {
-                        MessageBox.Show(e.Message, "Error");
-                        this.migrationService.Clear();
-                    }
-                }
-            });
-        }
-
-        public void InitUpOneCommand()
-        {
-            this.UpOneCommand = new RelayCommand<RecognizedMigrationFile>((file) =>
-            {
-                if (file != null)
-                {
-                    this.model.ValidateAll();
-                    if (!this.model.HasErrors)
+                    await Task.Run(() =>
                     {
                         try
                         {
-                            this.migrationService.UpOne(file.FullName, this.model.AssemblyPath, this.model.ConnectionString, this.model.ProviderName, this.model.Engine);
+                            this.SetActive();
+
+                            this.migrationService.UpAll(this.model.AssemblyPath, this.model.ConnectionString, this.model.ProviderName, this.model.Engine);
+
+                            this.SetInactive();
 
                             MessageBox.Show("Db udpated!", "Success");
 
@@ -203,9 +178,78 @@ namespace EasyMigApp.ViewModels
                         }
                         catch (Exception e)
                         {
+                            this.SetInactive();
                             MessageBox.Show(e.Message, "Error");
                             this.migrationService.Clear();
                         }
+                    });
+                }
+            });
+        }
+
+        public void InitDownAllCommand()
+        {
+            this.DownAllCommand = new RelayCommand(async () =>
+            {
+                this.model.ValidateAll();
+                if (!this.model.HasErrors)
+                {
+                    await Task.Run(() =>
+                    {
+                        try
+                        {
+                            this.SetActive();
+
+                            this.migrationService.DownAll(this.model.AssemblyPath, this.model.ConnectionString, this.model.ProviderName, this.model.Engine);
+
+                            this.SetInactive();
+
+                            MessageBox.Show("Db udpated!", "Success");
+
+                            this.SaveConnectionString(this.model.ConnectionString);
+                        }
+                        catch (Exception e)
+                        {
+                            this.SetInactive();
+                            MessageBox.Show(e.Message, "Error");
+                            this.migrationService.Clear();
+                        }
+                    });
+                }
+            });
+        }
+
+        public void InitUpOneCommand()
+        {
+            this.UpOneCommand = new RelayCommand<RecognizedMigrationFile>(async (file) =>
+            {
+                if (file != null)
+                {
+                    this.model.ValidateAll();
+                    if (!this.model.HasErrors)
+                    {
+                        await Task.Run(() =>
+                        {
+                            try
+                            {
+                                this.SetActive();
+
+                                this.migrationService.UpOne(file.FullName, this.model.AssemblyPath, this.model.ConnectionString, this.model.ProviderName, this.model.Engine);
+
+                                this.SetInactive();
+
+                                MessageBox.Show("Db udpated!", "Success");
+
+                                this.SaveConnectionString(this.model.ConnectionString);
+                            }
+                            catch (Exception e)
+                            {
+                                this.SetInactive();
+                                MessageBox.Show(e.Message, "Error");
+                                this.migrationService.Clear();
+                            }
+                        });
+
                     }
                 }
             });
@@ -213,26 +257,34 @@ namespace EasyMigApp.ViewModels
 
         public void InitDownOneCommand()
         {
-            this.DownOneCommand = new RelayCommand<RecognizedMigrationFile>((file) =>
+            this.DownOneCommand = new RelayCommand<RecognizedMigrationFile>(async (file) =>
             {
                 if (file != null)
                 {
                     this.model.ValidateAll();
                     if (!this.model.HasErrors)
                     {
-                        try
+                        await Task.Run(() =>
                         {
-                            this.migrationService.DownOne(file.FullName, this.model.AssemblyPath, this.model.ConnectionString, this.model.ProviderName, this.model.Engine);
+                            try
+                            {
+                                this.SetActive();
 
-                            MessageBox.Show("Db udpated!", "Success");
+                                this.migrationService.DownOne(file.FullName, this.model.AssemblyPath, this.model.ConnectionString, this.model.ProviderName, this.model.Engine);
 
-                            this.SaveConnectionString(this.model.ConnectionString);
-                        }
-                        catch (Exception e)
-                        {
-                            MessageBox.Show(e.Message, "Error");
-                            this.migrationService.Clear();
-                        }
+                                this.SetInactive();
+
+                                MessageBox.Show("Db udpated!", "Success");
+
+                                this.SaveConnectionString(this.model.ConnectionString);
+                            }
+                            catch (Exception e)
+                            {
+                                this.SetInactive();
+                                MessageBox.Show(e.Message, "Error");
+                                this.migrationService.Clear();
+                            }
+                        });
                     }
                 }
             });
@@ -240,40 +292,20 @@ namespace EasyMigApp.ViewModels
 
         public void InitSeedAllCommand()
         {
-            this.SeedAllCommand = new RelayCommand(() =>
+            this.SeedAllCommand = new RelayCommand(async () =>
             {
                 this.model.ValidateAll();
                 if (!this.model.HasErrors)
                 {
-                    try
-                    {
-                        this.migrationService.SeedAll(this.model.AssemblyPath, this.model.ConnectionString, this.model.ProviderName, this.model.Engine);
-
-                        MessageBox.Show("Db udpated!", "Success");
-
-                        this.SaveConnectionString(this.model.ConnectionString);
-                    }
-                    catch (Exception e)
-                    {
-                        MessageBox.Show(e.Message, "Error");
-                        this.migrationService.Clear();
-                    }
-                }
-            });
-        }
-
-        public void InitSeedOneCommand()
-        {
-            this.SeedOneCommand = new RelayCommand<RecognizedMigrationFile>((file) =>
-            {
-                if (file != null)
-                {
-                    this.model.ValidateAll();
-                    if (!this.model.HasErrors)
+                    await Task.Run(() =>
                     {
                         try
                         {
-                            this.migrationService.SeedOne(file.FullName, this.model.AssemblyPath, this.model.ConnectionString, this.model.ProviderName, this.model.Engine);
+                            this.SetActive();
+
+                            this.migrationService.SeedAll(this.model.AssemblyPath, this.model.ConnectionString, this.model.ProviderName, this.model.Engine);
+
+                            this.SetInactive();
 
                             MessageBox.Show("Db udpated!", "Success");
 
@@ -281,9 +313,45 @@ namespace EasyMigApp.ViewModels
                         }
                         catch (Exception e)
                         {
+                            this.SetInactive();
                             MessageBox.Show(e.Message, "Error");
                             this.migrationService.Clear();
                         }
+                    });
+                }
+            });
+        }
+
+        public void InitSeedOneCommand()
+        {
+            this.SeedOneCommand = new RelayCommand<RecognizedMigrationFile>(async (file) =>
+            {
+                if (file != null)
+                {
+                    this.model.ValidateAll();
+                    if (!this.model.HasErrors)
+                    {
+                        await Task.Run(() =>
+                        {
+                            try
+                            {
+                                this.SetActive();
+
+                                this.migrationService.SeedOne(file.FullName, this.model.AssemblyPath, this.model.ConnectionString, this.model.ProviderName, this.model.Engine);
+
+                                this.SetInactive();
+
+                                MessageBox.Show("Db udpated!", "Success");
+
+                                this.SaveConnectionString(this.model.ConnectionString);
+                            }
+                            catch (Exception e)
+                            {
+                                this.SetInactive();
+                                MessageBox.Show(e.Message, "Error");
+                                this.migrationService.Clear();
+                            }
+                        });
                     }
                 }
             });
@@ -328,7 +396,7 @@ namespace EasyMigApp.ViewModels
                     {
                         var directory = this.migrationService.GetAssemblyDirectory(this.model.AssemblyPath);
 
-                        this.migrationService.CreateSeedScript(this.model.AssemblyPath, this.model.ProviderName, directory + "/seed.sql", this.model.Engine);
+                        this.migrationService.CreateSeedScript(this.model.AssemblyPath, this.model.ProviderName, directory + "/seed.sql");
 
                         MessageBox.Show("Script created!", "Success");
 

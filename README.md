@@ -1,14 +1,14 @@
-# EasyMig
+# EasyMig (v0.2)
 
 > Migration Tool and Services
 
 Support:
 * **Sql Server** 
-* **MySQL** (require [MySQL Connector](https://dev.mysql.com/downloads/connector/net/) For .NET)
+* **MySQL** (with [MySQL Connector](https://dev.mysql.com/downloads/connector/net/) For .NET)
 
 Commands:
-* **Drop Database**
-* **Create Database**
+* **Drop Database if exists**
+* **Create Database**, **Create and use Database**
 * **Create Table**
     * _Add primary key_
     * _Add column_ (type, nullable, default, unique)
@@ -36,7 +36,6 @@ Execution:
 * Get Migrations | Seeders **Query string**
 * Create **Migration Script** (create table, etc.)
 * Create **Seed Script**
-* Create **Stored procedure Script** for SSMS (with GO DELIMTER)
 * **Execute** a sql **Query**
 
 Database information:
@@ -53,100 +52,43 @@ Migration and Seeder types are **grouped** by name **and sorted** by version and
 
 "_001_CREATE_POSTS_TABLE" : the version is "_001_", the name is "CREATE_POSTS_TABLE", the full name is "_001_CREATE_POSTS_TABLE"
 
+
 ## Installation With NuGet
 
 ```
 PM> Install-Package EasyMig
 ```
 
-## Migrations and Seeders
-
-Create a **Migration file**
-
-```cs
-public class CREATE_POSTS_TABLE : Migration
-{
-    public override void Up()
-    {
-        EasyMig.CreateTable("posts")
-              .AddPrimaryKey("id") // key auto incremented
-              .AddColumn("title")
-              .AddColumn("content", ColumnType.Text())
-              .AddTimestamps() // add created_at and updated_at columns
-              .AddForeignKey("user_id", "users", "id")
-              // we could initliaze table with data (identity off)
-              .Insert(SeedData.New.Set("id", 1).Set("title", "Post 1").Set("content", "Content 1").Set("user_id", 1))
-              .Insert(SeedData.New.Set("id", 2).Set("title", "Post 2").Set("content", "Content 2").Set("user_id", 1))
-              .Insert(SeedData.New.Set("id", 3).Set("title", "Post 3").Set("content", "Content 3").Set("user_id", 2));
-
-    }
-
-    public override void Down()
-    {
-        EasyMig.DropTable("posts");
-    }
-
-}
-```
-
-Create a **Seeder file** 
-Allow to seed an existing table
-
-```cs
-public class Posts_Seeder : Seeder
-{
-    public override void Run()
-    {
-        EasyMig.SeedTable("posts")
-            // dictionary (string, object) or use SeeData helper
-            .Insert(SeedData.New.Set("title", "Post 4").Set("content", "Content 4").Set("user_id", 3))
-            .Insert(SeedData.New.Set("title", "Post 5").Set("content", "Content 5").Set("user_id", 3))
-    }
-}
-```
-
-Then use the EasyMig Tool is the easy way to select types and do migrations.
-
-<img src="http://res.cloudinary.com/romagny13/image/upload/v1496624500/easymigapp_tool_sc0yol.png">
-
-## In Memory
-
-But its not a requirement. We could define migrations and seeders where we want and execute from Memory.
-
-Example:
-```cs
-// define commands
-EasyMig
-    .AlterTable("posts")
-    .AddForeignKeyConstraint("category_id", "categories", "id");
-
-    // other commands ...
-
-// execute
-EasyMig.DoMigrationsFromMemory(@"Server=localhost\SQLEXPRESS;Database=db1;Trusted_Connection=True;", "System.Data.SqlClient");
-```
-
 ## Commands
 
-### Drop Database
+### Database
+
+* **DropDatabaseIfExists**
+* **CreateDatabase**
+* **CreateAndUseDatabase**
+
+Example:
 
 ```cs
-EasyMig.DropDatabase("db1"); 
-```
-Sql generated with SQL Server for example
+EasyMig.DropDatabaseIfExists("db1"); // drop database
+EasyMig.CreateAndUseDatabase("db"); // create and use database
 
-```sql
-DROP DATABASE IF EXISTS [db1];
+// then create tables, stored procedures,etc. for this Database
+EasyMig.CreateTable("users")
+       .AddPrimaryKey("id")
+       .AddColumn("username")
+       .AddColumn("age", ColumnType.Int(), true);
+
+EasyMig.CreateStoredProcedure("get_user")
+       .AddParameter("@id", ColumnType.Int())
+       .SetBody("select * from [dbo].[users] where [id]=@id");
 ```
 
-### Create Database
+Update Database
 
 ```cs
-EasyMig.CreateDatabase("db1");
-```
-
-```sql
-CREATE DATABASE [db1];
+// no database selected with connection string
+EasyMig.ToSqlServer.DoMigrationsFromMemory(@"Server=localhost\SQLEXPRESS;Trusted_Connection=True;");
 ```
 
 ### Create Table
@@ -291,6 +233,7 @@ EasyMig.CreateTable("users")
         .Insert(SeedData.New.Set("id", 2).Set("username", "user2"));
 ```
 
+
 ## Alter Table command
 
 Allow to modify an existing Table.
@@ -376,13 +319,78 @@ Example
         .Insert(SeedData.New.Set("username", "user4"));
 ```
 
+## Migrations and Seeders
+
+Create a **Migration file**
+
+```cs
+public class CREATE_POSTS_TABLE : Migration
+{
+    public override void Up()
+    {
+        EasyMig.CreateTable("posts")
+              .AddPrimaryKey("id") // key auto incremented
+              .AddColumn("title")
+              .AddColumn("content", ColumnType.Text())
+              .AddTimestamps() // add created_at and updated_at columns
+              .AddForeignKey("user_id", "users", "id")
+              // we could initialize table with data (identity off)
+              .Insert(SeedData.New.Set("id", 1).Set("title", "Post 1").Set("content", "Content 1").Set("user_id", 1))
+              .Insert(SeedData.New.Set("id", 2).Set("title", "Post 2").Set("content", "Content 2").Set("user_id", 1))
+              .Insert(SeedData.New.Set("id", 3).Set("title", "Post 3").Set("content", "Content 3").Set("user_id", 2));
+
+    }
+
+    public override void Down()
+    {
+        EasyMig.DropTable("posts");
+    }
+
+}
+```
+
+Create a **Seeder file** 
+Allow to seed an existing table
+
+```cs
+public class Posts_Seeder : Seeder
+{
+    public override void Run()
+    {
+        EasyMig.SeedTable("posts")
+            // dictionary (string, object) or use SeeData helper
+            .Insert(SeedData.New.Set("title", "Post 4").Set("content", "Content 4").Set("user_id", 3))
+            .Insert(SeedData.New.Set("title", "Post 5").Set("content", "Content 5").Set("user_id", 3))
+    }
+}
+```
+
+Then use the EasyMig Tool is the easy way to select types and do migrations.
+
+<img src="http://res.cloudinary.com/romagny13/image/upload/v1496624500/easymigapp_tool_sc0yol.png">
+
+## In Memory
+
+But its not a requirement. We could define migrations and seeders where we want and execute from Memory.
+
+Example:
+```cs
+// define commands
+EasyMig
+    .AlterTable("posts")
+    .AddForeignKeyConstraint("category_id", "categories", "id");
+
+    // other commands ...
+
+// execute
+EasyMig.DoMigrationsFromMemory(@"Server=localhost\SQLEXPRESS;Database=db1;Trusted_Connection=True;", "System.Data.SqlClient");
+```
+
 ## Execution
 
 Targets:
 * _MySql_
-* _Sql Server_
-* _Sql Server Attached Db File_
-
+* _Sql Server_ and _Sql Server Attached Db File_
 
 ### Migrations 
 
@@ -456,13 +464,7 @@ var sql = EasyMig.ToMySql.GetSeedQuery();
 Migrations (create table, etc.):
 
 ```cs
-EasyMig.ToSqlServerAttachedDbFile.CreateMigrationScript("c:/path/to/assembly.dll","c:/path/to/script.sql");
-```
-
-Stored Procedures (DELIMITER : "GO" for SQL Server Managment Studio, "$$" for MySql):
-
-```cs
-EasyMig.ToSqlServerAttachedDbFile.CreateStoredProcedureScript("c:/path/to/assembly.dll", "c:/path/to/script.sql");
+EasyMig.ToSqlServer.CreateMigrationScript("c:/path/to/assembly.dll","c:/path/to/script.sql");
 ```
 
 Seeders:
@@ -515,7 +517,6 @@ EasyMig.ToMySql.DoMigrationsFromMemory("server=localhost;database=dbtest;uid=roo
 // or with Sql Server
 // EasyMig.ToSqlServer.DoMigrationsFromMemory(@"Server=localhost\SQLEXPRESS;Database=db1;Trusted_Connection=True;");
 ```
-
 
 ## Database Information
 

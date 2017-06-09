@@ -18,7 +18,7 @@ namespace EasyMigLibTest.Commands.Table
             var command = new SeedRwoCommand("table1",values );
             var result = command.GetQuery(new SqlQueryService());
 
-            Assert.AreEqual("INSERT INTO [dbo].[table1] ([colum1],[column2]) VALUES (1,'value 2');\r", result);
+            Assert.AreEqual("INSERT INTO [dbo].[table1] ([colum1],[column2]) VALUES (1,'value 2')\rGO\r", result);
         }
 
         [TestMethod]

@@ -9,7 +9,7 @@ namespace EasyMigTest
     [TestClass]
     public class SqlServerFileTest
     {
- 
+
         private string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\romag\Documents\Visual Studio 2017\Projects\experimental\EasyMigLib\EasyMigTest\dbTest.mdf;Integrated Security=True;Connect Timeout=30";
 
         public void BeforeEach()
@@ -66,11 +66,7 @@ namespace EasyMigTest
                 .AddColumn(columnName, ColumnType.Int(true))
                 .AddColumn("title");
 
-            EasyMig.ToSqlServerAttachedDbFile.DoMigrationsFromMemory(connectionString);
-
-            //var query = EasyMig.ToSqlServerAttachedDbFile.GetMigrationQuery();
-
-            //EasyMig.ToSqlServerAttachedDbFile.ExecuteQuery(query, connectionString);
+            EasyMig.ToSqlServer.DoMigrationsFromMemory(connectionString);
 
             await Task.Delay(500);
 
@@ -94,7 +90,7 @@ namespace EasyMigTest
                 .AddColumn("username")
                 .AddColumn("age", ColumnType.Int(), true);
 
-            EasyMig.ToSqlServerAttachedDbFile.DoMigrationsFromMemory(connectionString);
+            EasyMig.ToSqlServer.DoMigrationsFromMemory(connectionString);
 
             var table = EasyMig.Information.SqlServerAttachedDbFile.GetTable(tableName, connectionString);
             Assert.IsNotNull(table);
@@ -111,11 +107,7 @@ namespace EasyMigTest
 
             EasyMig.AlterTable(tableName).AddColumn(columnName, ColumnType.Int(true));
 
-            EasyMig.ToSqlServerAttachedDbFile.DoMigrationsFromMemory(connectionString);
-
-            //var query = EasyMig.ToSqlServerAttachedDbFile.GetMigrationQuery();
-
-            //EasyMig.ToSqlServerAttachedDbFile.ExecuteQuery(query, connectionString);
+            EasyMig.ToSqlServer.DoMigrationsFromMemory(connectionString);
 
             await Task.Delay(500);
 
@@ -137,11 +129,7 @@ namespace EasyMigTest
 
             EasyMig.AlterTable(tableName).ModifyColumn(columnName, ColumnType.VarChar(), true);
 
-            EasyMig.ToSqlServerAttachedDbFile.DoMigrationsFromMemory(connectionString);
-
-            //var query = EasyMig.ToSqlServerAttachedDbFile.GetMigrationQuery();
-
-            //EasyMig.ToSqlServerAttachedDbFile.ExecuteQuery(query, connectionString);
+            EasyMig.ToSqlServer.DoMigrationsFromMemory(connectionString);
 
             await Task.Delay(500);
 
@@ -157,11 +145,7 @@ namespace EasyMigTest
 
             EasyMig.AlterTable(tableName).AddPrimaryKeyConstraint(columnName);
 
-            EasyMig.ToSqlServerAttachedDbFile.DoMigrationsFromMemory(connectionString);
-
-            //var query = EasyMig.ToSqlServerAttachedDbFile.GetMigrationQuery();
-
-            //EasyMig.ToSqlServerAttachedDbFile.ExecuteQuery(query, connectionString);
+            EasyMig.ToSqlServer.DoMigrationsFromMemory(connectionString);
 
             await Task.Delay(500);
 
@@ -180,11 +164,7 @@ namespace EasyMigTest
 
             EasyMig.AlterTable(tableName).AddForeignKeyConstraint(fk, tableReferenced, columnName);
 
-            EasyMig.ToSqlServerAttachedDbFile.DoMigrationsFromMemory(connectionString);
-
-            //var query = EasyMig.ToSqlServerAttachedDbFile.GetMigrationQuery();
-
-            //EasyMig.ToSqlServerAttachedDbFile.ExecuteQuery(query, connectionString);
+            EasyMig.ToSqlServer.DoMigrationsFromMemory(connectionString);
 
             await Task.Delay(500);
 
@@ -202,11 +182,7 @@ namespace EasyMigTest
 
             EasyMig.AlterTable(tableName).DropColumn(columnName);
 
-            EasyMig.ToSqlServerAttachedDbFile.DoMigrationsFromMemory(connectionString);
-
-            //var query = EasyMig.ToSqlServerAttachedDbFile.GetMigrationQuery();
-
-            //EasyMig.ToSqlServerAttachedDbFile.ExecuteQuery(query, connectionString);
+            EasyMig.ToSqlServer.DoMigrationsFromMemory(connectionString);
 
             await Task.Delay(500);
 
@@ -225,11 +201,7 @@ namespace EasyMigTest
             EasyMig.SeedTable(tableName)
                 .Insert(SeedData.New.Set("username", "user1").Set("age", 20));
 
-            EasyMig.ToSqlServerAttachedDbFile.DoSeedFromMemory(connectionString);
-
-            //var query = EasyMig.ToSqlServerAttachedDbFile.GetSeedQuery();
-
-            //EasyMig.ToSqlServerAttachedDbFile.ExecuteQuery(query, connectionString);
+            EasyMig.ToSqlServer.DoSeedFromMemory(connectionString);
 
             var tableRows = EasyMig.Information.SqlServerAttachedDbFile.GetTableRows(tableName, connectionString);
             Assert.AreEqual(1, tableRows.Count);
@@ -245,7 +217,7 @@ namespace EasyMigTest
             EasyMig.SeedTable(tableName)
                 .Insert(SeedData.New.Set("username", "user2").Set("age", 30));
 
-            EasyMig.ToSqlServerAttachedDbFile.DoSeedFromMemory(connectionString);
+            EasyMig.ToSqlServer.DoSeedFromMemory(connectionString);
 
             var tableRows = EasyMig.Information.SqlServerAttachedDbFile.GetTableRows(tableName, connectionString);
             Assert.AreEqual(2, tableRows.Count);
@@ -263,7 +235,7 @@ namespace EasyMigTest
         {
             EasyMig.DropStoredProcedure("p1_test");
 
-            EasyMig.ToSqlServerAttachedDbFile.DoMigrationsFromMemory(connectionString);
+            EasyMig.ToSqlServer.DoMigrationsFromMemory(connectionString);
 
             Assert.IsFalse(EasyMig.Information.SqlServerAttachedDbFile.ProcedureExists("p1_test", connectionString));
         }
@@ -275,7 +247,7 @@ namespace EasyMigTest
                .AddParameter("@age", ColumnType.Int(), DatabaseParameterDirection.OUT)
                .SetBody("select @age=age from users where id=@id");
 
-            EasyMig.ToSqlServerAttachedDbFile.DoMigrationsFromMemory(connectionString);
+            EasyMig.ToSqlServer.DoMigrationsFromMemory(connectionString);
 
             Assert.IsTrue(EasyMig.Information.SqlServerAttachedDbFile.ProcedureExists("p1_test", connectionString));
         }

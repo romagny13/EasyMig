@@ -1,13 +1,14 @@
 ﻿using EasyMigLib.Commands;
-using System;
 using System.Collections.Generic;
 
 namespace EasyMigLib.Query.SqlClient
 {
     public class SqlQueryService : QueryService
     {
-        public SqlQueryService(string engine = null)
-        { }
+        public SqlQueryService()
+        {
+            this.SetDefaultDelimiter("\rGO\r");
+        }
 
         public override string FormatWithSchemaName(string value)
         {
@@ -80,7 +81,7 @@ namespace EasyMigLib.Query.SqlClient
             {
                 return "VARBINARY(MAX)";
             }
-            throw new Exception("Type not supported");
+            throw new EasyMigException("Type not supported");
         }
 
         public override string GetColumn(MigrationColumn column)
@@ -100,17 +101,17 @@ namespace EasyMigLib.Query.SqlClient
 
         public override string GetModifyColumn(string tableName, MigrationColumn column)
         {
-            return "ALTER TABLE " + this.FormatWithSchemaName(tableName) + " ALTER COLUMN " + this.GetModifedColumn(column) + ";\r";
+            return "ALTER TABLE " + this.FormatWithSchemaName(tableName) + " ALTER COLUMN " + this.GetModifedColumn(column) + this.GetDefaultDelimiter();
         }
 
         public string SetIdentityOn(string tableName)
         {
-            return "SET IDENTITY_INSERT " + this.FormatWithSchemaName(tableName) + " ON;\r";
+            return "SET IDENTITY_INSERT " + this.FormatWithSchemaName(tableName) + " ON" + this.GetDefaultDelimiter();
         }
 
         public string SetIdentityOff(string tableName)
         {
-            return "SET IDENTITY_INSERT " + this.FormatWithSchemaName(tableName) + " OFF;\r";
+            return "SET IDENTITY_INSERT " + this.FormatWithSchemaName(tableName) + " OFF" + this.GetDefaultDelimiter();
         }
 
         public bool HasIdentityPrimaryKey(CreateTableCommand createTableCommand)
@@ -157,7 +158,7 @@ namespace EasyMigLib.Query.SqlClient
         {
             return "CREATE PROCEDURE " + this.FormatWithSchemaName(procedureName) + " "
                  + this.GetParameters(parameters)
-                 + this.GetBody(body);
+                 + this.GetBody(body) + this.GetDefaultDelimiter();
         }
 
     }

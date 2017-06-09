@@ -1,7 +1,7 @@
 ﻿using EasyMigLib.Commands;
-using EasyMigLib.MySqlClient;
-using EasyMigLib.SqlClient;
-using EasyMigLib.SqlClientAttachedDbFile;
+using EasyMigLib.Information;
+using EasyMigLib.Migrations.MySqlClient;
+using EasyMigLib.Migrations.SqlClient;
 
 namespace EasyMigLib
 {
@@ -13,8 +13,6 @@ namespace EasyMigLib
         public static MySqlDb ToMySql => new MySqlDb(container);
 
         public static SqlServerDb ToSqlServer => new SqlServerDb(container);
-
-        public static SqlServerAttachedDbFile ToSqlServerAttachedDbFile => new SqlServerAttachedDbFile(container);
 
         public static DatabaseInformation Information => new DatabaseInformation();
 
@@ -28,7 +26,12 @@ namespace EasyMigLib
             return container.CreateDatabase(databaseName);
         }
 
-        public static DropDatabaseCommand DropDatabase(string databaseName)
+        public static CreateAndUseDatabaseCommand CreateAndUseDatabase(string databaseName)
+        {
+            return container.CreateAndUseDatabase(databaseName);
+        }
+
+        public static DropDatabaseCommand DropDatabaseIfExists(string databaseName)
         {
             return container.DropDatabase(databaseName);
         }

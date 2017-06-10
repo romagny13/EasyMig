@@ -1,6 +1,5 @@
-﻿using EasyMigLib.Commands;
-using System.Collections.Generic;
-using System;
+﻿using System.Collections.Generic;
+using EasyMigLib.Schema;
 
 namespace EasyMigLib.Query.MySqlClient
 {
@@ -131,7 +130,7 @@ namespace EasyMigLib.Query.MySqlClient
                 + (column.Unique ? " UNIQUE" : "");
         }
 
-        public override void AddTimestamps(CreateTableCommand table)
+        public override void AddTimestamps(CreateTableSchema table)
         {
             if (table.Timestamps
                && !table.HasColumn("created_at")
@@ -142,7 +141,7 @@ namespace EasyMigLib.Query.MySqlClient
             }
         }
 
-        public override string GetCreateTable(CreateTableCommand table)
+        public override string GetCreateTable(CreateTableSchema table)
         {
             var result = new List<string>();
 
@@ -173,7 +172,7 @@ namespace EasyMigLib.Query.MySqlClient
             return "ALTER TABLE " + this.FormatWithSchemaName(tableName) + " MODIFY COLUMN " + this.GetColumn(column) + ";\r";
         }
 
-        public string GetAutoIncrement(CreateTableCommand createTableCommand)
+        public string GetAutoIncrement(CreateTableSchema createTableCommand)
         {
             var result = "";
             foreach (var column in createTableCommand.primaryKeys)
@@ -186,7 +185,7 @@ namespace EasyMigLib.Query.MySqlClient
             return result;
         }
 
-        public override string GetAddPrimaryKeyConstraint(CreateTableCommand createTableCommand)
+        public override string GetAddPrimaryKeyConstraint(CreateTableSchema createTableCommand)
         {
             var primaryKeys = createTableCommand.GetPrimaryKeyNames();
             if (primaryKeys.Length > 0)
@@ -204,7 +203,7 @@ namespace EasyMigLib.Query.MySqlClient
             }
         }
 
-        public override string GetAddForeignKeyConstraints(CreateTableCommand createTableCommand)
+        public override string GetAddForeignKeyConstraints(CreateTableSchema createTableCommand)
         {
             var result = "";
             foreach (var foreignKey in createTableCommand.foreignKeys)
@@ -217,9 +216,9 @@ namespace EasyMigLib.Query.MySqlClient
 
         // stored procedure
 
-        public override string GetParameter(DatabaseParameter parameter)
+        public override string GetParameter(StoredProcedureParameter parameter)
         {
-            return (parameter.Direction != DatabaseParameterDirection.IN ? parameter.Direction.ToString() + " " : "")
+            return (parameter.Direction != StoredProcedureParameterDirection.IN ? parameter.Direction.ToString() + " " : "")
                 + parameter.ParameterName
                 + " " + this.GetColumnType(parameter.ParameterType);
         }
@@ -229,7 +228,7 @@ namespace EasyMigLib.Query.MySqlClient
             return "\rBEGIN\r" + this.FormatBody(body) + "\rEND";
         }
 
-        public override string GetCreateStoredProcedure(string procedureName, Dictionary<string, DatabaseParameter> parameters, string body)
+        public override string GetCreateStoredProcedure(string procedureName, Dictionary<string, StoredProcedureParameter> parameters, string body)
         {
             return @"CREATE PROCEDURE " + this.FormatWithSchemaName(procedureName) + "(" + this.GetParameters(parameters) +")"
                    + this.GetBody(body);

@@ -1,79 +1,79 @@
-﻿using EasyMigLib.Commands;
-using EasyMigLib.Information;
+﻿using EasyMigLib.Information;
 using EasyMigLib.Migrations.MySqlClient;
 using EasyMigLib.Migrations.SqlClient;
+using EasyMigLib.Schema;
 
 namespace EasyMigLib
 {
-
-    public static class EasyMig
+    public class EasyMig
     {
-        private static CommandContainer container;
+        internal static DatabaseSchema schema;
 
-        public static MySqlDb ToMySql => new MySqlDb(container);
+        public static MySqlDb ToMySql => new MySqlDb(schema);
 
-        public static SqlServerDb ToSqlServer => new SqlServerDb(container);
+        public static SqlServerDb ToSqlServer => new SqlServerDb(schema);
 
         public static DatabaseInformation Information => new DatabaseInformation();
 
         static EasyMig()
         {
-            container = new CommandContainer();
+            schema = new DatabaseSchema();
         }
 
-        public static CreateDatabaseCommand CreateDatabase(string databaseName)
+        public static void CreateDatabase(string databaseName)
         {
-            return container.CreateDatabase(databaseName);
+            schema.CreateDatabase(databaseName);
         }
 
-        public static CreateAndUseDatabaseCommand CreateAndUseDatabase(string databaseName)
+        public static void CreateAndUseDatabase(string databaseName)
         {
-            return container.CreateAndUseDatabase(databaseName);
+            schema.CreateAndUseDatabase(databaseName);
         }
 
-        public static DropDatabaseCommand DropDatabaseIfExists(string databaseName)
+        public static void DropDatabaseIfExists(string databaseName)
         {
-            return container.DropDatabase(databaseName);
+            schema.DropDatabase(databaseName);
         }
 
-        public static CreateTableCommand CreateTable(string tableName)
+        public static CreateTableSchema CreateTable(string tableName)
         {
-            return container.CreateTable(tableName);
+            return schema.CreateTable(tableName);
         }
 
-        public static AlterTableCommand AlterTable(string tableName)
+        public static AlterTableSchema AlterTable(string tableName)
         {
-            return container.AlterTable(tableName);
+            return schema.AlterTable(tableName);
         }
 
-        public static DropTableCommand DropTable(string tableName)
+        public static void DropTable(string tableName)
         {
-            return container.DropTable(tableName);
+            schema.DropTable(tableName);
         }
 
-        public static CreateStoredProcedureCommand CreateStoredProcedure(string procedureName)
+        public static StoredProcedureSchema CreateStoredProcedure(string procedureName)
         {
-            return container.CreateStoredProcedure(procedureName);
+            return schema.CreateStoredProcedure(procedureName);
         }
 
-        public static DropStoredProcedureCommand DropStoredProcedure(string procedureName)
+        public static void DropStoredProcedure(string procedureName)
         {
-            return container.DropStoredProcedure(procedureName);
+            schema.DropStoredProcedure(procedureName);
         }
 
-        public static SeedTableCommand SeedTable(string tableName)
+        public static SeedTableSchema SeedTable(string tableName)
         {
-            return container.SeedTable(tableName);
+            return schema.SeedTable(tableName);
         }
 
         public static void ClearMigrations()
         {
-            container.ClearMigrations();
+            schema.ClearMigrations();
         }
 
         public static void ClearSeeders()
         {
-            container.ClearSeeders();
+            schema.ClearSeeders();
         }
+
     }
 }

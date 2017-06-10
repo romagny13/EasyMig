@@ -1,6 +1,5 @@
-﻿using EasyMigLib.Commands;
+﻿using EasyMigLib.Schema;
 using System.Collections.Generic;
-using System;
 
 namespace EasyMigLib.Query
 {
@@ -12,7 +11,7 @@ namespace EasyMigLib.Query
 
         public abstract string GetColumnType(ColumnType columnType);
         public abstract string GetColumn(MigrationColumn column);
-        public abstract string GetCreateStoredProcedure(string procedureName, Dictionary<string, DatabaseParameter> parameters, string body);
+        public abstract string GetCreateStoredProcedure(string procedureName, Dictionary<string, StoredProcedureParameter> parameters, string body);
 
         protected List<string> reservedWords;
 
@@ -91,7 +90,7 @@ namespace EasyMigLib.Query
             return "DROP TABLE IF EXISTS " + this.FormatWithSchemaName(tableName) + this.GetDefaultDelimiter();
         }
 
-        public virtual void AddTimestamps(CreateTableCommand table)
+        public virtual void AddTimestamps(CreateTableSchema table)
         {
             if (table.Timestamps
                && !table.HasColumn("created_at")
@@ -128,7 +127,7 @@ namespace EasyMigLib.Query
             }
         }
 
-        public virtual string GetCreateTable(CreateTableCommand table)
+        public virtual string GetCreateTable(CreateTableSchema table)
         {
             var result = new List<string>();
 
@@ -189,9 +188,18 @@ namespace EasyMigLib.Query
 
         }
 
+        public virtual string GetAddForeignKeyConstraint(string tableName, ForeignKeyConstraint foreignKey)
+        {
+            return "ALTER TABLE " + this.FormatWithSchemaName(tableName)
+                    + " ADD FOREIGN KEY (" + this.WrapWithQuotes(foreignKey.ColumnName)
+                    + ") REFERENCES " + this.FormatWithSchemaName(foreignKey.TableReferenced)
+                    + "(" + this.WrapWithQuotes(foreignKey.PrimaryKeyReferenced) + ")" + this.GetDefaultDelimiter();
+
+        }
+
         // at initialization
 
-        public virtual string GetAddPrimaryKeyConstraint(CreateTableCommand createTableCommand)
+        public virtual string GetAddPrimaryKeyConstraint(CreateTableSchema createTableCommand)
         {
             if (createTableCommand.HasPrimaryKeys)
             {
@@ -209,7 +217,7 @@ namespace EasyMigLib.Query
             }
         }
 
-        public virtual string GetAddForeignKeyConstraints(CreateTableCommand createTableCommand)
+        public virtual string GetAddForeignKeyConstraints(CreateTableSchema createTableCommand)
         {
             var result = "";
             foreach (var foreignKey in createTableCommand.foreignKeys)
@@ -248,10 +256,20 @@ namespace EasyMigLib.Query
                 + this.GetSeedValues(columnValues) + ")" + this.GetDefaultDelimiter();
         }
 
-        public virtual string GetSeeds(CreateTableCommand createTableCommand)
+        public virtual string GetSeeds(CreateTableSchema createTableCommand)
         {
             var result = "";
-            foreach (var seedRowCommand in createTableCommand.seedTableCommand.seedRowCommands)
+            foreach (var seedRowCommand in createTableCommand.seedTable.rows)
+            {
+                result += this.GetSeedRow(seedRowCommand.TableName, seedRowCommand.columnValues);
+            }
+            return result;
+        }
+
+        public virtual string GetSeeds(SeedTableSchema table)
+        {
+            var result = "";
+            foreach (var seedRowCommand in table.rows)
             {
                 result += this.GetSeedRow(seedRowCommand.TableName, seedRowCommand.columnValues);
             }
@@ -260,14 +278,14 @@ namespace EasyMigLib.Query
 
         // stored procedure
 
-        public virtual string GetParameter(DatabaseParameter parameter)
+        public virtual string GetParameter(StoredProcedureParameter parameter)
         {
             return parameter.ParameterName + " " + this.GetColumnType(parameter.ParameterType)
              + (parameter.DefaultValue != null ? "=" + parameter.DefaultValue : "")
-             + (parameter.Direction != DatabaseParameterDirection.IN ? " " + parameter.Direction.ToString() : "");
+             + (parameter.Direction != StoredProcedureParameterDirection.IN ? " " + parameter.Direction.ToString() : "");
         }
 
-        public virtual string GetParameters(Dictionary<string, DatabaseParameter> parameters)
+        public virtual string GetParameters(Dictionary<string, StoredProcedureParameter> parameters)
         {
             var result = new List<string>();
             foreach (var parameter in parameters)

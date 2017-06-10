@@ -2,7 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Threading.Tasks;
 using EasyMigLib;
-using EasyMigLib.Commands;
+using EasyMigLib.Schema;
 
 namespace EasyMigTest
 {
@@ -10,7 +10,7 @@ namespace EasyMigTest
     public class SqlServerFileTest
     {
 
-        private string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\romag\Documents\Visual Studio 2017\Projects\experimental\EasyMigLib\EasyMigTest\dbTest.mdf;Integrated Security=True;Connect Timeout=30";
+        private string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\romag\Documents\Visual Studio 2017\Projects\EasyMigLib\EasyMigTest\dbTest.mdf;Integrated Security=True;Connect Timeout=30";
 
         public void BeforeEach()
         {
@@ -46,15 +46,6 @@ namespace EasyMigTest
             TestCreateStoredProcedure();
         }
 
-        //[TestMethod]
-        //public void TestProcedure()
-        //{
-        //    this.BeforeEach();
-
-        //    TestDropStoredProcedure();
-        //    TestCreateStoredProcedure();
-        //}
-
         public async Task TestCreateTable()
         {
             this.BeforeEach();
@@ -68,7 +59,7 @@ namespace EasyMigTest
 
             EasyMig.ToSqlServer.DoMigrationsFromMemory(connectionString);
 
-            await Task.Delay(500);
+            await Task.Delay(200);
 
             Assert.IsTrue(EasyMig.Information.SqlServerAttachedDbFile.TableExists(tableName, connectionString));
 
@@ -109,7 +100,7 @@ namespace EasyMigTest
 
             EasyMig.ToSqlServer.DoMigrationsFromMemory(connectionString);
 
-            await Task.Delay(500);
+            await Task.Delay(200);
 
             Assert.IsTrue(EasyMig.Information.SqlServerAttachedDbFile.ColumnExists(tableName, columnName, connectionString));
 
@@ -131,7 +122,7 @@ namespace EasyMigTest
 
             EasyMig.ToSqlServer.DoMigrationsFromMemory(connectionString);
 
-            await Task.Delay(500);
+            await Task.Delay(200);
 
             var table = EasyMig.Information.SqlServerAttachedDbFile.GetTable(tableName, connectionString);
 
@@ -147,7 +138,7 @@ namespace EasyMigTest
 
             EasyMig.ToSqlServer.DoMigrationsFromMemory(connectionString);
 
-            await Task.Delay(500);
+            await Task.Delay(200);
 
             var table = EasyMig.Information.SqlServerAttachedDbFile.GetTable(tableName, connectionString);
 
@@ -166,7 +157,7 @@ namespace EasyMigTest
 
             EasyMig.ToSqlServer.DoMigrationsFromMemory(connectionString);
 
-            await Task.Delay(500);
+            await Task.Delay(200);
 
             var table = EasyMig.Information.SqlServerAttachedDbFile.GetTable(tableName, connectionString);
 
@@ -184,7 +175,7 @@ namespace EasyMigTest
 
             EasyMig.ToSqlServer.DoMigrationsFromMemory(connectionString);
 
-            await Task.Delay(500);
+            await Task.Delay(200);
 
             Assert.IsFalse(EasyMig.Information.SqlServerAttachedDbFile.ColumnExists(tableName, columnName, connectionString));
 
@@ -243,8 +234,8 @@ namespace EasyMigTest
         public void TestCreateStoredProcedure()
         {
             EasyMig.CreateStoredProcedure("p1_test")
-               .AddParameter("@id", ColumnType.Int())
-               .AddParameter("@age", ColumnType.Int(), DatabaseParameterDirection.OUT)
+               .AddInParameter("@id", ColumnType.Int())
+               .AddOutParameter("@age", ColumnType.Int())
                .SetBody("select @age=age from users where id=@id");
 
             EasyMig.ToSqlServer.DoMigrationsFromMemory(connectionString);

@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{58621EB2-B232-49D3-B299-48586BCB31C0}</ProjectGuid>
+    <ProjectGuid>{FA47CE29-B64B-4EDD-AAE4-92262B8C5832}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>EasyMigApp</RootNamespace>
     <AssemblyName>EasyMigApp</AssemblyName>
@@ -58,14 +58,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Models\DataAnnotationsValidationService.cs" />
-    <Compile Include="Models\IMigrationService.cs" />
-    <Compile Include="Models\IValidationService.cs" />
-    <Compile Include="Models\MigrationModel.cs" />
-    <Compile Include="Models\MigrationService.cs" />
-    <Compile Include="Models\Observable.cs" />
-    <Compile Include="Models\Session.cs" />
-    <Compile Include="Models\Validatable.cs" />
     <Compile Include="Shell.xaml.cs">
       <DependentUpon>Shell.xaml</DependentUpon>
     </Compile>
@@ -81,6 +73,14 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\DataAnnotationsValidationService.cs" />
+    <Compile Include="Models\IMigrationService.cs" />
+    <Compile Include="Models\IValidationService.cs" />
+    <Compile Include="Models\MigrationModel.cs" />
+    <Compile Include="Models\MigrationService.cs" />
+    <Compile Include="Models\Observable.cs" />
+    <Compile Include="Models\Session.cs" />
+    <Compile Include="Models\Validatable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -108,7 +108,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EasyMigLib\EasyMigLib.csproj">
-      <Project>{9623d7c0-78a6-491c-bf18-d4d4b5f59002}</Project>
+      <Project>{a376b384-90c7-4f15-be41-1f6adaa894a8}</Project>
       <Name>EasyMigLib</Name>
     </ProjectReference>
   </ItemGroup>

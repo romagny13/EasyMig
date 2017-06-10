@@ -1,0 +1,38 @@
+﻿
+1/ SCHEMA
+
+a/database
+-- create
+-- drop
+-- create and use
+
+b/create table
+--> define schema
+-- add column
+-- add primary key
+-- add foreign key
+-- seed on init
+
+c/Alter Table
+-- add column
+-- modify column
+-- drop column
+-- add primary constraint
+-- add foreign key constraint
+
+d/stored procedures
+-- create
+-- drop
+
+e/seeders
+- Seed (existing) Table
+
+2/Execution
+targets
+- MySql
+--> Migrations
+--> Seeds
+
+- Sql Server (check attached db file)
+--> Migrations
+--> Seeds

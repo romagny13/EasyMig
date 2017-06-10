@@ -1,9 +1,8 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using EasyMigLib;
-using EasyMigLib.Commands;
 using System.Collections.Generic;
 using EasyMigLib.Query.MySqlClient;
+using EasyMigLib.Schema;
 
 namespace EasyMigLibTest.Services
 {
@@ -123,7 +122,7 @@ namespace EasyMigLibTest.Services
         {
             var service = this.GetService();
 
-            var result = service.GetAddColumn("table1", new MigrationColumn("column1", ColumnType.VarChar(100), true));
+            var result = service.GetAddColumn("table1", new MigrationColumn("table1", "column1", ColumnType.VarChar(100), true));
 
             Assert.AreEqual("ALTER TABLE `table1` ADD `column1` VARCHAR(100) COLLATE utf8mb4_unicode_ci NULL;\r", result);
         }
@@ -133,7 +132,7 @@ namespace EasyMigLibTest.Services
         {
             var service = this.GetService();
 
-            var result = service.GetModifyColumn("table1", new MigrationColumn("column1", ColumnType.VarChar(100), true));
+            var result = service.GetModifyColumn("table1", new MigrationColumn("table1", "column1", ColumnType.VarChar(100), true));
 
             Assert.AreEqual("ALTER TABLE `table1` MODIFY COLUMN `column1` VARCHAR(100) COLLATE utf8mb4_unicode_ci NULL;\r", result);
         }
@@ -168,7 +167,7 @@ namespace EasyMigLibTest.Services
         {
             var service = this.GetService();
 
-            var result = service.GetAddForeignKeyConstraint("posts", new ForeignKeyColumn("user_id", ColumnType.Int(), "users", "id"));
+            var result = service.GetAddForeignKeyConstraint("posts", new ForeignKeyColumn("posts", "user_id", ColumnType.Int(), "users", "id"));
 
             Assert.AreEqual("ALTER TABLE `posts` ADD FOREIGN KEY (`user_id`) REFERENCES `users`(`id`);\r", result);
         }
@@ -182,7 +181,7 @@ namespace EasyMigLibTest.Services
         {
             var service = this.GetService();
 
-            var table = new CreateTableCommand("table1");
+            var table = new CreateTableSchema("table1");
             table.AddColumn("column1", true);
 
             var result = service.GetColumn(table.GetColumn("column1"));
@@ -195,7 +194,7 @@ namespace EasyMigLibTest.Services
         {
             var service = this.GetService();
 
-            var table = new CreateTableCommand("table1");
+            var table = new CreateTableSchema("table1");
             table.AddColumn("column1", false);
 
             var result = service.GetColumn(table.GetColumn("column1"));
@@ -210,7 +209,7 @@ namespace EasyMigLibTest.Services
         {
             var service = this.GetService();
 
-            var table = new CreateTableCommand("table1");
+            var table = new CreateTableSchema("table1");
             table.AddColumn("column1", ColumnType.VarChar(), false, "my value");
 
             var result = service.GetColumn(table.GetColumn("column1"));
@@ -223,7 +222,7 @@ namespace EasyMigLibTest.Services
         {
             var service = this.GetService();
 
-            var table = new CreateTableCommand("table1");
+            var table = new CreateTableSchema("table1");
             table.AddColumn("column1", ColumnType.Int(), false, 10);
 
             var result = service.GetColumn(table.GetColumn("column1"));
@@ -238,7 +237,7 @@ namespace EasyMigLibTest.Services
         {
             var service = this.GetService();
 
-            var table = new CreateTableCommand("table1");
+            var table = new CreateTableSchema("table1");
             table.AddColumn("column1", ColumnType.TinyInt());
 
             var result = service.GetColumn(table.GetColumn("column1"));
@@ -251,7 +250,7 @@ namespace EasyMigLibTest.Services
         {
             var service = this.GetService();
 
-            var table = new CreateTableCommand("table1");
+            var table = new CreateTableSchema("table1");
             table.AddColumn("column1", ColumnType.TinyInt(true));
 
             var result = service.GetColumn(table.GetColumn("column1"));
@@ -267,7 +266,7 @@ namespace EasyMigLibTest.Services
         {
             var service = this.GetService();
 
-            var table = new CreateTableCommand("table1");
+            var table = new CreateTableSchema("table1");
             table.AddColumn("column1", ColumnType.SmallInt());
 
             var result = service.GetColumn(table.GetColumn("column1"));
@@ -280,7 +279,7 @@ namespace EasyMigLibTest.Services
         {
             var service = this.GetService();
 
-            var table = new CreateTableCommand("table1");
+            var table = new CreateTableSchema("table1");
             table.AddColumn("column1", ColumnType.SmallInt(true));
 
             var result = service.GetColumn(table.GetColumn("column1"));
@@ -295,7 +294,7 @@ namespace EasyMigLibTest.Services
         {
             var service = this.GetService();
 
-            var table = new CreateTableCommand("table1");
+            var table = new CreateTableSchema("table1");
             table.AddColumn("column1", ColumnType.Int());
 
             var result = service.GetColumn(table.GetColumn("column1"));
@@ -308,7 +307,7 @@ namespace EasyMigLibTest.Services
         {
             var service = this.GetService();
 
-            var table = new CreateTableCommand("table1");
+            var table = new CreateTableSchema("table1");
             table.AddColumn("column1", ColumnType.Int(true));
 
             var result = service.GetColumn(table.GetColumn("column1"));
@@ -324,7 +323,7 @@ namespace EasyMigLibTest.Services
         {
             var service = this.GetService();
 
-            var table = new CreateTableCommand("table1");
+            var table = new CreateTableSchema("table1");
             table.AddColumn("column1", ColumnType.BigInt());
 
             var result = service.GetColumn(table.GetColumn("column1"));
@@ -337,7 +336,7 @@ namespace EasyMigLibTest.Services
         {
             var service = this.GetService();
 
-            var table = new CreateTableCommand("table1");
+            var table = new CreateTableSchema("table1");
             table.AddColumn("column1", ColumnType.BigInt(true));
 
             var result = service.GetColumn(table.GetColumn("column1"));
@@ -353,7 +352,7 @@ namespace EasyMigLibTest.Services
         {
             var service = this.GetService();
 
-            var table = new CreateTableCommand("table1");
+            var table = new CreateTableSchema("table1");
             table.AddColumn("column1", ColumnType.Bit());
 
             var result = service.GetColumn(table.GetColumn("column1"));
@@ -368,7 +367,7 @@ namespace EasyMigLibTest.Services
         {
             var service = this.GetService();
 
-            var table = new CreateTableCommand("table1");
+            var table = new CreateTableSchema("table1");
             table.AddColumn("column1", ColumnType.Float());
 
             var result = service.GetColumn(table.GetColumn("column1"));
@@ -381,7 +380,7 @@ namespace EasyMigLibTest.Services
         {
             var service = this.GetService();
 
-            var table = new CreateTableCommand("table1");
+            var table = new CreateTableSchema("table1");
             table.AddColumn("column1", ColumnType.Float(2));
 
             var result = service.GetColumn(table.GetColumn("column1"));
@@ -396,7 +395,7 @@ namespace EasyMigLibTest.Services
         {
             var service = this.GetService();
 
-            var table = new CreateTableCommand("table1");
+            var table = new CreateTableSchema("table1");
             table.AddColumn("column1", ColumnType.Char());
 
             var result = service.GetColumn(table.GetColumn("column1"));
@@ -409,7 +408,7 @@ namespace EasyMigLibTest.Services
         {
             var service = this.GetService();
 
-            var table = new CreateTableCommand("table1");
+            var table = new CreateTableSchema("table1");
             table.AddColumn("column1", ColumnType.Char(100));
 
             var result = service.GetColumn(table.GetColumn("column1"));
@@ -424,7 +423,7 @@ namespace EasyMigLibTest.Services
         {
             var service = this.GetService();
 
-            var table = new CreateTableCommand("table1");
+            var table = new CreateTableSchema("table1");
             table.AddColumn("column1");
 
             var result = service.GetColumn(table.GetColumn("column1"));
@@ -437,7 +436,7 @@ namespace EasyMigLibTest.Services
         {
             var service = this.GetService();
 
-            var table = new CreateTableCommand("table1");
+            var table = new CreateTableSchema("table1");
             table.AddColumn("column1", ColumnType.VarChar(100));
 
             var result = service.GetColumn(table.GetColumn("column1"));
@@ -452,7 +451,7 @@ namespace EasyMigLibTest.Services
         {
             var service = this.GetService();
 
-            var table = new CreateTableCommand("table1");
+            var table = new CreateTableSchema("table1");
             table.AddColumn("column1", ColumnType.Text());
 
             var result = service.GetColumn(table.GetColumn("column1"));
@@ -467,7 +466,7 @@ namespace EasyMigLibTest.Services
         {
             var service = this.GetService();
 
-            var table = new CreateTableCommand("table1");
+            var table = new CreateTableSchema("table1");
             table.AddColumn("column1", ColumnType.LongText());
 
             var result = service.GetColumn(table.GetColumn("column1"));
@@ -482,7 +481,7 @@ namespace EasyMigLibTest.Services
         {
             var service = this.GetService();
 
-            var table = new CreateTableCommand("table1");
+            var table = new CreateTableSchema("table1");
             table.AddColumn("column1", ColumnType.DateTime());
 
             var result = service.GetColumn(table.GetColumn("column1"));
@@ -497,7 +496,7 @@ namespace EasyMigLibTest.Services
         {
             var service = this.GetService();
 
-            var table = new CreateTableCommand("table1");
+            var table = new CreateTableSchema("table1");
             table.AddColumn("column1", ColumnType.Date());
 
             var result = service.GetColumn(table.GetColumn("column1"));
@@ -512,7 +511,7 @@ namespace EasyMigLibTest.Services
         {
             var service = this.GetService();
 
-            var table = new CreateTableCommand("table1");
+            var table = new CreateTableSchema("table1");
             table.AddColumn("column1", ColumnType.Time());
 
             var result = service.GetColumn(table.GetColumn("column1"));
@@ -527,7 +526,7 @@ namespace EasyMigLibTest.Services
         {
             var service = this.GetService();
 
-            var table = new CreateTableCommand("table1");
+            var table = new CreateTableSchema("table1");
             table.AddColumn("column1", ColumnType.Timestamp());
 
             var result = service.GetColumn(table.GetColumn("column1"));
@@ -542,7 +541,7 @@ namespace EasyMigLibTest.Services
         {
             var service = this.GetService();
 
-            var table = new CreateTableCommand("table1");
+            var table = new CreateTableSchema("table1");
             table.AddColumn("column1", ColumnType.Blob());
 
             var result = service.GetColumn(table.GetColumn("column1"));
@@ -570,7 +569,7 @@ namespace EasyMigLibTest.Services
         {
             var service = this.GetService();
 
-            var table = new CreateTableCommand("table1")
+            var table = new CreateTableSchema("table1")
                 .AddColumn("column1")
                 .AddColumn("column2");
 
@@ -586,7 +585,7 @@ namespace EasyMigLibTest.Services
         {
             var service = this.GetService();
 
-            var table = new CreateTableCommand("table1")
+            var table = new CreateTableSchema("table1")
                 .AddPrimaryKey("pk1")
                 .AddColumn("column1")
                 .AddColumn("column2");
@@ -602,7 +601,7 @@ namespace EasyMigLibTest.Services
         {
             var service = this.GetService();
 
-            var table = new CreateTableCommand("table1")
+            var table = new CreateTableSchema("table1")
                 .AddPrimaryKey("pk1", ColumnType.Int())
                 .AddPrimaryKey("pk2", ColumnType.Int())
                 .AddColumn("column1");
@@ -618,7 +617,7 @@ namespace EasyMigLibTest.Services
         {
             var service = this.GetService();
 
-            var table = new CreateTableCommand("table1")
+            var table = new CreateTableSchema("table1")
                 .AddPrimaryKey("pk1")
                 .AddColumn("column1")
                 .AddForeignKey("fk1", "table2", "id");
@@ -634,7 +633,7 @@ namespace EasyMigLibTest.Services
         {
             var service = this.GetService();
 
-            var table = new CreateTableCommand("table1")
+            var table = new CreateTableSchema("table1")
                 .AddPrimaryKey("pk1")
                 .AddColumn("column1")
                 .AddForeignKey("fk1", "table2", "id")
@@ -651,7 +650,7 @@ namespace EasyMigLibTest.Services
         {
             var service = this.GetService();
 
-            var table = new CreateTableCommand("table1")
+            var table = new CreateTableSchema("table1")
                 .AddPrimaryKey("pk1")
                 .AddColumn("column1")
                 .AddTimestamps();
@@ -669,7 +668,7 @@ namespace EasyMigLibTest.Services
         {
             var service = this.GetService();
 
-            var table = new CreateTableCommand("table1")
+            var table = new CreateTableSchema("table1")
                  .AddPrimaryKey("pk1")
                  .AddColumn("column1");
 
@@ -684,7 +683,7 @@ namespace EasyMigLibTest.Services
         {
             var service = this.GetService();
 
-            var table = new CreateTableCommand("table1")
+            var table = new CreateTableSchema("table1")
                 .AddPrimaryKey("pk1", ColumnType.Int())
                 .AddPrimaryKey("pk2", ColumnType.Int())
                 .AddColumn("column1");
@@ -700,7 +699,7 @@ namespace EasyMigLibTest.Services
         {
             var service = this.GetService();
 
-            var table = new CreateTableCommand("table1")
+            var table = new CreateTableSchema("table1")
                  .AddColumn("column1");
 
             var result = service.GetAddPrimaryKeyConstraint(table);
@@ -716,7 +715,7 @@ namespace EasyMigLibTest.Services
         {
             var service = this.GetService();
 
-            var table = new CreateTableCommand("posts")
+            var table = new CreateTableSchema("posts")
                 .AddForeignKey("user_id", "users", "id");
 
             var result = service.GetAddForeignKeyConstraints(table);
@@ -730,7 +729,7 @@ namespace EasyMigLibTest.Services
         {
             var service = this.GetService();
 
-            var table = new CreateTableCommand("posts")
+            var table = new CreateTableSchema("posts")
                 .AddForeignKey("user_id", "users", "id")
                 .AddForeignKey("category_id", "categories", "id");
 
@@ -745,7 +744,7 @@ namespace EasyMigLibTest.Services
         {
             var service = this.GetService();
 
-            var table = new CreateTableCommand("posts");
+            var table = new CreateTableSchema("posts");
 
             var result = service.GetAddForeignKeyConstraints(table);
 
@@ -760,9 +759,9 @@ namespace EasyMigLibTest.Services
         {
             var service = this.GetService();
 
-            var p = new CreateStoredProcedureCommand("p1")
-              .AddParameter("p_id", ColumnType.Int())
-              .AddParameter("p_age", ColumnType.Int(), DatabaseParameterDirection.OUT)
+            var p = new StoredProcedureSchema("p1")
+              .AddInParameter("p_id", ColumnType.Int())
+              .AddOutParameter("p_age", ColumnType.Int())
               .SetBody("select age into p_age from users where id=p_id");
 
             var result = service.GetCreateStoredProcedure(p.ProcedureName,p.Parameters,p.Body);
@@ -775,9 +774,7 @@ namespace EasyMigLibTest.Services
         {
             var service = this.GetService();
 
-            var p = new DropStoredProcedureCommand("p1");
-
-            var result = service.GetDropStoredProcedure(p.ProcedureName);
+            var result = service.GetDropStoredProcedure("p1");
 
             Assert.AreEqual("DROP PROCEDURE IF EXISTS `p1`;\r", result);
         }
@@ -809,7 +806,7 @@ namespace EasyMigLibTest.Services
         {
             var service = this.GetService();
 
-            var table = new CreateTableCommand("users")
+            var table = new CreateTableSchema("users")
                 .AddPrimaryKey("id", ColumnType.Int())
                 .AddColumn("username")
                 .AddColumn("age")
@@ -827,7 +824,7 @@ namespace EasyMigLibTest.Services
         {
             var service = this.GetService();
 
-            var table = new CreateTableCommand("users")
+            var table = new CreateTableSchema("users")
                 .AddPrimaryKey("id", ColumnType.Int())
                 .AddColumn("username")
                 .AddColumn("age", true)
@@ -859,7 +856,7 @@ namespace EasyMigLibTest.Services
         {
             var service = new MySqlQueryService("MyISAM");
 
-            var table = new CreateTableCommand("table1")
+            var table = new CreateTableSchema("table1")
              .AddColumn("column1");
 
             var result = service.GetCreateTable(table);

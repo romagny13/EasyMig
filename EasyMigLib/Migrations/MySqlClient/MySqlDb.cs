@@ -1,81 +1,100 @@
-﻿using EasyMigLib.Commands;
-using EasyMigLib.MigrationReflection;
+﻿using EasyMigLib.MigrationReflection;
+using EasyMigLib.Schema;
 using System;
+using System.Collections.Generic;
 
 namespace EasyMigLib.Migrations.MySqlClient
 {
     public class MySqlDb
     {
-        protected MySqlSchema container;
+        protected MySqlExecutor executor;
 
-        public MySqlDb(CommandContainer commandContainer)
+        public MySqlDb(DatabaseSchema schema)
         {
-            this.container = new MySqlSchema(commandContainer);
-        }      
+            this.executor = new MySqlExecutor(schema);
+        }
 
         public string GetMigrationQuery(string engine = "InnoDB")
         {
-            return container.GetMigrationQuery(engine);
+            return executor.GetMigrationQuery(engine);
         }
 
         public string GetSeedQuery()
         {
-            return container.GetSeedQuery();
+            return executor.GetSeedQuery();
         }
 
         public void DoSeedForAssembly(string assemblyPath, string connectionString)
         {
-            container.DoSeedForAssembly(assemblyPath, connectionString);
+            executor.DoSeedForAssembly(assemblyPath, connectionString);
         }
 
         public void DoSeedForTypes(Type[] assemblyTypes, string connectionString)
         {
-            container.DoSeedForTypes(assemblyTypes, connectionString);
+            executor.DoSeedForTypes(assemblyTypes, connectionString);
         }
 
         public void DoSeedOnlyFor(string seedFileName, string assemblyPath, string connectionString)
         {
-            container.DoSeedOnlyFor(seedFileName, assemblyPath, connectionString);
+            executor.DoSeedOnlyFor(seedFileName, assemblyPath, connectionString);
         }
 
         public void DoSeedFromMemory(string connectionString)
         {
-            container.DoSeedFromMemory(connectionString);
+            executor.DoSeedFromMemory(connectionString);
         }
 
-        public void DoMigrationsForAssembly(string assemblyPath, string connectionString, string engine = "InnoDB", MigrationDirection direction = MigrationDirection.Up)
+        public void DoMigrationsForAssembly(string assemblyPath, 
+            string connectionString, string engine = "InnoDB", MigrationDirection direction = MigrationDirection.Up)
         {
-            container.DoMigrationsForAssembly(assemblyPath, connectionString, engine, direction);
+            executor.DoMigrationsForAssembly(assemblyPath, connectionString, engine, direction);
         }
 
-        public void DoMigrationsForTypes(Type[] assemblyTypes, string connectionString, string engine = "InnoDB", MigrationDirection direction = MigrationDirection.Up)
+        public void DoMigrationsForTypes(Type[] assemblyTypes, 
+            string connectionString, string engine = "InnoDB", MigrationDirection direction = MigrationDirection.Up)
         {
-            container.DoMigrationsForTypes(assemblyTypes, connectionString, engine, direction);
+            executor.DoMigrationsForTypes(assemblyTypes, connectionString, engine, direction);
         }
 
-        public void DoMigrationOnlyFor(string migrationFileName, string assemblyPath, string connectionString, string engine = "InnoDB", MigrationDirection direction = MigrationDirection.Up)
+        public void DoMigrationOnlyFor(string migrationFileName, string assemblyPath, 
+            string connectionString, string engine = "InnoDB", MigrationDirection direction = MigrationDirection.Up)
         {
-            container.DoMigrationOnlyFor(migrationFileName, assemblyPath, connectionString, engine, direction);
+            executor.DoMigrationOnlyFor(migrationFileName, assemblyPath, connectionString, engine, direction);
         }
 
         public void DoMigrationsFromMemory(string connectionString, string engine = "InnoDB")
         {
-            container.DoMigrationsFromMemory(connectionString, engine);
+            executor.DoMigrationsFromMemory(connectionString, engine);
         }
 
         public int ExecuteQuery(string query, string connectionString)
         {
-            return container.ExecuteQuery(query, connectionString);
+            return executor.OpenConnectionAndExecuteQuery(query, connectionString);
+        }
+
+        public void ExecuteQueries(List<string> queries, string connectionString)
+        {
+            executor.OpenConnectionAndExecuteQueries(queries, connectionString);
         }
 
         public void CreateMigrationScript(string assemblyPath, string fileName, string engine = "InnoDB")
         {
-            container.CreateMigrationsScript(assemblyPath, fileName, engine);
+            executor.CreateMigrationsScript(assemblyPath, fileName, engine);
+        }
+
+        public void CreateMigrationScriptFromMemory(string fileName, string engine = "InnoDB")
+        {
+            executor.CreateMigrationScriptFromMemory(fileName, engine);
         }
 
         public void CreateSeedScript(string assemblyPath, string fileName)
         {
-            container.CreateSeedScript(assemblyPath, fileName);
+            executor.CreateSeedScript(assemblyPath, fileName);
+        }
+
+        public void CreateSeedScriptFromMemory(string fileName)
+        {
+            executor.CreateSeedScriptFromMemory(fileName);
         }
     }
 }

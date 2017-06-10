@@ -1,82 +1,100 @@
-﻿using EasyMigLib.Commands;
-using EasyMigLib.MigrationReflection;
+﻿using EasyMigLib.MigrationReflection;
+using EasyMigLib.Schema;
 using System;
+using System.Collections.Generic;
 
 namespace EasyMigLib.Migrations.SqlClient
 {
     public class SqlServerDb
     {
-        protected SqlServerSchema container;
+        protected SqlServerExecutor executor;
 
-        public SqlServerDb(CommandContainer commandContainer)
+        public SqlServerDb(DatabaseSchema schema)
         {
-            this.container = new SqlServerSchema(commandContainer);
+            this.executor = new SqlServerExecutor(schema);
         }
 
         public string GetMigrationQuery()
         {
-            return container.GetMigrationQuery();
+            return executor.GetMigrationQueryWithGODelimiter();
         }
 
         public string GetSeedQuery()
         {
-            return container.GetSeedQuery();
+            return executor.GetSeedQueryWithGODelimiter();
         }
 
         public void DoSeedForAssembly(string assemblyPath, string connectionString)
         {
-            container.DoSeedForAssembly(assemblyPath, connectionString);
+            executor.DoSeedForAssembly(assemblyPath, connectionString);
         }
 
         public void DoSeedForTypes(Type[] assemblyTypes, string connectionString)
         {
-            container.DoSeedForTypes(assemblyTypes, connectionString);
+            executor.DoSeedForTypes(assemblyTypes, connectionString);
         }
 
         public void DoSeedOnlyFor(string seedFileName, string assemblyPath, string connectionString)
         {
-            container.DoSeedOnlyFor(seedFileName, assemblyPath, connectionString);
+            executor.DoSeedOnlyFor(seedFileName, assemblyPath, connectionString);
         }
 
         public void DoSeedFromMemory(string connectionString)
         {
-            container.DoSeedFromMemory(connectionString);
+            executor.DoSeedFromMemory(connectionString);
         }
 
-        public void DoMigrationsForAssembly(string assemblyPath, string connectionString, MigrationDirection direction = MigrationDirection.Up)
+        public void DoMigrationsForAssembly(string assemblyPath, 
+            string connectionString, MigrationDirection direction = MigrationDirection.Up)
         {
-            container.DoMigrationsForAssembly(assemblyPath, connectionString, direction);
+            executor.DoMigrationsForAssembly(assemblyPath, connectionString, direction);
         }
 
-        public void DoMigrationsForTypes(Type[] assemblyTypes, string connectionString, MigrationDirection direction = MigrationDirection.Up)
+        public void DoMigrationsForTypes(Type[] assemblyTypes, 
+            string connectionString, MigrationDirection direction = MigrationDirection.Up)
         {
-            container.DoMigrationsForTypes(assemblyTypes, connectionString, direction);
+            executor.DoMigrationsForTypes(assemblyTypes, connectionString, direction);
+        }
+
+        public void DoMigrationOnlyFor(string migrationFileName, string assemblyPath, 
+            string connectionString, MigrationDirection direction = MigrationDirection.Up)
+        {
+            executor.DoMigrationOnlyFor(migrationFileName, assemblyPath, connectionString, direction);
         }
 
         public void DoMigrationsFromMemory(string connectionString)
         {
-            container.DoMigrationsFromMemory(connectionString);
-        }
-
-        public void DoMigrationOnlyFor(string migrationFileName, string assemblyPath, string connectionString, MigrationDirection direction = MigrationDirection.Up)
-        {
-            container.DoMigrationOnlyFor(migrationFileName, assemblyPath, connectionString, direction);
+            executor.DoMigrationsFromMemory(connectionString);
         }
 
         public int ExecuteQuery(string query, string connectionString)
         {
-            return container.ExecuteQuery(query, connectionString);
+            return executor.OpenConnectionAndExecuteQuery(query, connectionString);
+        }
+
+        public void ExecuteQueries(List<string> queries, string connectionString)
+        {
+            executor.OpenConnectionAndExecuteQueries(queries, connectionString);
         }
 
         public void CreateMigrationScript(string assemblyPath, string fileName)
         {
-            container.CreateMigrationsScript(assemblyPath, fileName);
+            executor.CreateMigrationsScript(assemblyPath, fileName);
+        }
+
+        public void CreateMigrationScriptFromMemory(string fileName)
+        {
+            executor.CreateMigrationScriptFromMemory(fileName);
         }
 
         public void CreateSeedScript(string assemblyPath, string fileName)
         {
-            container.CreateSeedScript(assemblyPath, fileName);
+            executor.CreateSeedScript(assemblyPath, fileName);
         }
-       
+
+        public void CreateSeedScriptFromMemory(string fileName)
+        {
+            executor.CreateSeedScriptFromMemory(fileName);
+        }
     }
 }

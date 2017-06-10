@@ -1,8 +1,8 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using EasyMigLib.Db.MySqlClient;
-using MySql.Data.MySqlClient;
 using System.Collections.Generic;
+using MySql.Data.MySqlClient;
 
 namespace EasyMigTest.Db.MySqlClient
 {

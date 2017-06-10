@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{9623D7C0-78A6-491C-BF18-D4D4B5F59002}</ProjectGuid>
+    <ProjectGuid>{A376B384-90C7-4F15-BE41-1F6ADAA894A8}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>EasyMigLib</RootNamespace>
@@ -32,7 +32,6 @@
   <ItemGroup>
     <Reference Include="MySql.Data, Version=6.9.9.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL" />
     <Reference Include="System" />
-    <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -42,66 +41,53 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Commands\CommandContainer.cs" />
-    <Compile Include="Commands\DatabaseCommand.cs" />
-    <Compile Include="Commands\DatabaseParameter.cs" />
-    <Compile Include="Commands\DatabaseParameterDirection.cs" />
-    <Compile Include="Commands\Database\CreateAndUseDatabaseCommand.cs" />
-    <Compile Include="Commands\Procedure\DropStoredProcedureCommand.cs" />
-    <Compile Include="Information\DatabaseInformation.cs" />
+    <Compile Include="Db\Common\DbService.cs" />
     <Compile Include="Db\Common\DbServiceParameter.cs" />
     <Compile Include="Db\Common\IDbService.cs" />
     <Compile Include="Db\MySqlClient\IMySqlDbService.cs" />
+    <Compile Include="Db\MySqlClient\MySqlDbService.cs" />
+    <Compile Include="EasyMig.cs" />
     <Compile Include="EasyMigException.cs" />
+    <Compile Include="Information\DatabaseInformation.cs" />
+    <Compile Include="Information\DatabaseTable.cs" />
     <Compile Include="Information\MySqlClient\IMySqlDatabaseInformationQueryService.cs" />
+    <Compile Include="Information\MySqlClient\MySqlDatabaseInformation.cs" />
+    <Compile Include="Information\MySqlClient\MySqlDatabaseInformationQueryService.cs" />
     <Compile Include="Information\SqlClientAttachedDbFile\ISqlServerAttachedDbFileInformationQueryService.cs" />
+    <Compile Include="Information\SqlClientAttachedDbFile\SqlServerAttachedDbFileInformation.cs" />
+    <Compile Include="Information\SqlClientAttachedDbFile\SqlServerAttachedDbFileInformationQueryService.cs" />
     <Compile Include="Information\SqlClient\ISqlServerDatabaseInformationQueryService.cs" />
+    <Compile Include="Information\SqlClient\SqlServerDatabaseInformation.cs" />
+    <Compile Include="Information\SqlClient\SqlServerDatabaseInformationQueryService.cs" />
+    <Compile Include="Migration.cs" />
     <Compile Include="MigrationReflection\IMigrationAssemblyService.cs" />
     <Compile Include="MigrationReflection\MigrationAssemblyService.cs" />
-    <Compile Include="MigrationReflection\RecognizedMigrationFile.cs" />
-    <Compile Include="Commands\ColumnType.cs" />
-    <Compile Include="Commands\Column\AddColumnCommand.cs" />
-    <Compile Include="Commands\Column\AddForeignKeyConstraintCommand.cs" />
-    <Compile Include="Commands\Column\AddPrimaryKeyConstraintCommand.cs" />
-    <Compile Include="Commands\Column\DropColumnCommand.cs" />
-    <Compile Include="Commands\Column\ModifyColumnCommand.cs" />
-    <Compile Include="Commands\Database\CreateDatabaseCommand.cs" />
-    <Compile Include="Commands\Database\DropDatabaseCommand.cs" />
-    <Compile Include="Commands\Procedure\CreateStoredProcedureCommand.cs" />
-    <Compile Include="Commands\Table\AlterTableCommand.cs" />
-    <Compile Include="Commands\Table\CreateTableCommand.cs" />
-    <Compile Include="Commands\Table\DropTableCommand.cs" />
-    <Compile Include="Commands\ForeignKeyColumn.cs" />
-    <Compile Include="Commands\PrimaryKeyColumn.cs" />
-    <Compile Include="Information\DatabaseTable.cs" />
-    <Compile Include="Commands\SeedData.cs" />
-    <Compile Include="Commands\Table\SeedRowCommand.cs" />
-    <Compile Include="Commands\Table\SeedTableCommand.cs" />
-    <Compile Include="Query\IQueryService.cs" />
-    <Compile Include="EasyMig.cs" />
-    <Compile Include="Migration.cs" />
     <Compile Include="MigrationReflection\MigrationDirection.cs" />
+    <Compile Include="MigrationReflection\RecognizedMigrationFile.cs" />
     <Compile Include="Migrations\MySqlClient\MySqlDb.cs" />
-    <Compile Include="Db\MySqlClient\MySqlDbService.cs" />
-    <Compile Include="Information\MySqlClient\MySqlDatabaseInformation.cs" />
-    <Compile Include="Migrations\MySqlClient\MySqlSchema.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Commands\MigrationColumn.cs" />
-    <Compile Include="Db\MySqlClient\MySqlQuerySplitter.cs" />
-    <Compile Include="Query\QueryService.cs" />
-    <Compile Include="Db\IQuerySplitter.cs" />
-    <Compile Include="Db\SqlClient\SqlQuerySplitter.cs" />
-    <Compile Include="Seeder.cs" />
-    <Compile Include="Information\MySqlClient\MySqlDatabaseInformationQueryService.cs" />
-    <Compile Include="Query\MySqlClient\MySqlQueryService.cs" />
-    <Compile Include="Db\Common\DbService.cs" />
-    <Compile Include="Information\SqlClientAttachedDbFile\SqlServerAttachedDbFileInformationQueryService.cs" />
-    <Compile Include="Information\SqlClientAttachedDbFile\SqlServerAttachedDbFileInformation.cs" />
+    <Compile Include="Migrations\MySqlClient\MySqlExecutor.cs" />
     <Compile Include="Migrations\SqlClient\SqlServerDb.cs" />
-    <Compile Include="Information\SqlClient\SqlServerDatabaseInformationQueryService.cs" />
+    <Compile Include="Migrations\SqlClient\SqlServerExecutor.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Query\IQueryService.cs" />
+    <Compile Include="Query\MySqlClient\MySqlQueryService.cs" />
+    <Compile Include="Query\QueryService.cs" />
     <Compile Include="Query\SqlClient\SqlQueryService.cs" />
-    <Compile Include="Information\SqlClient\SqlServerDatabaseInformation.cs" />
-    <Compile Include="Migrations\SqlClient\SqlServerSchema.cs" />
+    <Compile Include="Schema\DatabaseSchema.cs" />
+    <Compile Include="Schema\ForeignKeyColumn.cs" />
+    <Compile Include="Schema\AlterTableSchema.cs" />
+    <Compile Include="Schema\ForeignKeyConstraint.cs" />
+    <Compile Include="Schema\PrimaryKeyConstraint.cs" />
+    <Compile Include="Schema\MigrationColumn.cs" />
+    <Compile Include="Schema\ColumnType.cs" />
+    <Compile Include="Schema\CreateTableSchema.cs" />
+    <Compile Include="Schema\PrimaryKeyColumn.cs" />
+    <Compile Include="Schema\SeedData.cs" />
+    <Compile Include="Schema\SeedRow.cs" />
+    <Compile Include="Schema\SeedTableSchema.cs" />
+    <Compile Include="Schema\StoredProcedure.cs" />
+    <Compile Include="Seeder.cs" />
+    <Compile Include="Util.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -1,4 +1,4 @@
-﻿using EasyMigLib.Commands;
+﻿using EasyMigLib.Schema;
 using System.Collections.Generic;
 
 namespace EasyMigLib.Query.SqlClient
@@ -7,7 +7,7 @@ namespace EasyMigLib.Query.SqlClient
     {
         public SqlQueryService()
         {
-            this.SetDefaultDelimiter("\rGO\r");
+            // this.SetDefaultDelimiter("\rGO\r");
         }
 
         public override string FormatWithSchemaName(string value)
@@ -104,17 +104,7 @@ namespace EasyMigLib.Query.SqlClient
             return "ALTER TABLE " + this.FormatWithSchemaName(tableName) + " ALTER COLUMN " + this.GetModifedColumn(column) + this.GetDefaultDelimiter();
         }
 
-        public string SetIdentityOn(string tableName)
-        {
-            return "SET IDENTITY_INSERT " + this.FormatWithSchemaName(tableName) + " ON" + this.GetDefaultDelimiter();
-        }
-
-        public string SetIdentityOff(string tableName)
-        {
-            return "SET IDENTITY_INSERT " + this.FormatWithSchemaName(tableName) + " OFF" + this.GetDefaultDelimiter();
-        }
-
-        public bool HasIdentityPrimaryKey(CreateTableCommand createTableCommand)
+        public bool HasIdentityPrimaryKey(CreateTableSchema createTableCommand)
         {
             foreach (var primaryKey in createTableCommand.primaryKeys)
             {
@@ -126,26 +116,13 @@ namespace EasyMigLib.Query.SqlClient
             return false;
         }
 
-        public override string GetSeeds(CreateTableCommand createTableCommand)
+        public override string GetSeeds(CreateTableSchema createTableCommand)
         {
             var result = "";
-            var hasIdentity = this.HasIdentityPrimaryKey(createTableCommand);
-
-            if (hasIdentity)
-            {
-                result += this.SetIdentityOn(createTableCommand.TableName);
-            }
-
-            foreach (var seedRowCommand in createTableCommand.seedTableCommand.seedRowCommands)
+            foreach (var seedRowCommand in createTableCommand.seedTable.rows)
             {
                 result += this.GetSeedRow(seedRowCommand.TableName, seedRowCommand.columnValues);
             }
-
-            if (hasIdentity)
-            {
-                result += this.SetIdentityOff(createTableCommand.TableName);
-            }
-
             return result;
         }
 
@@ -154,7 +131,7 @@ namespace EasyMigLib.Query.SqlClient
             return "\rAS\rBEGIN\r" + this.FormatBody(body) + "\rEND";
         }
 
-        public override string GetCreateStoredProcedure(string procedureName, Dictionary<string, DatabaseParameter> parameters, string body)
+        public override string GetCreateStoredProcedure(string procedureName, Dictionary<string, StoredProcedureParameter> parameters, string body)
         {
             return "CREATE PROCEDURE " + this.FormatWithSchemaName(procedureName) + " "
                  + this.GetParameters(parameters)

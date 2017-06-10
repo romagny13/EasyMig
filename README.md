@@ -1,4 +1,4 @@
-# EasyMig (v0.2)
+# EasyMig (v0.3)
 
 > Migration Tool and Services
 

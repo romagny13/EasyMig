@@ -2,7 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using EasyMigLib;
 using System.Threading.Tasks;
-using EasyMigLib.Commands;
+using EasyMigLib.Schema;
 
 namespace EasyMigLibTest
 {
@@ -158,7 +158,7 @@ namespace EasyMigLibTest
 
             EasyMig.ToMySql.ExecuteQuery(query, completeConnectionString);
 
-            await Task.Delay(500);
+            await Task.Delay(200);
 
             Assert.IsFalse(EasyMig.Information.MySql.DatabaseExists("db2", completeConnectionString));
         }
@@ -173,7 +173,7 @@ namespace EasyMigLibTest
 
             EasyMig.ToMySql.ExecuteQuery(query, connectionString);
 
-            await Task.Delay(500);
+            await Task.Delay(200);
 
             Assert.IsTrue(EasyMig.Information.MySql.DatabaseExists("db2", connectionString));
         }
@@ -195,7 +195,7 @@ namespace EasyMigLibTest
 
             EasyMig.ToMySql.ExecuteQuery(query, completeConnectionString);
 
-            await Task.Delay(500);
+            await Task.Delay(200);
 
             Assert.IsTrue(EasyMig.Information.MySql.TableExists(dbName, tableName, connectionString));
 
@@ -240,7 +240,7 @@ namespace EasyMigLibTest
 
             EasyMig.ToMySql.ExecuteQuery(query, completeConnectionString);
 
-            await Task.Delay(500);
+            await Task.Delay(200);
 
             Assert.IsTrue(EasyMig.Information.MySql.ColumnExists(dbName, tableName, columnName, connectionString));
 
@@ -266,7 +266,7 @@ namespace EasyMigLibTest
 
             EasyMig.ToMySql.ExecuteQuery(query, completeConnectionString);
 
-            await Task.Delay(500);
+            await Task.Delay(200);
 
             var table = EasyMig.Information.MySql.GetTable(dbName, tableName, connectionString);
 
@@ -287,7 +287,7 @@ namespace EasyMigLibTest
 
             EasyMig.ToMySql.ExecuteQuery(query, completeConnectionString);
 
-            await Task.Delay(500);
+            await Task.Delay(200);
 
             var table = EasyMig.Information.MySql.GetTable(dbName, tableName, connectionString);
 
@@ -307,11 +307,13 @@ namespace EasyMigLibTest
 
             EasyMig.AlterTable(tableName).AddForeignKeyConstraint(fk,tableReferenced,columnName);
 
-            var query = EasyMig.ToMySql.GetMigrationQuery();
+            EasyMig.ToMySql.DoMigrationsFromMemory(completeConnectionString);
 
-            EasyMig.ToMySql.ExecuteQuery(query, completeConnectionString);
+            // var query = EasyMig.ToMySql.GetMigrationQuery();
 
-            await Task.Delay(500);
+            // EasyMig.ToMySql.ExecuteQuery(query, completeConnectionString);
+
+            await Task.Delay(200);
 
             var table = EasyMig.Information.MySql.GetTable(dbName, tableName, connectionString);
 
@@ -334,7 +336,7 @@ namespace EasyMigLibTest
 
             EasyMig.ToMySql.ExecuteQuery(query, completeConnectionString);
 
-            await Task.Delay(500);
+            await Task.Delay(200);
 
             Assert.IsFalse(EasyMig.Information.MySql.ColumnExists(dbName, tableName, columnName, connectionString));
 
@@ -414,8 +416,8 @@ namespace EasyMigLibTest
             EasyMig.ClearMigrations();
 
             EasyMig.CreateStoredProcedure("p1_test")
-               .AddParameter("p_id", ColumnType.Int())
-               .AddParameter("p_age", ColumnType.Int(), DatabaseParameterDirection.OUT)
+               .AddInParameter("p_id", ColumnType.Int())
+               .AddOutParameter("p_age", ColumnType.Int())
                .SetBody("select age into p_age from users where id=p_id;");
 
             EasyMig.ToMySql.DoMigrationsFromMemory(completeConnectionString);

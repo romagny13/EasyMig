@@ -71,7 +71,7 @@ Example:
 
 ```cs
 EasyMig.DropDatabaseIfExists("db1"); // drop database
-EasyMig.CreateAndUseDatabase("db"); // create and use database
+EasyMig.CreateAndUseDatabase("db1"); // create and use database
 
 // then create tables, stored procedures,etc. for this Database
 EasyMig.CreateTable("users")

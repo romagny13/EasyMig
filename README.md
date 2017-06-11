@@ -80,7 +80,7 @@ EasyMig.CreateTable("users")
        .AddColumn("age", ColumnType.Int(), true);
 
 EasyMig.CreateStoredProcedure("get_user")
-       .AddParameter("@id", ColumnType.Int())
+       .AddInParameter("@id", ColumnType.Int())
        .SetBody("select * from [dbo].[users] where [id]=@id");
 ```
 
@@ -293,8 +293,8 @@ Example with Sql Server
 
 ```cs
 EasyMig.CreateStoredProcedure("p1")
-       .AddParameter("@id", ColumnType.Int())
-       .AddParameter("@age", ColumnType.Int(), DatabaseParameterDirection.OUT)
+       .AddInParameter("@id", ColumnType.Int())
+       .AddOutParameter("@age", ColumnType.Int(), DatabaseParameterDirection.OUT)
        .SetBody("select @age=age from users where id=@id");
 ```
 
@@ -302,8 +302,8 @@ Example with MySql
 
 ```cs
 EasyMig.CreateStoredProcedure("p1")
-       .AddParameter("p_id", ColumnType.Int())
-       .AddParameter("p_age", ColumnType.Int(), DatabaseParameterDirection.OUT)
+       .AddInParameter("p_id", ColumnType.Int())
+       .AddOutParameter("p_age", ColumnType.Int(), DatabaseParameterDirection.OUT)
        .SetBody("select age into p_age from users where id=p_id");
 ```
 

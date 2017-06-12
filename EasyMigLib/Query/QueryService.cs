@@ -199,17 +199,17 @@ namespace EasyMigLib.Query
 
         // at initialization
 
-        public virtual string GetAddPrimaryKeyConstraint(CreateTableSchema createTableCommand)
+        public virtual string GetAddPrimaryKeyConstraint(CreateTableSchema table)
         {
-            if (createTableCommand.HasPrimaryKeys)
+            if (table.HasPrimaryKeys)
             {
                 var formattedPrimaryKeys = new List<string>();
-                foreach (var primaryKey in createTableCommand.primaryKeys)
+                foreach (var primaryKey in table.primaryKeys)
                 {
                     formattedPrimaryKeys.Add(this.WrapWithQuotes(primaryKey.Value.ColumnName));
                 }
 
-                return "ALTER TABLE " + this.FormatWithSchemaName(createTableCommand.TableName) + " ADD PRIMARY KEY (" + string.Join(",", formattedPrimaryKeys) + ")" + this.GetDefaultDelimiter();
+                return "ALTER TABLE " + this.FormatWithSchemaName(table.TableName) + " ADD PRIMARY KEY (" + string.Join(",", formattedPrimaryKeys) + ")" + this.GetDefaultDelimiter();
             }
             else
             {
@@ -217,12 +217,12 @@ namespace EasyMigLib.Query
             }
         }
 
-        public virtual string GetAddForeignKeyConstraints(CreateTableSchema createTableCommand)
+        public virtual string GetAddForeignKeyConstraints(CreateTableSchema table)
         {
             var result = "";
-            foreach (var foreignKey in createTableCommand.foreignKeys)
+            foreach (var foreignKey in table.foreignKeys)
             {
-                result += this.GetAddForeignKeyConstraint(createTableCommand.TableName, foreignKey.Value);
+                result += this.GetAddForeignKeyConstraint(table.TableName, foreignKey.Value);
             }
             return result;
         }
@@ -256,10 +256,10 @@ namespace EasyMigLib.Query
                 + this.GetSeedValues(columnValues) + ")" + this.GetDefaultDelimiter();
         }
 
-        public virtual string GetSeeds(CreateTableSchema createTableCommand)
+        public virtual string GetSeeds(CreateTableSchema table)
         {
             var result = "";
-            foreach (var seedRowCommand in createTableCommand.seedTable.rows)
+            foreach (var seedRowCommand in table.seedTable.rows)
             {
                 result += this.GetSeedRow(seedRowCommand.TableName, seedRowCommand.columnValues);
             }

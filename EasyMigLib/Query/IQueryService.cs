@@ -16,8 +16,8 @@ namespace EasyMigLib.Query
         string GetAddColumn(string tableName, MigrationColumn column);
         string GetAddForeignKeyConstraint(string tableName, ForeignKeyColumn foreignKey);
         string GetAddForeignKeyConstraint(string tableName, ForeignKeyConstraint foreignKey);
-        string GetAddForeignKeyConstraints(CreateTableSchema createTableCommand);
-        string GetAddPrimaryKeyConstraint(CreateTableSchema createTableCommand);
+        string GetAddForeignKeyConstraints(CreateTableSchema table);
+        string GetAddPrimaryKeyConstraint(CreateTableSchema table);
         string GetAddPrimaryKeyConstraint(string tableName, string[] primaryKeys);
         string GetColumn(MigrationColumn column);
         string GetColumnType(ColumnType columnType);
@@ -36,7 +36,7 @@ namespace EasyMigLib.Query
         List<string> GetReservedWords();
         string GetSeedColumns(Dictionary<string, object> columnValues);
         string GetSeedRow(string tableName, Dictionary<string, object> columnValues);
-        string GetSeeds(CreateTableSchema createTableCommand);
+        string GetSeeds(CreateTableSchema table);
         string GetSeeds(SeedTableSchema table);
         string GetSeedValues(Dictionary<string, object> columnValues);
         string GetUseDatabase(string databaseName);

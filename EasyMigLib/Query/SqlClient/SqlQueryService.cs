@@ -104,9 +104,9 @@ namespace EasyMigLib.Query.SqlClient
             return "ALTER TABLE " + this.FormatWithSchemaName(tableName) + " ALTER COLUMN " + this.GetModifedColumn(column) + this.GetDefaultDelimiter();
         }
 
-        public bool HasIdentityPrimaryKey(CreateTableSchema createTableCommand)
+        public bool HasIdentityPrimaryKey(CreateTableSchema table)
         {
-            foreach (var primaryKey in createTableCommand.primaryKeys)
+            foreach (var primaryKey in table.primaryKeys)
             {
                 if (primaryKey.Value.AutoIncrement)
                 {
@@ -116,10 +116,10 @@ namespace EasyMigLib.Query.SqlClient
             return false;
         }
 
-        public override string GetSeeds(CreateTableSchema createTableCommand)
+        public override string GetSeeds(CreateTableSchema table)
         {
             var result = "";
-            foreach (var seedRowCommand in createTableCommand.seedTable.rows)
+            foreach (var seedRowCommand in table.seedTable.rows)
             {
                 result += this.GetSeedRow(seedRowCommand.TableName, seedRowCommand.columnValues);
             }

@@ -172,22 +172,22 @@ namespace EasyMigLib.Query.MySqlClient
             return "ALTER TABLE " + this.FormatWithSchemaName(tableName) + " MODIFY COLUMN " + this.GetColumn(column) + ";\r";
         }
 
-        public string GetAutoIncrement(CreateTableSchema createTableCommand)
+        public string GetAutoIncrement(CreateTableSchema table)
         {
             var result = "";
-            foreach (var column in createTableCommand.primaryKeys)
+            foreach (var column in table.primaryKeys)
             {
                 if (column.Value.AutoIncrement)
                 {
-                    result += "ALTER TABLE " + this.FormatWithSchemaName(createTableCommand.TableName) + " MODIFY " + this.WrapWithQuotes(column.Key) + " INT UNSIGNED NOT NULL AUTO_INCREMENT;\r";
+                    result += "ALTER TABLE " + this.FormatWithSchemaName(table.TableName) + " MODIFY " + this.WrapWithQuotes(column.Key) + " INT UNSIGNED NOT NULL AUTO_INCREMENT;\r";
                 }
             }
             return result;
         }
 
-        public override string GetAddPrimaryKeyConstraint(CreateTableSchema createTableCommand)
+        public override string GetAddPrimaryKeyConstraint(CreateTableSchema table)
         {
-            var primaryKeys = createTableCommand.GetPrimaryKeyNames();
+            var primaryKeys = table.GetPrimaryKeyNames();
             if (primaryKeys.Length > 0)
             {
                 var formattedPrimaryKeys = new List<string>();
@@ -195,7 +195,7 @@ namespace EasyMigLib.Query.MySqlClient
                 {
                     formattedPrimaryKeys.Add(this.WrapWithQuotes(primaryKey));
                 }
-                return "ALTER TABLE " + this.FormatWithSchemaName(createTableCommand.TableName) + " ADD PRIMARY KEY (" + string.Join(",", formattedPrimaryKeys) + ");\r" + this.GetAutoIncrement(createTableCommand);
+                return "ALTER TABLE " + this.FormatWithSchemaName(table.TableName) + " ADD PRIMARY KEY (" + string.Join(",", formattedPrimaryKeys) + ");\r" + this.GetAutoIncrement(table);
             }
             else
             {
@@ -203,13 +203,13 @@ namespace EasyMigLib.Query.MySqlClient
             }
         }
 
-        public override string GetAddForeignKeyConstraints(CreateTableSchema createTableCommand)
+        public override string GetAddForeignKeyConstraints(CreateTableSchema table)
         {
             var result = "";
-            foreach (var foreignKey in createTableCommand.foreignKeys)
+            foreach (var foreignKey in table.foreignKeys)
             {
-                result += "CREATE INDEX " + this.WrapWithQuotes(foreignKey.Value.ColumnName + "_index") + " ON " + this.FormatWithSchemaName(createTableCommand.TableName) + " (" + this.WrapWithQuotes(foreignKey.Value.ColumnName) + ");\r";
-                result += "ALTER TABLE " + this.FormatWithSchemaName(createTableCommand.TableName) + " ADD FOREIGN KEY (" + this.WrapWithQuotes(foreignKey.Value.ColumnName) + ") REFERENCES " + this.FormatWithSchemaName(foreignKey.Value.TableReferenced) + "(" + this.WrapWithQuotes(foreignKey.Value.PrimaryKeyReferenced) + ");\r";
+                result += "CREATE INDEX " + this.WrapWithQuotes(foreignKey.Value.ColumnName + "_index") + " ON " + this.FormatWithSchemaName(table.TableName) + " (" + this.WrapWithQuotes(foreignKey.Value.ColumnName) + ");\r";
+                result += "ALTER TABLE " + this.FormatWithSchemaName(table.TableName) + " ADD FOREIGN KEY (" + this.WrapWithQuotes(foreignKey.Value.ColumnName) + ") REFERENCES " + this.FormatWithSchemaName(foreignKey.Value.TableReferenced) + "(" + this.WrapWithQuotes(foreignKey.Value.PrimaryKeyReferenced) + ");\r";
             }
             return result;
         }

@@ -212,7 +212,7 @@ EasyMig.CreateTable("users")
 
 ### Insert data on table creation
 
-We could define the primary key ("_IDENTITY_INSERT_" is "off" for **Sql Server**).
+We could define the primary key ("_IDENTITY_INSERT_" is "on" for **Sql Server**).
 
 Example with **Dictionaries**
 
@@ -294,7 +294,7 @@ Example with Sql Server
 ```cs
 EasyMig.CreateStoredProcedure("p1")
        .AddInParameter("@id", ColumnType.Int())
-       .AddOutParameter("@age", ColumnType.Int(), DatabaseParameterDirection.OUT)
+       .AddOutParameter("@age", ColumnType.Int())
        .SetBody("select @age=age from users where id=@id");
 ```
 
@@ -303,7 +303,7 @@ Example with MySql
 ```cs
 EasyMig.CreateStoredProcedure("p1")
        .AddInParameter("p_id", ColumnType.Int())
-       .AddOutParameter("p_age", ColumnType.Int(), DatabaseParameterDirection.OUT)
+       .AddOutParameter("p_age", ColumnType.Int())
        .SetBody("select age into p_age from users where id=p_id");
 ```
 

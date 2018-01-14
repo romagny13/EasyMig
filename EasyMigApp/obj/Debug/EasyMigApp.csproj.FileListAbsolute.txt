@@ -17,3 +17,22 @@ c:\users\romag\documents\visual studio 2017\Projects\EasyMigLib\EasyMigApp\obj\D
 c:\users\romag\documents\visual studio 2017\Projects\EasyMigLib\EasyMigApp\obj\Debug\EasyMigApp.csproj.GenerateResource.Cache
 c:\users\romag\documents\visual studio 2017\Projects\EasyMigLib\EasyMigApp\obj\Debug\EasyMigApp.exe
 c:\users\romag\documents\visual studio 2017\Projects\EasyMigLib\EasyMigApp\obj\Debug\EasyMigApp.pdb
+C:\Users\romag\Documents\Github\EasyMig\EasyMigApp\bin\Debug\EasyMigApp.exe.config
+C:\Users\romag\Documents\Github\EasyMig\EasyMigApp\bin\Debug\EasyMigApp.exe
+C:\Users\romag\Documents\Github\EasyMig\EasyMigApp\bin\Debug\EasyMigApp.pdb
+C:\Users\romag\Documents\Github\EasyMig\EasyMigApp\bin\Debug\EasyMigLib.dll
+C:\Users\romag\Documents\Github\EasyMig\EasyMigApp\bin\Debug\MySql.Data.dll
+C:\Users\romag\Documents\Github\EasyMig\EasyMigApp\bin\Debug\EasyMigLib.pdb
+C:\Users\romag\Documents\Github\EasyMig\EasyMigApp\obj\Debug\EasyMigApp.csprojResolveAssemblyReference.cache
+C:\Users\romag\Documents\Github\EasyMig\EasyMigApp\obj\Debug\Shell.g.cs
+C:\Users\romag\Documents\Github\EasyMig\EasyMigApp\obj\Debug\App.g.cs
+C:\Users\romag\Documents\Github\EasyMig\EasyMigApp\obj\Debug\EasyMigApp_MarkupCompile.cache
+C:\Users\romag\Documents\Github\EasyMig\EasyMigApp\obj\Debug\EasyMigApp_MarkupCompile.lref
+C:\Users\romag\Documents\Github\EasyMig\EasyMigApp\obj\Debug\App.baml
+C:\Users\romag\Documents\Github\EasyMig\EasyMigApp\obj\Debug\Shell.baml
+C:\Users\romag\Documents\Github\EasyMig\EasyMigApp\obj\Debug\EasyMigApp.g.resources
+C:\Users\romag\Documents\Github\EasyMig\EasyMigApp\obj\Debug\EasyMigApp.Properties.Resources.resources
+C:\Users\romag\Documents\Github\EasyMig\EasyMigApp\obj\Debug\EasyMigApp.csproj.GenerateResource.Cache
+C:\Users\romag\Documents\Github\EasyMig\EasyMigApp\obj\Debug\EasyMigApp.csproj.CoreCompileInputs.cache
+C:\Users\romag\Documents\Github\EasyMig\EasyMigApp\obj\Debug\EasyMigApp.exe
+C:\Users\romag\Documents\Github\EasyMig\EasyMigApp\obj\Debug\EasyMigApp.pdb

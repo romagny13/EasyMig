@@ -81,6 +81,10 @@ namespace EasyMigLib.Query.SqlClient
             {
                 return "VARBINARY(MAX)";
             }
+            else if (columnType is CustomColumnType)
+            {
+                return ((CustomColumnType)columnType).Name;
+            }
             throw new EasyMigException("Type not supported");
         }
 

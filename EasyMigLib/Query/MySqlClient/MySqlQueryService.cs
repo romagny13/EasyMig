@@ -119,6 +119,10 @@ namespace EasyMigLib.Query.MySqlClient
             {
                 return "BLOB";
             }
+            else if (columnType is CustomColumnType)
+            {
+                return ((CustomColumnType)columnType).Name;
+            }
             throw new EasyMigException("Type not supported");
         }
 

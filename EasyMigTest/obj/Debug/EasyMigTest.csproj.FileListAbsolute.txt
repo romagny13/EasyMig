@@ -19,3 +19,24 @@ c:\users\romag\documents\visual studio 2017\Projects\EasyMigLib\EasyMigTest\bin\
 c:\users\romag\documents\visual studio 2017\Projects\EasyMigLib\EasyMigTest\bin\Debug\MySql.Data.xml
 c:\users\romag\documents\visual studio 2017\Projects\EasyMigLib\EasyMigTest\bin\Debug\dbTest.mdf
 c:\users\romag\documents\visual studio 2017\Projects\EasyMigLib\EasyMigTest\bin\Debug\dbTest_log.ldf
+C:\Users\romag\Documents\Github\EasyMig\EasyMigTest\bin\Debug\Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.dll
+C:\Users\romag\Documents\Github\EasyMig\EasyMigTest\bin\Debug\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.Interface.dll
+C:\Users\romag\Documents\Github\EasyMig\EasyMigTest\bin\Debug\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.dll
+C:\Users\romag\Documents\Github\EasyMig\EasyMigTest\bin\Debug\fr\Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.resources.dll
+C:\Users\romag\Documents\Github\EasyMig\EasyMigTest\bin\Debug\fr\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.resources.dll
+C:\Users\romag\Documents\Github\EasyMig\EasyMigTest\bin\Debug\fr\Microsoft.VisualStudio.TestPlatform.TestFramework.resources.dll
+C:\Users\romag\Documents\Github\EasyMig\EasyMigTest\bin\Debug\dbTest.mdf
+C:\Users\romag\Documents\Github\EasyMig\EasyMigTest\bin\Debug\dbTest_log.ldf
+C:\Users\romag\Documents\Github\EasyMig\EasyMigTest\bin\Debug\EasyMigTest.dll
+C:\Users\romag\Documents\Github\EasyMig\EasyMigTest\bin\Debug\EasyMigTest.pdb
+C:\Users\romag\Documents\Github\EasyMig\EasyMigTest\bin\Debug\EasyMigLib.dll
+C:\Users\romag\Documents\Github\EasyMig\EasyMigTest\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.dll
+C:\Users\romag\Documents\Github\EasyMig\EasyMigTest\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.dll
+C:\Users\romag\Documents\Github\EasyMig\EasyMigTest\bin\Debug\EasyMigLib.pdb
+C:\Users\romag\Documents\Github\EasyMig\EasyMigTest\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.xml
+C:\Users\romag\Documents\Github\EasyMig\EasyMigTest\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.xml
+C:\Users\romag\Documents\Github\EasyMig\EasyMigTest\bin\Debug\MySql.Data.xml
+C:\Users\romag\Documents\Github\EasyMig\EasyMigTest\obj\Debug\EasyMigTest.csprojResolveAssemblyReference.cache
+C:\Users\romag\Documents\Github\EasyMig\EasyMigTest\obj\Debug\EasyMigTest.csproj.CoreCompileInputs.cache
+C:\Users\romag\Documents\Github\EasyMig\EasyMigTest\obj\Debug\EasyMigTest.dll
+C:\Users\romag\Documents\Github\EasyMig\EasyMigTest\obj\Debug\EasyMigTest.pdb

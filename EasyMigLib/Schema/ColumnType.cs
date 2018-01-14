@@ -102,6 +102,19 @@
     public class BlobColumnType : ColumnType
     { }
 
+
+    // custom (rowversion for sql server for example)
+
+    public class CustomColumnType : ColumnType
+    {
+        public string Name { get; }
+
+        public CustomColumnType(string name)
+        {
+            this.Name = name;
+        }
+    }
+
     public class ColumnType
     {
         // String types
@@ -197,5 +210,12 @@
             // TIMESTAMP
             return new BlobColumnType();
         }
+
+        public static CustomColumnType Custom(string name)
+        {
+            // CUSTOM
+            return new CustomColumnType(name);
+        }
     }
+
 }
